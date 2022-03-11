@@ -3,8 +3,4 @@ Repositório para o desenvolvimento do projeto de Pesquisa e Inovação da SPTEC
 <img src="img/TempControl Sem Fundo.png" alt="Logo Empresa" style="height: 250px; "/>
 ## Equipe 
 
-Gabriel Duarte - @GabrielDuarte14 <br>
-Gustavo Antonio - @GustavoAntonio12 <br>
-Rafaella Piovezan - @RafaPiovezan <br>
-Pedro Jesuino @PedroJsn <br>
-Vinicius da Silva Sousa - @VS-Sousa
+@GabrielDuarte14 
