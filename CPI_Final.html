@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Financeira - Final</title>
+    <style>
+        body{
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        .container{
+            width: 650px;
+            height: 700px;
+            background-color: red;
+        }
+        .menu{
+            width: 100%;
+            height: 15%;
+        }
+        .content{
+            width: 100%;
+            height: 70%;
+        }
+        .logo{
+            width: 20%;
+            height: 100%;
+            float: left;
+        }   
+        .menu-options{
+            width: 32%;
+            height: 100%;
+            float: right;
+        }
+        .options{
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-weight: 500;
+            color: #004aad;
+        }
+        h3{
+            color: #004aad;
+        }
+        button{
+            color: #004aad;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="menu">
+            <img src="TEMPCONTROL.png" alt="" class="logo">
+            <div class="menu-options">
+                <br><br>
+                <b class="options" onclick="frete()">Frete</b>
+                <b class="options" onclick="indenizacao()">Indenização</b>
+                <b class="options" onclick="lucro()">Lucro</b>
+            </div>
+        </div>
+        <div class="content">
+            <h3>Olá, é um prazer ter você conosco!</h3>
+            <div class="frete_div">
+                <p>Por favor, preencha os dados do formulário abaixo para conferir o preço para realizar o transporte rodoviários dos medicamentos termolábeis utilizando nosso sistema de verificação de umidade e temperatura.</p>
+                <p>Insira a Distancia Percorrida em KM (<i>Entre o Remetente e o Destinatário</i>): </p><input id="distIn" type="text" placeholder="Ex: 2 ">
+                <p>Insira o Número de Eixos do Caminhão:</p><input id="eixoIn" type="text" placeholder="Ex: 7 ">
+                <br><br>
+                <button onClick="calcularFrete()">Verificar Valor</button>
+                <br>
+                <div id="bloco"></div>
+            </div>
+            <div class="indenizacao_div">
+
+            </div>
+            <div class="lucro_div">
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    function calcularFrete(){
+        var eixo = eixoIn.value;
+        var variacaoCCD = ((0.5618*eixo)+1.922); //Valor referente o uso de cada eixo do caminhão
+        var cc = 116.05 // Valor de carga e descarga de cargas frigorificadas ou aquecidas
+        var dist = distIn.value;
+        var sistema =  750; // Valor da implementação do sistema no eixo
+        var pisoMinimo = (dist*variacaoCCD)+cc;
+        var frete = pisoMinimo+sistema;
+        bloco.innerHTML = `<h4>Sua carga com veículo de ${eixo} eixo(s) monitorada pelo sistema <i><b style='color:#004aad;'>TempControl</b></i> (escolha que anualmente retorna no mínimo 15% de todo seu faturamento total), percorrendo ${dist} KM corresponde ao piso mínimo do frete no valor de: <b style='color:#004aad;'>R$: ${frete}</b></h4>`
+        bloco.innerHTML += `<h5> Valores Baseados Na Tabela de Fretes da ANTT (Agência Nacional de Transportes Terrestres)</h5>`;
+    }
+</script>
