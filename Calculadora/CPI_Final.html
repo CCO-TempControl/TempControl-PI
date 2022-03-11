@@ -1,92 +1,392 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora Financeira - Final</title>
-    <style>
-        body{
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        }
-        .container{
-            width: 650px;
-            height: 700px;
-            background-color: red;
-        }
-        .menu{
-            width: 100%;
-            height: 15%;
-        }
-        .content{
-            width: 100%;
-            height: 70%;
-        }
-        .logo{
-            width: 20%;
-            height: 100%;
-            float: left;
-        }   
-        .menu-options{
-            width: 32%;
-            height: 100%;
-            float: right;
-        }
-        .options{
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            font-weight: 500;
-            color: #004aad;
-        }
-        h3{
-            color: #004aad;
-        }
-        button{
-            color: #004aad;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora Financeira - Final</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .container {
+      width: 800px;
+      height: 1000px;
+    }
+
+    .menu {
+      width: 100%;
+      height: 10%;
+    }
+
+    .content {
+      width: 100%;
+      height: 70%;
+    }
+
+    .logo {
+      width: 20%;
+      height: 100%;
+      float: left;
+    }
+
+    .menu-options {
+      width: 24%;
+      height: 100%;
+      float: right;
+    }
+
+    .options {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-weight: 700;
+      color: #004aad;
+    }
+
+    h3 {
+      color: #004aad;
+    }
+
+    h4 {
+      color: #4DB0E6;
+    }
+
+    button {
+      color: #004aad;
+    }
+  </style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="menu">
-            <img src="TEMPCONTROL.png" alt="" class="logo">
-            <div class="menu-options">
-                <br><br>
-                <b class="options" onclick="frete()">Frete</b>
-                <b class="options" onclick="indenizacao()">Indenização</b>
-                <b class="options" onclick="lucro()">Lucro</b>
-            </div>
-        </div>
-        <div class="content">
-            <h3>Olá, é um prazer ter você conosco!</h3>
-            <div class="frete_div">
-                <p>Por favor, preencha os dados do formulário abaixo para conferir o preço para realizar o transporte rodoviários dos medicamentos termolábeis utilizando nosso sistema de verificação de umidade e temperatura.</p>
-                <p>Insira a Distancia Percorrida em KM (<i>Entre o Remetente e o Destinatário</i>): </p><input id="distIn" type="text" placeholder="Ex: 2 ">
-                <p>Insira o Número de Eixos do Caminhão:</p><input id="eixoIn" type="text" placeholder="Ex: 7 ">
-                <br><br>
-                <button onClick="calcularFrete()">Verificar Valor</button>
-                <br>
-                <div id="bloco"></div>
-            </div>
-            <div class="indenizacao_div">
-
-            </div>
-            <div class="lucro_div">
-
-            </div>
-        </div>
+  <div class="container">
+    <div class="menu">
+      <img src="TEMPCONTROL.png" alt="" class="logo">
+      <div class="menu-options">
+        <br><br>
+        <u class="options" onclick="frete()">Frete</u>
+        <u class="options" onclick="indenizacao()">Indenização</u>
+        <u class="options" onclick="lucro()">Lucro</u>
+      </div>
     </div>
+    <div class="content">
+      <h3>Olá, é um prazer ter você conosco!</h3>
+      <div class="frete_div" id="frete_div" style="display: none;">
+        <h4>Calculadora de Frete</h4>
+        <p>Por favor, preencha os dados do formulário abaixo para conferir o preço para realizar o transporte
+          rodoviários dos medicamentos termolábeis utilizando nosso sistema de verificação de umidade e temperatura.</p>
+        <p>Insira a Distancia Percorrida em KM (<i>Entre o Remetente e o Destinatário</i>): </p><input id="distIn"
+          type="text" placeholder="Ex: 2 ">
+        <p>Insira o Número de Eixos do Caminhão:</p><input id="eixoIn" type="text" placeholder="Ex: 7 ">
+        <br><br>
+        <button onClick="calcularFrete()">Verificar Valor</button>
+        <br>
+        <div id="bloco"></div>
+      </div>
+      <div id="indenizacao_div" class="indenizacao_div" style="display: none;">
+        <div>
+          <div>
+            <h4>Calculadora de Indenizações</h4>
+            <p>
+              Nessa calculadora, a empresa informará alguns dados sobre os lotes de
+              medicamentos e vacinas que a empresa trabalha e com isso diremos como
+              o nosso sistema pode ajudar financeiramente a sua empresa!
+            </p>
+          </div>
+          <div>
+            <div>
+              <p>Número de lotes que são transportados por mês:</p>
+              <input id="txtNumLotes" type="text" placeholder="Número de lotes">
+            </div>
+            <div>
+              <p>Quanto a empresa gasta com transporte de lotes por mês:</p>
+              <input id="txtGastos" type="text" placeholder="Gastos com transporte">
+            </div>
+            <div>
+              <p>Porcentagem de lotes que são perdidos por problemas no transporte por mês:</p>
+              <input id="txtPerda" type="text" placeholder="% de lotes perdidos">
+            </div>
+            <br>
+            <div>
+              <button onclick="calcularIndenizacao()">Calcular</button>
+            </div>
+          </div>
+          <div id="divMensagem" style="display: none;">
+            <p>
+              Atualmente a empresa gasta <b id="bGastos" style="color: red;"></b> com transporte
+              de medicamentos. Esse transporte apenas garante que o lote vai chegar a distribuidora,
+              porém ele não garante que transformações químicas não ocorreram com o medicamento e o
+              tornaram impróprio.
+            </p>
+            <p>
+              Segundo os dados informados, <b id="bLotesPerdidos"></b> lotes são perdidos por
+              problemas no transporte e os outros <u id="uLotesParaVenda"></u> lotes serão vendidos
+              para consumidores.
+            </p>
+            <p>
+              Se considerarmos que desses lotes que vão para a venda, 10% sofreram transformação
+              química por temperaturas inadequadas, ou seja, <b id="bLotesTransformados"></b>; esses
+              lotes são possíveis causadores de intoxicação medicamentosa, algo que põe em risco a
+              credibilidade da empresa e a vida de inúmeras pessoas.
+            </p>
+            <p>
+              Então, fica a pergunta, a empresa realmente acha que vale a pena pagar por um
+              transporte te coloca num risco de receber um processo com indenização por volta de
+              R$ 182.000,00? <br>
+              Nesse cenário, se todos os lotes transformados resultassem em processos de intoxicação
+              medicamentosa, a empresa teria de pagar
+              <b style="color: red;"><u id="uIndenizacao"></u></b> em indenizações.
+            </p>
+            <p>
+              Com a nossa solução, você terá monitoramento total da temperatura do lote durante
+              o transporte, podendo assim evitar que lotes que sofreram transformações químicas
+              cheguem aos consumidores, e estrague a saúde de seus clientes e de sua marca.
+            </p>
+          </div>
+          <br>
+        </div>
+      </div>
+      <div class="lucro_div" id="lucro_div" style="display: none;">
+        <h4>Calculadora Lucro</h4>
+        <h4>Qual o tipo de medicamento que você está transportando?</h4>
+        <button onclick="solido()">Sólido</button>
+        <button onclick="liquido()">Líquido</button>
+
+        <div id="solido_div" style="display: none;">
+          <h4>Medicamentos sólidos</h4>
+          <span>Quantos lotes você comprou?</span>
+          <input type="text" placeholder="Lotes comprados: " id="lotesComprados_solido">
+          <br><br>
+          <span>Qual o valor dos lotes?</span>
+          <input type="text" placeholder="Valor dos lotes: " id="valorLotes_solido">
+          <br><br>
+          <span>Quantos lotes você perdeu na viagem?</span>
+          <input type="text" placeholder="Lotes perdidos: " id="lotesPerdidos_solido">
+          <br><br>
+          <span>Por quanto você vende o lote?</span>
+          <input type="text" placeholder="Valor da venda dos lotes: " id="vendaLotes_solido">
+          <button onclick="calcular()">Calcular</button>
+          <br><br>
+
+          <div id="content_solido"></div>
+        </div>
+
+        <div id="liquido_div" style="display: none;">
+          <h4>Qual o tipo de medicamento líquido?</h4>
+          <button onclick="vacina()">Vacina</button>
+          <button onclick="analgesico()">Analgésico</button>
+          <div id="vacina_div" style="display: none;">
+            <h4>Vacinas</h4>
+            <span>Quantos lotes você comprou?</span>
+            <input type="text" placeholder="Lotes comprados: " id="lotesComprados_vacina">
+            <br><br>
+            <span>Qual o valor dos lotes?</span>
+            <input type="text" placeholder="Valor dos lotes: " id="valorLotes_vacina">
+            <br><br>
+            <span>Quantos lotes você perdeu na viagem?</span>
+            <input type="text" placeholder="Lotes perdidos: " id="lotesPerdidos_vacina">
+            <br><br>
+            <span>Por quanto você vende o lote?</span>
+            <input type="text" placeholder="Valor da venda dos lotes: " id="vendaLotes_vacina">
+            <button onclick="calcularVacina()">Calcular</button>
+            <br><br>
+
+            <div id="content_vacina"></div>
+          </div>
+
+          <div id="analgesico_div" style="display: none;">
+            <h4>Analgésico líquido</h4>
+            <span>Quantos lotes você comprou?</span>
+            <input type="text" placeholder="Lotes comprados: " id="lotesComprados_analgesico">
+            <br><br>
+            <span>Qual o valor dos lotes?</span>
+            <input type="text" placeholder="Valor dos lotes: " id="valorLotes_analgesico">
+            <br><br>
+            <span>Quantos lotes você perdeu na viagem?</span>
+            <input type="text" placeholder="Lotes perdidos: " id="lotesPerdidos_analgesico">
+            <br><br>
+            <span>Por quanto você vende o lote?</span>
+            <input type="text" placeholder="Valor da venda dos lotes: " id="vendaLotes_analgesico">
+            <button onclick="calcularLiquido()">Calcular</button>
+            <br><br>
+
+            <div id="content_analgesico"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
+
 </html>
 <script>
-    function calcularFrete(){
-        var eixo = eixoIn.value;
-        var variacaoCCD = ((0.5618*eixo)+1.922); //Valor referente o uso de cada eixo do caminhão
-        var cc = 116.05 // Valor de carga e descarga de cargas frigorificadas ou aquecidas
-        var dist = distIn.value;
-        var sistema =  750; // Valor da implementação do sistema no eixo
-        var pisoMinimo = (dist*variacaoCCD)+cc;
-        var frete = pisoMinimo+sistema;
-        bloco.innerHTML = `<h4>Sua carga com veículo de ${eixo} eixo(s) monitorada pelo sistema <i><b style='color:#004aad;'>TempControl</b></i> (escolha que anualmente retorna no mínimo 15% de todo seu faturamento total), percorrendo ${dist} KM corresponde ao piso mínimo do frete no valor de: <b style='color:#004aad;'>R$: ${frete}</b></h4>`
-        bloco.innerHTML += `<h5> Valores Baseados Na Tabela de Fretes da ANTT (Agência Nacional de Transportes Terrestres)</h5>`;
-    }
+  function frete(){
+    frete_div.style.display = 'block';
+    indenizacao_div.style.display = 'none';
+    lucro_div.style.display = 'none';
+  }
+
+  function indenizacao(){
+    frete_div.style.display = 'none';
+    indenizacao_div.style.display = 'block';
+    lucro_div.style.display = 'none';
+  }
+
+  function lucro(){
+    frete_div.style.display = 'none';
+    indenizacao_div.style.display = 'none';
+    lucro_div.style.display = 'block';
+  }
+
+  function calcularFrete() {
+    var eixo = eixoIn.value;
+    var variacaoCCD = ((0.5618 * eixo) + 1.922); //Valor referente o uso de cada eixo do caminhão
+    var cc = 116.05 // Valor de carga e descarga de cargas frigorificadas ou aquecidas
+    var dist = distIn.value;
+    var sistema = 750; // Valor da implementação do sistema no eixo
+    var pisoMinimo = (dist * variacaoCCD) + cc;
+    var frete = pisoMinimo + sistema;
+    bloco.innerHTML =
+      `<h4>Sua carga com veículo de ${eixo} eixo(s) monitorada pelo sistema <i><b style='color:#004aad;'>TempControl</b></i> (escolha que anualmente retorna no mínimo 15% de todo seu faturamento total), percorrendo ${dist} KM corresponde ao piso mínimo do frete no valor de: <b style='color:#004aad;'>R$: ${frete}</b></h4>`
+    bloco.innerHTML +=
+      `<h4> Valores Baseados Na Tabela de Fretes da ANTT (Agência Nac4onal de Transportes Terrestres)</h5>`;
+  }
+
+  function calcularIndenizacao() {
+    var numLotes = Number(txtNumLotes.value);
+    var gastos = Number(txtGastos.value);
+    var perda = (Number(txtPerda.value)) / 100;
+
+    // Representa a porcentagem de lotes que chegaram no destino, 
+    // ou seja, não apresentaram problemas no transporte
+    var lotesOk = 1 - perda;
+
+    // Representa os lotes que vão ser vendidos
+    var lotesParaVenda = numLotes * lotesOk;
+    var lotesPerdidos = numLotes * perda;
+
+    /* 
+      Representa os lotes que sofreram transformação química e podem causar
+      problemas, mas estão sendo vendidos porque não houve um controle adequado
+
+      Partindo da premissa que 10% dos lotes sofrem alteração química que não
+      são detectadas pela falta de controle adequado
+    */
+    var lotesTransformados = lotesParaVenda * 0.1;
+
+    /*
+      Representa o total a ser pago com indenizações se todos os lotes que causaram
+      intoxicação medicamentosa acabaram em processo.
+
+      Partindo da premissa que todos os lotes transformados causaram intoxicação 
+      medicamentosa.
+    */
+    var totalIndenizacoes = lotesTransformados * 182000;
+
+    bGastos.innerHTML = `R$ ${gastos}`;
+    bLotesPerdidos.innerHTML = `${lotesPerdidos}`;
+    uLotesParaVenda.innerHTML = `${lotesParaVenda}`;
+    bLotesTransformados.innerHTML = `${lotesTransformados}`;
+    uIndenizacao.innerHTML = `R$ ${totalIndenizacoes}`;
+
+    divMensagem.style.display = 'block';
+  }
+
+  function solido() {
+    solido_div.style.display = 'block';
+    liquido_div.style.display = 'none';
+    vacina_div.style.display = 'none';
+    analgesico_div.style.display = 'none';
+  }
+
+  function liquido() {
+    solido_div.style.display = 'none';
+    liquido_div.style.display = 'block';
+    vacina_div.style.display = 'none';
+    analgesico_div.style.display = 'none';
+  }
+
+  function vacina() {
+    solido_div.style.display = 'none';
+    liquido_div.style.display = 'block';
+    vacina_div.style.display = 'block';
+    analgesico_div.style.display = 'none';
+  }
+
+  function analgesico() {
+    solido_div.style.display = 'none';
+    liquido_div.style.display = 'block';
+    vacina_div.style.display = 'none';
+    analgesico_div.style.display = 'block';
+  }
+
+  function calcular() {
+    var qtdLotes = lotesComprados_solido.value;
+    var valorLote = valorLotes_solido.value;
+    var perdaLote = lotesPerdidos_solido.value;
+    var vendaLote = vendaLotes_solido.value;
+
+    var valorTotalLotes = ((qtdLotes*valorLote) - (perdaLote*valorLote));
+    var receita = qtdLotes*valorLote;
+    var valorVenda = (qtdLotes-perdaLote) * vendaLote;
+
+    valorTotalLotes = valorVenda - valorTotalLotes;
+
+    var porcentagemLucro = valorTotalLotes/receita;
+    porcentagemLucro = porcentagemLucro*100; 
+
+    var lucroSemPerda = qtdLotes * (vendaLote - valorLote);
+
+    var porcentagemLucroPerda = (lucroSemPerda * 100) / valorLote;
+
+
+    /* content_solido.innerHTML = `O seu lucro com a venda do medicamento foi de: <b>R$${valorTotalLotes}</b>, ou seja 
+        você teve um lucro de <b>${porcentagemLucro}%</b> <br> Esse lucro poderia ter sido de: <b>R$${lucroSemPerda}</b>, sendo um
+        lucro de <b>${porcentagemLucroPerda}%</b> se você não tivesse nenhuma perda do medicamento. <br> Aconselhamos que você mantenha esse
+        medicamento em temperatura ambiente, ou seja, de <b>15° a 30°C</b> para que não tenha perda de medicamento.`; */
+
+     content_solido.innerHTML = `${valorTotalLotes} e ${valorVenda} e ${porcentagemLucro}`;   
+  }
+
+  function calcularVacina() {
+    var qtdLotes = lotesComprados_vacina.value;
+    var valorLote = valorLotes_vacina.value;
+    var perdaLote = lotesPerdidos_vacina.value;
+    var vendaLote = vendaLotes_vacina.value;
+
+    var valorTotalLotes = (qtdLotes - perdaLote) * (vendaLote - valorLote);
+
+    var porcentagemLucro = (valorTotalLotes * 100) / valorLote;
+
+    var lucroSemPerda = qtdLotes * (vendaLote - valorLote);
+
+    var porcentagemLucroPerda = (lucroSemPerda * 100) / valorLote;
+
+
+    content_vacina.innerHTML = `O seu lucro com a venda da vacina foi de: <b>R$${valorTotalLotes}</b>, ou seja 
+        você teve um lucro de <b>${porcentagemLucro}%</b> <br> Esse lucro poderia ter sido de: <b>R$${lucroSemPerda}</b>, sendo um
+        lucro de <b>${porcentagemLucroPerda}%</b> se você não tivesse nenhuma perda do medicamento. <br> Aconselhamos que você mantenha à
+        vacina uma temperatura de <b>2° a 8°C</b> para que não tenha perda de vacina.`;
+  }
+
+  function calcularLiquido() {
+    var qtdLotes = lotesComprados_analgesico.value;
+    var valorLote = valorLotes_analgesico.value;
+    var perdaLote = lotesPerdidos_analgesico.value;
+    var vendaLote = vendaLotes_analgesico.value;
+
+    var valorTotalLotes = (qtdLotes - perdaLote) * (vendaLote - valorLote);
+
+    var porcentagemLucro = (valorTotalLotes * 100) / valorLote;
+
+    var lucroSemPerda = qtdLotes * (vendaLote - valorLote);
+
+    var porcentagemLucroPerda = (lucroSemPerda * 100) / valorLote;
+
+
+    content_analgesico.innerHTML = `O seu lucro com a venda do medicamento foi de: <b>R$${valorTotalLotes}</b>, ou seja 
+        você teve um lucro de <b>${porcentagemLucro}%</b> <br> Esse lucro poderia ter sido de: <b>R$${lucroSemPerda}</b>, sendo um
+        lucro de <b>${porcentagemLucroPerda}%</b> se você não tivesse nenhuma perda do medicamento. <br> Aconselhamos que você mantenha esse
+        medicamento em temperatura ambiente, ou seja, de <b>15° a 30°C</b> para que não tenha perda de medicamento.`;
+  }
 </script>
