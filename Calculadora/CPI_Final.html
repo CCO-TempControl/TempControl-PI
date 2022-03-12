@@ -27,7 +27,7 @@
     }
 
     .logo {
-      width: 20%;
+      width: 25%;
       height: 100%;
       float: left;
     }
@@ -61,7 +61,7 @@
 <body>
   <div class="container">
     <div class="menu">
-      <img src="TEMPCONTROL.png" alt="" class="logo">
+      <img src="logo.png" alt="" class="logo">
       <div class="menu-options">
         <br><br>
         <u class="options" onclick="frete()">Frete</u>
@@ -220,19 +220,19 @@
 
 </html>
 <script>
-  function frete(){
+  function frete() {
     frete_div.style.display = 'block';
     indenizacao_div.style.display = 'none';
     lucro_div.style.display = 'none';
   }
 
-  function indenizacao(){
+  function indenizacao() {
     frete_div.style.display = 'none';
     indenizacao_div.style.display = 'block';
     lucro_div.style.display = 'none';
   }
 
-  function lucro(){
+  function lucro() {
     frete_div.style.display = 'none';
     indenizacao_div.style.display = 'none';
     lucro_div.style.display = 'block';
@@ -326,26 +326,24 @@
     var perdaLote = lotesPerdidos_solido.value;
     var vendaLote = vendaLotes_solido.value;
 
-    var valorTotalLotes = ((qtdLotes*valorLote) - (perdaLote*valorLote));
-    var receita = qtdLotes*valorLote;
-    var valorVenda = (qtdLotes-perdaLote) * vendaLote;
+    var valorTotalLotes = ((qtdLotes * valorLote) - (perdaLote * valorLote));
+    var receita = qtdLotes * valorLote;
+    var valorVenda = (qtdLotes - perdaLote) * vendaLote;
 
     valorTotalLotes = valorVenda - valorTotalLotes;
 
-    var porcentagemLucro = valorTotalLotes/receita;
-    porcentagemLucro = porcentagemLucro*100; 
+    var porcentagemLucro = (valorTotalLotes / receita) * 100;
 
     var lucroSemPerda = qtdLotes * (vendaLote - valorLote);
 
-    var porcentagemLucroPerda = (lucroSemPerda * 100) / valorLote;
+    var porcentagemLucroPerda = (lucroSemPerda / receita) * 100;
 
 
-    /* content_solido.innerHTML = `O seu lucro com a venda do medicamento foi de: <b>R$${valorTotalLotes}</b>, ou seja 
+    content_solido.innerHTML = `O seu lucro com a venda do medicamento foi de: <b>R$${valorTotalLotes}</b>, ou seja 
         você teve um lucro de <b>${porcentagemLucro}%</b> <br> Esse lucro poderia ter sido de: <b>R$${lucroSemPerda}</b>, sendo um
         lucro de <b>${porcentagemLucroPerda}%</b> se você não tivesse nenhuma perda do medicamento. <br> Aconselhamos que você mantenha esse
-        medicamento em temperatura ambiente, ou seja, de <b>15° a 30°C</b> para que não tenha perda de medicamento.`; */
+        medicamento em temperatura ambiente, ou seja, de <b>15° a 30°C</b> para que não tenha perda de medicamento.`;
 
-     content_solido.innerHTML = `${valorTotalLotes} e ${valorVenda} e ${porcentagemLucro}`;   
   }
 
   function calcularVacina() {
@@ -354,13 +352,17 @@
     var perdaLote = lotesPerdidos_vacina.value;
     var vendaLote = vendaLotes_vacina.value;
 
-    var valorTotalLotes = (qtdLotes - perdaLote) * (vendaLote - valorLote);
+    var valorTotalLotes = ((qtdLotes * valorLote) - (perdaLote * valorLote));
+    var receita = qtdLotes * valorLote;
+    var valorVenda = (qtdLotes - perdaLote) * vendaLote;
 
-    var porcentagemLucro = (valorTotalLotes * 100) / valorLote;
+    valorTotalLotes = valorVenda - valorTotalLotes;
+
+    var porcentagemLucro = (valorTotalLotes / receita) * 100;
 
     var lucroSemPerda = qtdLotes * (vendaLote - valorLote);
 
-    var porcentagemLucroPerda = (lucroSemPerda * 100) / valorLote;
+    var porcentagemLucroPerda = (lucroSemPerda / receita) * 100;
 
 
     content_vacina.innerHTML = `O seu lucro com a venda da vacina foi de: <b>R$${valorTotalLotes}</b>, ou seja 
@@ -375,13 +377,17 @@
     var perdaLote = lotesPerdidos_analgesico.value;
     var vendaLote = vendaLotes_analgesico.value;
 
-    var valorTotalLotes = (qtdLotes - perdaLote) * (vendaLote - valorLote);
+    var valorTotalLotes = ((qtdLotes * valorLote) - (perdaLote * valorLote));
+    var receita = qtdLotes * valorLote;
+    var valorVenda = (qtdLotes - perdaLote) * vendaLote;
 
-    var porcentagemLucro = (valorTotalLotes * 100) / valorLote;
+    valorTotalLotes = valorVenda - valorTotalLotes;
+
+    var porcentagemLucro = (valorTotalLotes / receita) * 100;
 
     var lucroSemPerda = qtdLotes * (vendaLote - valorLote);
 
-    var porcentagemLucroPerda = (lucroSemPerda * 100) / valorLote;
+    var porcentagemLucroPerda = (lucroSemPerda / receita) * 100;
 
 
     content_analgesico.innerHTML = `O seu lucro com a venda do medicamento foi de: <b>R$${valorTotalLotes}</b>, ou seja 
