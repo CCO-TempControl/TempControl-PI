@@ -247,9 +247,9 @@
     var pisoMinimo = (dist * variacaoCCD) + cc;
     var frete = pisoMinimo + sistema;
     bloco.innerHTML =
-      `<h4>Sua carga com veículo de ${eixo} eixo(s) monitorada pelo sistema <i><b style='color:#004aad;'>TempControl</b></i> (escolha que anualmente retorna no mínimo 15% de todo seu faturamento total), percorrendo ${dist} KM corresponde ao piso mínimo do frete no valor de: <b style='color:#004aad;'>R$: ${frete}</b></h4>`
+      `<br><span>Sua carga com veículo de ${eixo} eixo(s) monitorada pelo sistema <i><b style='color:#004aad;'>TempControl</b></i> (escolha que anualmente retorna no mínimo 15% de todo seu faturamento total), percorrendo ${dist} KM corresponde ao piso mínimo do frete no valor de: <b style='color:#004aad;'>R$: ${frete}</b></span>`
     bloco.innerHTML +=
-      `<h4> Valores Baseados Na Tabela de Fretes da ANTT (Agência Nac4onal de Transportes Terrestres)</h5>`;
+      `<br><span> Valores Baseados Na Tabela de Fretes da ANTT (Agência Nacional de Transportes Terrestres)</span>`;
   }
 
   function calcularIndenizacao() {
