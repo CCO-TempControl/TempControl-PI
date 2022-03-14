@@ -65,8 +65,7 @@
       <div class="menu-options">
         <br><br>
         <u class="options" onclick="frete()">Frete</u>
-        <u class="options" onclick="indenizacao()">Indenização</u>
-        <u class="options" onclick="lucro()">Lucro</u>
+        <u class="options" onclick="lucro()">Lucro/Indenização</u>
       </div>
     </div>
     <div class="content">
@@ -82,70 +81,7 @@
         <button onClick="calcularFrete()">Verificar Valor</button>
         <br>
         <div id="bloco"></div>
-      </div>
-      <div id="indenizacao_div" class="indenizacao_div" style="display: none;">
-        <div>
-          <div>
-            <h4>Calculadora de Indenizações</h4>
-            <p>
-              Nessa calculadora, a empresa informará alguns dados sobre os lotes de
-              medicamentos e vacinas que a empresa trabalha e com isso diremos como
-              o nosso sistema pode ajudar financeiramente a sua empresa!
-            </p>
-          </div>
-          <div>
-            <div>
-              <p>Número de lotes que são transportados por mês:</p>
-              <input id="txtNumLotes" type="text" placeholder="Número de lotes">
-            </div>
-            <div>
-              <p>Quanto a empresa gasta com transporte de lotes por mês:</p>
-              <input id="txtGastos" type="text" placeholder="Gastos com transporte">
-            </div>
-            <div>
-              <p>Porcentagem de lotes que são perdidos por problemas no transporte por mês:</p>
-              <input id="txtPerda" type="text" placeholder="% de lotes perdidos">
-            </div>
-            <br>
-            <div>
-              <button onclick="calcularIndenizacao()">Calcular</button>
-            </div>
-          </div>
-          <div id="divMensagem" style="display: none;">
-            <p>
-              Atualmente a empresa gasta <b id="bGastos" style="color: red;"></b> com transporte
-              de medicamentos. Esse transporte apenas garante que o lote vai chegar a distribuidora,
-              porém ele não garante que transformações químicas não ocorreram com o medicamento e o
-              tornaram impróprio.
-            </p>
-            <p>
-              Segundo os dados informados, <b id="bLotesPerdidos"></b> lotes são perdidos por
-              problemas no transporte e os outros <u id="uLotesParaVenda"></u> lotes serão vendidos
-              para consumidores.
-            </p>
-            <p>
-              Se considerarmos que desses lotes que vão para a venda, 10% sofreram transformação
-              química por temperaturas inadequadas, ou seja, <b id="bLotesTransformados"></b>; esses
-              lotes são possíveis causadores de intoxicação medicamentosa, algo que põe em risco a
-              credibilidade da empresa e a vida de inúmeras pessoas.
-            </p>
-            <p>
-              Então, fica a pergunta, a empresa realmente acha que vale a pena pagar por um
-              transporte te coloca num risco de receber um processo com indenização por volta de
-              R$ 182.000,00? <br>
-              Nesse cenário, se todos os lotes transformados resultassem em processos de intoxicação
-              medicamentosa, a empresa teria de pagar
-              <b style="color: red;"><u id="uIndenizacao"></u></b> em indenizações.
-            </p>
-            <p>
-              Com a nossa solução, você terá monitoramento total da temperatura do lote durante
-              o transporte, podendo assim evitar que lotes que sofreram transformações químicas
-              cheguem aos consumidores, e estrague a saúde de seus clientes e de sua marca.
-            </p>
-          </div>
-          <br>
-        </div>
-      </div>
+      </div>      
       <div class="lucro_div" id="lucro_div" style="display: none;">
         <h4>Calculadora Lucro</h4>
         <h4>Qual o tipo de medicamento que você está transportando?</h4>
@@ -165,7 +101,7 @@
           <br><br>
           <span>Por quanto você vende o lote?</span>
           <input type="text" placeholder="Valor da venda dos lotes: " id="vendaLotes_solido">
-          <button onclick="calcular()">Calcular</button>
+          <button onclick="calcularSolido()">Calcular</button>
           <br><br>
 
           <div id="content_solido"></div>
@@ -192,6 +128,7 @@
             <br><br>
 
             <div id="content_vacina"></div>
+            
           </div>
 
           <div id="analgesico_div" style="display: none;">
@@ -210,7 +147,7 @@
             <button onclick="calcularLiquido()">Calcular</button>
             <br><br>
 
-            <div id="content_analgesico"></div>
+            <div id="content_analgesico"></div> 
           </div>
         </div>
       </div>
@@ -222,19 +159,11 @@
 <script>
   function frete() {
     frete_div.style.display = 'block';
-    indenizacao_div.style.display = 'none';
-    lucro_div.style.display = 'none';
-  }
-
-  function indenizacao() {
-    frete_div.style.display = 'none';
-    indenizacao_div.style.display = 'block';
     lucro_div.style.display = 'none';
   }
 
   function lucro() {
     frete_div.style.display = 'none';
-    indenizacao_div.style.display = 'none';
     lucro_div.style.display = 'block';
   }
 
@@ -250,46 +179,6 @@
       `<br><span>Sua carga com veículo de ${eixo} eixo(s) monitorada pelo sistema <i><b style='color:#004aad;'>TempControl</b></i> (escolha que anualmente retorna no mínimo 15% de todo seu faturamento total), percorrendo ${dist} KM corresponde ao piso mínimo do frete no valor de: <b style='color:#004aad;'>R$: ${frete}</b></span>`
     bloco.innerHTML +=
       `<br><span> Valores Baseados Na Tabela de Fretes da ANTT (Agência Nacional de Transportes Terrestres)</span>`;
-  }
-
-  function calcularIndenizacao() {
-    var numLotes = Number(txtNumLotes.value);
-    var gastos = Number(txtGastos.value);
-    var perda = (Number(txtPerda.value)) / 100;
-
-    // Representa a porcentagem de lotes que chegaram no destino, 
-    // ou seja, não apresentaram problemas no transporte
-    var lotesOk = 1 - perda;
-
-    // Representa os lotes que vão ser vendidos
-    var lotesParaVenda = numLotes * lotesOk;
-    var lotesPerdidos = numLotes * perda;
-
-    /* 
-      Representa os lotes que sofreram transformação química e podem causar
-      problemas, mas estão sendo vendidos porque não houve um controle adequado
-
-      Partindo da premissa que 10% dos lotes sofrem alteração química que não
-      são detectadas pela falta de controle adequado
-    */
-    var lotesTransformados = lotesParaVenda * 0.1;
-
-    /*
-      Representa o total a ser pago com indenizações se todos os lotes que causaram
-      intoxicação medicamentosa acabaram em processo.
-
-      Partindo da premissa que todos os lotes transformados causaram intoxicação 
-      medicamentosa.
-    */
-    var totalIndenizacoes = lotesTransformados * 182000;
-
-    bGastos.innerHTML = `R$ ${gastos}`;
-    bLotesPerdidos.innerHTML = `${lotesPerdidos}`;
-    uLotesParaVenda.innerHTML = `${lotesParaVenda}`;
-    bLotesTransformados.innerHTML = `${lotesTransformados}`;
-    uIndenizacao.innerHTML = `R$ ${totalIndenizacoes}`;
-
-    divMensagem.style.display = 'block';
   }
 
   function solido() {
@@ -320,11 +209,31 @@
     analgesico_div.style.display = 'block';
   }
 
-  function calcular() {
+  function calcularSolido() {
     var qtdLotes = lotesComprados_solido.value;
     var valorLote = valorLotes_solido.value;
     var perdaLote = lotesPerdidos_solido.value;
     var vendaLote = vendaLotes_solido.value;
+
+    var lotesParaVenda = qtdLotes - perdaLote;
+
+    /* 
+      Representa os lotes que sofreram transformação química e podem causar
+      problemas, mas estão sendo vendidos porque não houve um controle adequado
+
+      Partindo da premissa que 10% dos lotes sofrem alteração química que não
+      são detectadas pela falta de controle adequado
+    */
+    var lotesTransformados = lotesParaVenda * 0.1;
+
+    /*
+      Representa o total a ser pago com indenizações se todos os lotes que causaram
+      intoxicação medicamentosa acabaram em processo.
+
+      Partindo da premissa que todos os lotes transformados causaram intoxicação 
+      medicamentosa.
+    */
+    var totalIndenizacoes = lotesTransformados * 182000;
 
     var valorTotalLotes = ((qtdLotes * valorLote) - (perdaLote * valorLote));
     var receita = qtdLotes * valorLote;
@@ -338,12 +247,12 @@
 
     var porcentagemLucroPerda = (lucroSemPerda / receita) * 100;
 
-
     content_solido.innerHTML = `O seu lucro com a venda do medicamento foi de: <b>R$${valorTotalLotes}</b>, ou seja 
         você teve um lucro de <b>${porcentagemLucro}%</b> <br> Esse lucro poderia ter sido de: <b>R$${lucroSemPerda}</b>, sendo um
-        lucro de <b>${porcentagemLucroPerda}%</b> se você não tivesse nenhuma perda do medicamento. <br> Aconselhamos que você mantenha esse
-        medicamento em temperatura ambiente, ou seja, de <b>15° a 30°C</b> para que não tenha perda de medicamento.`;
-
+        lucro de <b>${porcentagemLucroPerda}%</b> se você não tivesse nenhuma perda do medicamento. <br> Caso 10% dos lotes que 
+        foram para venda sofram transformação química, você corre o risco de pagar <b>R$${totalIndenizacoes}</b> em indenizações por 
+        intoxicação medicamentosa. <br> Aconselhamos que você mantenha esse medicamento em temperatura ambiente, ou seja, 
+        de <b>15° a 30°C</b> para que não tenha perda de medicamento.`;
   }
 
   function calcularVacina() {
@@ -351,6 +260,10 @@
     var valorLote = valorLotes_vacina.value;
     var perdaLote = lotesPerdidos_vacina.value;
     var vendaLote = vendaLotes_vacina.value;
+
+    var lotesParaVenda = qtdLotes - perdaLote;
+    var lotesTransformados = lotesParaVenda * 0.1;
+    var totalIndenizacoes = lotesTransformados * 182000;
 
     var valorTotalLotes = ((qtdLotes * valorLote) - (perdaLote * valorLote));
     var receita = qtdLotes * valorLote;
@@ -367,8 +280,10 @@
 
     content_vacina.innerHTML = `O seu lucro com a venda da vacina foi de: <b>R$${valorTotalLotes}</b>, ou seja 
         você teve um lucro de <b>${porcentagemLucro}%</b> <br> Esse lucro poderia ter sido de: <b>R$${lucroSemPerda}</b>, sendo um
-        lucro de <b>${porcentagemLucroPerda}%</b> se você não tivesse nenhuma perda do medicamento. <br> Aconselhamos que você mantenha à
-        vacina uma temperatura de <b>2° a 8°C</b> para que não tenha perda de vacina.`;
+        lucro de <b>${porcentagemLucroPerda}%</b> se você não tivesse nenhuma perda do medicamento. <br> Caso 10% dos lotes que 
+        foram para venda sofram transformação química, você corre o risco de pagar <b>R$${totalIndenizacoes}</b> em indenizações por 
+        intoxicação medicamentosa. <br> Aconselhamos que você mantenha à vacina uma temperatura de <b>2° a 8°C</b> para que não tenha 
+        perda de vacina.`;
   }
 
   function calcularLiquido() {
@@ -376,6 +291,10 @@
     var valorLote = valorLotes_analgesico.value;
     var perdaLote = lotesPerdidos_analgesico.value;
     var vendaLote = vendaLotes_analgesico.value;
+
+    var lotesParaVenda = qtdLotes - perdaLote;
+    var lotesTransformados = lotesParaVenda * 0.1;
+    var totalIndenizacoes = lotesTransformados * 182000;
 
     var valorTotalLotes = ((qtdLotes * valorLote) - (perdaLote * valorLote));
     var receita = qtdLotes * valorLote;
@@ -392,7 +311,9 @@
 
     content_analgesico.innerHTML = `O seu lucro com a venda do medicamento foi de: <b>R$${valorTotalLotes}</b>, ou seja 
         você teve um lucro de <b>${porcentagemLucro}%</b> <br> Esse lucro poderia ter sido de: <b>R$${lucroSemPerda}</b>, sendo um
-        lucro de <b>${porcentagemLucroPerda}%</b> se você não tivesse nenhuma perda do medicamento. <br> Aconselhamos que você mantenha esse
-        medicamento em temperatura ambiente, ou seja, de <b>15° a 30°C</b> para que não tenha perda de medicamento.`;
+        lucro de <b>${porcentagemLucroPerda}%</b> se você não tivesse nenhuma perda do medicamento. <br> Caso 10% dos lotes que 
+        foram para venda sofram transformação química, você corre o risco de pagar <b>R$${totalIndenizacoes}</b> em indenizações por 
+        intoxicação medicamentosa. <br> Aconselhamos que você mantenha esse medicamento em temperatura ambiente, ou seja, de 
+        <b>15° a 30°C</b> para que não tenha perda de medicamento.`;
   }
 </script>
