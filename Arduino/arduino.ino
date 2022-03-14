@@ -31,7 +31,7 @@ void loop(){
   
   //tipo variavel nome variavel = valor variavel (estrutura)
   float dht11_umidade = dht.readHumidity(); // comando que vem da biblioteca importada (INCLUDE) , que le a umidade 
-  float dht11_temperatura = dht.readTemperature();//comando que vem da biblioteca importada (INCLUDE) , que le a umidade 
+  float dht11_temperatura = dht.readTemperature();//comando que vem da biblioteca importada (INCLUDE) , que le a temperatura 
   
   Serial.println((String)"umidade: " + dht11_umidade);
   Serial.println((String)"temperatura: " +dht11_temperatura);
