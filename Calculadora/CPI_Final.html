@@ -245,17 +245,17 @@
     */
     var totalIndenizacoes = lotesTransformados * 182000;
 
-    var valorTotalLotes = ((qtdLotes * valorLote) - (perdaLote * valorLote));
-    var receita = qtdLotes * valorLote;
-    var valorVenda = (qtdLotes - perdaLote) * vendaLote;
+    var valorTotalLotes = ((qtdLotes * valorLote) - (perdaLote * valorLote)); // pegando o valor dos lotes perdidos.
+    var receita = qtdLotes * valorLote; // o total que você pode gastar
+    var valorVenda = (qtdLotes - perdaLote) * vendaLote; // o valor da venda do lote com as perdas
 
-    valorTotalLotes = valorVenda - valorTotalLotes;
+    valorTotalLotes = valorVenda - valorTotalLotes; // fazendo o calculo do valor da venda com os lotes perdidos, quanto você ganhou com a venda
 
-    var porcentagemLucro = (valorTotalLotes / receita) * 100;
+    var porcentagemLucro = (valorTotalLotes / receita) * 100; // fazendo o calculo de porcentagem, %.
 
-    var lucroSemPerda = qtdLotes * (vendaLote - valorLote);
+    var lucroSemPerda = qtdLotes * (vendaLote - valorLote); // aqui e o calculo da venda sem a perda dos lotes
 
-    var porcentagemLucroPerda = (lucroSemPerda / receita) * 100;
+    var porcentagemLucroPerda = (lucroSemPerda / receita) * 100; // porcentagem sem a perda.
 
     content_solido.innerHTML = `O seu lucro com a venda do medicamento foi de: <b>R$${valorTotalLotes}</b>, ou seja 
         você teve um lucro de <b>${porcentagemLucro}%</b> <br> Esse lucro poderia ter sido de: <b>R$${lucroSemPerda}</b>, sendo um
