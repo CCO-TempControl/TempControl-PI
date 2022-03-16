@@ -39,8 +39,8 @@
     }
 
     .options {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      font-weight: 700;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; /* Define a fonte que vai ser usada */
+      font-weight: 700; /* Define a grossura (peso) das fontes */
       color: #004aad;
     }
 
@@ -70,18 +70,21 @@
     </div>
     <div class="content">
       <h3>Olá, é um prazer ter você conosco!</h3>
+
       <div class="frete_div" id="frete_div" style="display: none;">
         <h4>Calculadora de Frete</h4>
         <p>Por favor, preencha os dados do formulário abaixo para conferir o preço para realizar o transporte
           rodoviários dos medicamentos termolábeis utilizando nosso sistema de verificação de umidade e temperatura.</p>
-        <p>Insira a Distancia Percorrida em KM (<i>Entre o Remetente e o Destinatário</i>): </p><input id="distIn"
-          type="text" placeholder="Ex: 2 ">
-        <p>Insira o Número de Eixos do Caminhão:</p><input id="eixoIn" type="text" placeholder="Ex: 7 ">
+        <p>Insira a Distancia Percorrida em KM (<i>Entre o Remetente e o Destinatário</i>): </p>
+        <input id="distIn" type="text" placeholder="Ex: 2 ">
+        <p>Insira o Número de Eixos do Caminhão:</p>
+        <input id="eixoIn" type="text" placeholder="Ex: 7 ">
         <br><br>
-        <button onClick="calcularFrete()">Verificar Valor</button>
+        <button onclick="calcularFrete()">Verificar Valor</button>
         <br>
         <div id="bloco"></div>
       </div>      
+
       <div class="lucro_div" id="lucro_div" style="display: none;">
         <h4>Calculadora Lucro</h4>
         <h4>Qual o tipo de medicamento que você está transportando?</h4>
@@ -169,10 +172,17 @@
 
   function calcularFrete() {
     var eixo = eixoIn.value;
-    var variacaoCCD = ((0.5618 * eixo) + 1.922); //Valor referente o uso de cada eixo do caminhão
-    var cc = 116.05 // Valor de carga e descarga de cargas frigorificadas ou aquecidas
     var dist = distIn.value;
+
+    /*
+      Calcula a variação CCD (Taxa de variação de transporte)
+      1.922 é um valor fixo inicial, depois a cada eixo do caminhão, é adicionada 0.5618
+    */
+    var variacaoCCD = ((0.5618 * eixo) + 1.922);
+
+    var cc = 116.05; // Valor de carga e descarga de cargas frigorificadas ou aquecidas
     var sistema = 750; // Valor da implementação do sistema no eixo
+
     var pisoMinimo = (dist * variacaoCCD) + cc;
     var frete = pisoMinimo + sistema;
     bloco.innerHTML =
