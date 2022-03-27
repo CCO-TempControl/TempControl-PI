@@ -1,0 +1,36 @@
+/* CSS HEX */
+--cobalt: #074ba8;
+--polar: #eef9fb;
+--picton-blue: #51b0e3;
+--cornflower: #92c2e6;
+--steel-blue: #537db4;
+--sky-blue: #70c4ec;
+--wedgewood: #487498;
+--logan: #acb4cc;
+--mariner: #347cd8;
+
+
+/* SCSS HEX */
+$cobalt: #074ba8;
+$polar: #eef9fb;
+$picton-blue: #51b0e3;
+$cornflower: #92c2e6;
+$steel-blue: #537db4;
+$sky-blue: #70c4ec;
+$wedgewood: #487498;
+$logan: #acb4cc;
+$mariner: #347cd8;
+
+
+/* SCSS RGB */
+--cobalt: rgba(7,75,168,1);
+--polar: rgba(238,249,251,1);
+--picton-blue: rgba(81,176,227,1);
+--cornflower: rgba(146,194,230,1);
+--steel-blue: rgba(83,125,180,1);
+--sky-blue: rgba(112,196,236,1);
+--wedgewood: rgba(72,116,152,1);
+--logan: rgba(172,180,204,1);
+--mariner: rgba(52,124,216,1);
+
+
