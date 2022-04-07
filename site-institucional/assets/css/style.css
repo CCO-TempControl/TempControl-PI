@@ -1,0 +1,433 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #fefefe;
+  font-family: sans-serif;
+}
+
+/* Azul do titulo #0253c4 */
+/* Azul mais claro #4ab2e8 */
+
+.container {
+  width: 80%;
+  margin: auto;
+  display: flex;
+}
+
+
+
+/* EFEITOS */
+::-webkit-scrollbar {
+  width: 2px;
+  background: #FFF;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #0253c4;
+}
+
+/* Header */
+
+.header {
+  width: 100%;
+  border-bottom: 4px solid #0253c4;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #fefefe;
+}
+
+.header .container {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header .container img {
+  height: 100px;
+}
+
+.header .container nav {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 50%;
+}
+
+.header .container nav a {
+  color: #4ab2e8;
+  font-weight: bold;
+  text-decoration: none;
+  padding: 5px;
+}
+
+.header .container nav :hover {
+  border-bottom: 2px solid #4ab2e8;
+}
+
+.header .container nav a.here {
+  color: #0253c4;
+  font-weight: bold;
+  text-decoration: none;
+  padding: 5px;
+}
+
+.header .container nav a.here:hover {
+  border-bottom: 2px solid #0253c4;
+}
+
+/* Banner */
+
+.banner {
+  background-image: url('../img/transporte_medicamentos.jpg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #3C9DCF;
+  width: 100%;
+  height: 510px;
+  margin-top: 100px;
+}
+
+.banner .shadow {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.637);
+  display: flex;
+}
+
+.banner .shadow .container {
+  align-items: center;
+  justify-content: center;
+}
+
+.banner .shadow .container p {
+  font-size: 40px;
+  color:white;
+  width: 30%;
+  text-align: center;
+}
+
+.banner .shadow .container p span {
+  font-weight: bold;
+}
+
+/* Solution */
+
+.solution {
+  background-color: #fefefe;
+  display: flex;
+}
+
+.solution .container {
+  align-items: center;
+  justify-content: center;
+}
+
+.solution .container .organizer {
+  display: flex;
+  flex-direction: column;
+  margin: 50px 0 30px;
+  align-items: center;
+  justify-content: center;
+}
+
+.solution .container .organizer h2 {
+  font-size: 34px;
+  color: #0253c4;
+  margin-top: 10px;
+  margin-bottom: 50px;
+}
+
+.solution .container .organizer a {
+  padding: 20px 50px;
+  margin-top: 25px;
+  background-color: #3C9DCF;
+  color: #f5f5f5;
+  font: 700 20px monospace;
+  border: 0;
+  border-radius: 60px;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+}
+
+.solution .container .organizer .boxes {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.solution .container .organizer .boxes .box {
+  margin-bottom: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 33.33%;
+}
+
+.solution .container .organizer .boxes .box img {
+  height: 100px;
+}
+
+.solution .container .organizer .boxes .box p {
+  text-align: center;
+  font-size: 16px;
+  width: 70%;
+}
+
+.solution .container .organizer .boxes .box h4 {
+  font-size: 18px;
+  color: #0253c4;
+  margin-bottom: 10px;
+}
+
+/* Empresas Parceiras */
+
+.enterprises {
+  background-color: #0253c4;
+}
+
+.enterprises .container .organizer {
+  display: flex;
+  flex-direction: column;
+  margin: 40px 0 60px;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.enterprises .container .organizer h2 {
+  font-size: 34px;
+  color: white;
+}
+
+.enterprises .container .organizer .partners {
+  display: flex;
+  width: 100%;
+  margin-top: 30px;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.enterprises .container .partners img {
+  height: 100px;
+}
+
+/* Footer */
+
+.footer {
+  display: flex;
+  background-color: #fefefe;
+  border-top: 3px solid #0253c4;
+}
+
+.footer .container .organizer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  margin: 40px 0 20px;
+}
+
+.footer .container .organizer p {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 12px;
+}
+
+.footer .container .organizer .sections {
+  display: flex;
+  width: 50%;
+  justify-content: space-between;
+}
+
+.footer .container .organizer .sections .section h4 {
+  font-size: 16px;
+  color: #0253c4;
+  margin-bottom: 8px;
+}
+
+.footer .container .organizer .sections .section ul {
+  list-style: none;
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
+  width: 300px;
+  padding: 0;
+  font-size: 14px;
+}
+
+.footer .container .organizer .sections .section ul li {
+  margin: 2px 0;
+}
+
+/* Diagrama de Visão de Negócio */
+
+.diagram {
+  background-color: #fefefe;
+  display: flex;
+}
+
+.diagram .container {
+  align-items: center;
+  justify-content: center;
+}
+
+.diagram .container img {
+  width: 60%;
+  margin: 10px 0 50px;
+}
+
+/* Caculator */
+
+.alt-banner {
+  background-image: linear-gradient(to bottom right, #0253c4, #3C9DCF, #4ab2e8);
+  display: flex;
+}
+
+.calculator {
+  height: fit-content;
+  margin-top: 104px;
+  background-color: #3C9DCF;
+}
+
+.calculator .container {
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.calculator .container .organizer {
+  display: flex;
+  margin: 30px 0;
+  background-color: #fefefe;
+  border-radius: 20px;
+  width: 80%;
+  height: 80%;
+  align-items: center;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.calculator .container .organizer {
+  display: flex;
+  margin: 30px 0;
+  background-color: #fefefe;
+  border-radius: 20px;
+  width: 80%;
+  height: 80%;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.calculator .container .organizer h2 {
+  font-size: 34px;
+  color: #0253c4;
+  margin: 20px 0 28px;
+}
+
+.calculator .container .organizer .options {
+  display: flex;
+  width: 100%;
+  justify-content: space-evenly;
+}
+
+.calculator .container .organizer .options .btn-calculator {
+  background-color: transparent;
+  border: 0;
+  padding: 2px 10px 6px;
+  border-bottom: 3px solid #4ab2e8;
+  color: #4ab2e8;
+  font-weight: bold;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.calculator .container .organizer .options .selected {
+  border-bottom: 3px solid #0253c4;
+  color: #0253c4;
+}
+
+.calculator-form {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  height: 100%;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+#divRevenue {
+  display: none;
+}
+
+.calculator-form p {
+  font-size: 16px;
+  width: 80%;
+}
+
+.calculator-form .field {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  margin: 8px 0;
+}
+
+.calculator-form .field label {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.calculator-form .field input {
+  font-size: 14px;
+  border-radius: 5px;
+  height: 24px;
+  border: 2px solid #3C9DCF;
+  padding-left: 10px;
+}
+
+.calculator-form .field input:focus {
+  outline: #0253c4;
+  border: 2px solid #0253c4;
+}
+
+.calculator-form button {
+  margin: 20px 0;
+  background-color: #3C9DCF;
+  padding: 10px 30px;
+  border: 0;
+  border-radius: 30px;
+  color: #f5f5f5;
+  font-weight: bold;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.calculator-form .result {
+  display: flex;
+  width: 80%;
+  align-items: center;
+  flex-direction: column;
+  margin-bottom: 50px;
+}
+
+.calculator-form .result p {
+  width: 100%;
+  line-height: 26px;
+  font-size: 18px;
+}
+
+.calculator-form .result p span {
+  font-weight: bold;
+  color: #3C9DCF;
+}
+
+#divResultadoFrete {
+  display: none;
+}
+
+#divResultadoReceita {
+  display: none;
+}

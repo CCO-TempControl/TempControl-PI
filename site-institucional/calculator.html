@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HOME - TempControl</title>
+  <link rel="stylesheet" href="./assets/css/style.css">
+  <link rel="icon" type="image/x-icon" href="./assets/img/Logo.png">
+</head>
+<body>
+  <!-- Header -->
+  <div class="header">
+    <div class="container">
+      <a href="./index.html">
+        <img 
+          src="./assets/img/logo_nome_sembg.png" 
+          alt="TempControl"
+        >
+      </a>      
+      <nav>
+        <a href="">Quem somos</a>
+        <a href="./solution.html">Solução</a>
+        <a class="here" href="">Simulador</a>
+        <a href="./sign-in.html">Login</a>
+        <a href="./sign-up.html">Cadastro</a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Calculator -->
+  <div class="calculator alt-banner">
+    <div class="container">
+      <div class="organizer">
+        <h2>Simulador Financeiro</h2>
+        <div class="options">
+          <button id="btnFreight" class="btn-calculator selected" onclick="frete()">Frete</button>
+          <button id="btnRevenue" class="btn-calculator" onclick="receitaIndenizacao()">Receita/Indenização</button>
+        </div>
+
+        <div id="divFreight" class="calculator-form">
+          <p>
+            Por favor, preencha os dados do formulário abaixo para conferir o preço para realizar o transporte
+            rodoviários dos medicamentos termolábeis utilizando nosso sistema de verificação de umidade e temperatura.
+          </p>
+          <div class="field">
+            <label for="txtDistancia">
+              Insira a Distancia Percorrida em KM (Entre o Remetente e o Destinatário): 
+            </label>
+            <input id="txtDistancia" type="text" placeholder="Ex: 2 ">
+          </div>
+          <div class="field">
+            <label for="txtEixo">
+              Insira o Número de Eixos do Caminhão:
+            </label>
+            <input id="txtEixo" type="text" placeholder="Ex: 7 ">
+          </div>
+          <button onclick="calcularFrete()">Verificar Valor</button>
+
+          <div id="divResultadoFrete" class="result">
+            <p>
+              Sua carga com veículo de <span id="spanEixo" ></span> 
+              monitorada pelo nosos sistema (escolha que anualmente retorna no mínimo 
+              15% de todo seu faturamento total), percorrendo 
+              <span id="spanDist"></span> corresponde ao piso mínimo do frete 
+              no valor de: <span id="spanPisoMinFrete"></span>
+            </p>
+          </div>
+        </div>
+
+        <div id="divRevenue" class="calculator-form">
+          <div class="field">
+            <label for="txtLotesComprados">
+              Quantos lotes você comprou?
+            </label>
+            <input id="txtLotesComprados" type="text" placeholder="Ex: 100">
+          </div>
+          <div class="field">
+            <label for="txtLotesPerdidos">
+              Quantos lotes você perdeu na viagem?
+            </label>
+            <input id="txtLotesPerdidos" type="text" placeholder="Ex: 40">
+          </div>
+          <div class="field">
+            <label for="txtValorLotes">
+              Por quanto você comprou cada lote?
+            </label>
+            <input id="txtValorLotes" type="text" placeholder="Ex: 2">
+          </div>
+          <div class="field">
+            <label for="txtVendaLotes">
+              Por quanto você vendeu cada lote?
+            </label>
+            <input id="txtVendaLotes" type="text" placeholder="Ex: 4">
+          </div>
+          <button onclick="calcularReceita()">Calcular</button>
+
+          <div id="divResultadoReceita" class="result">
+            <p>
+              O seu rendimento com a venda do medicamento foi de: <span id="spanValorTotalLotes"></span>, ou seja 
+              você teve um rendimento de <span id="spanPorcentagemLucro"></span>
+            </p>
+            <p>
+              Esse rendimento poderia ter sido de: <span id="spanLucroSemPerda"></span>, sendo um
+              rendimento de <span id="spanPorcentagemLucroPerda"></span> se você não tivesse nenhuma perda do medicamento.
+            </p>
+            <p>
+              Caso 10% dos lotes que foram para venda sofram transformação química, você corre o risco de pagar 
+              <span id="spanTotalIndenizacoes"></span> em indenizações por intoxicação medicamentosa. 
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="container">
+      <div class="organizer">
+        <div class="sections">
+          <div class="section">
+            <h4>Empresa</h4>
+            <ul>
+              <li>Sobre</li>
+              <li>atendimento@tempcontrol.com</li>
+              <li>+55 (11) 99999-8888</li>
+            </ul>
+          </div>
+          <div class="section">
+            <h4>Solução</h4>
+            <ul>
+              <li>Sobre</li>
+              <li>Simulador Financeiro</li>
+            </ul>
+          </div>
+        </div>
+        <p>
+          Desenvolvido pelo Grupo 10 de PI da SPTech &copy; 2022
+        </p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+<script>
+  function frete() {
+    btnRevenue.classList.remove('selected');
+    divRevenue.style.display = 'none';
+    divResultadoReceita.style.display = 'none';
+    
+    divResultadoFrete.style.display = 'none';
+    divFreight.style.display = 'flex';
+    btnFreight.classList.add('selected');
+  }
+
+  function receitaIndenizacao() {
+    btnFreight.classList.remove('selected');
+    divFreight.style.display = 'none';
+    divResultadoFrete.style.display = 'none';
+
+    divResultadoReceita.style.display = 'none';
+    divRevenue.style.display = 'flex';
+    btnRevenue.classList.add('selected');
+  }
+
+  function calcularFrete() {
+    var dist = Number(txtDistancia.value);
+    var eixo = Number(txtEixo.value);
+
+    if (typeof(dist) != "number") {
+      alert('Distância deve ser um valor númerico');
+      
+    } else if (typeof(eixo) != 'number') {
+      alert('Eixo deve ser um valor númerico');
+
+    } else if (dist <= 0) {
+      alert('Distância deve ser um valor maior que zero');
+      
+    } else if (eixo <= 0) {
+      alert('Eixo deve ser um valor maior que zero');
+
+    } else {
+      /*
+        Calcula a variação CCD (Taxa de variação de transporte)
+        1.922 é um valor fixo inicial, depois a cada eixo do caminhão, é adicionada 0.5618
+      */
+      var variacaoCCD = ((0.5618 * eixo) + 1.922);
+  
+      var cc = 116.05; // Valor de carga e descarga de cargas frigorificadas ou aquecidas
+      var sistema = 750; // Valor da implementação do sistema no eixo
+  
+      var pisoMinimo = (dist * variacaoCCD) + cc;
+      var frete = pisoMinimo + sistema;
+  
+      if (eixo > 1) {
+        spanEixo.innerHTML = `${eixo} eixos`;
+      } else {
+        spanEixo.innerHTML = `${eixo} eixo`;
+      }
+  
+      spanDist.innerHTML = `${dist} KM`
+      spanPisoMinFrete.innerHTML = `R$${frete.toFixed(2)}`;
+
+      divResultadoFrete.style.display = 'flex'
+    }
+  }
+
+  function calcularReceita() {
+    var qtdLotes = Number(txtLotesComprados.value);
+    var perdaLote = Number(txtLotesPerdidos.value);
+    var valorLote = Number(txtValorLotes.value);
+    var vendaLote = Number(txtVendaLotes.value);
+
+    if (typeof(qtdLotes) != 'number') {
+      alert('A quantidade de lotes comprados deve ser um valor númerico');
+
+    } else if (typeof(perdaLote) != 'number') {
+      alert('A quantidade de lotes perdidos deve ser um valor númerico');
+
+    } else if (typeof(valorLote) != 'number') {
+      alert('O valor de compra dos lotes deve ser um valor númerico');
+
+    } else if (typeof(vendaLote) != 'number') {
+      alert('O valor de venda dos lotes deve ser um valor númerico');
+
+    } else if (qtdLotes <= 0) {
+      alert('A quantidade de lotes comprados deve ser um valor maior que zero');
+
+    } else if (perdaLote < 0) {
+      alert('A quantidade de lotes perdidos não pode ser menor que zero');
+
+    } else if (qtdLotes < perdaLote) {
+      alert('A quantidade de lotes comprados deve ser um valor maior que ou igual a quantidade de lotes perdidos');
+
+    } else if (valorLote <= 0) {
+      alert('O valor de compra dos lotes deve ser um valor maior que zero');
+
+    } else if (vendaLote <= 0) {
+      alert('O valor de venda dos lotes deve ser um valor maior que zero');
+
+    } else {
+      var lotesParaVenda = qtdLotes - perdaLote;
+  
+      /* 
+        Representa os lotes que sofreram transformação química e podem causar
+        problemas, mas estão sendo vendidos porque não houve um controle adequado
+        Partindo da premissa que 10% dos lotes sofrem alteração química que não
+        são detectadas pela falta de controle adequado
+      */
+      var lotesTransformados = lotesParaVenda * 0.1;
+  
+      /*
+        Representa o total a ser pago com indenizações se todos os lotes que causaram
+        intoxicação medicamentosa acabaram em processo.
+        Partindo da premissa que todos os lotes transformados causaram intoxicação 
+        medicamentosa.
+      */
+      var totalIndenizacoes = lotesTransformados * 182000;
+  
+      // pegando o valor dos lotes perdidos.
+      var valorTotalLotes = ((qtdLotes * valorLote) - (perdaLote * valorLote));
+  
+      // o total que você pode gastar
+      var receita = qtdLotes * valorLote; 
+  
+      // o valor da venda do lote com as perdas
+      var valorVenda = (qtdLotes - perdaLote) * vendaLote; 
+  
+      // fazendo o calculo do valor da venda com os lotes perdidos, 
+      // quanto você ganhou com a venda
+      valorTotalLotes = valorVenda - valorTotalLotes; 
+  
+      // fazendo o calculo de porcentagem, %.
+      var porcentagemLucro = (valorTotalLotes / receita) * 100; 
+  
+      // aqui e o calculo da venda sem a perda dos lotes
+      var lucroSemPerda = qtdLotes * (vendaLote - valorLote); 
+  
+      // porcentagem sem a perda.
+      var porcentagemLucroPerda = (lucroSemPerda / receita) * 100;
+
+      spanValorTotalLotes.innerHTML = `R$${valorTotalLotes.toFixed(2)}`;
+      spanPorcentagemLucro.innerHTML = `${porcentagemLucro.toFixed(2)}%`;
+      spanLucroSemPerda.innerHTML = `R$${lucroSemPerda.toFixed(2)}`;
+      spanPorcentagemLucroPerda.innerHTML = `${porcentagemLucroPerda.toFixed(2)}%`;
+      spanTotalIndenizacoes.innerHTML = `R$${totalIndenizacoes.toFixed(2)}`;
+
+      divResultadoReceita.style.display = 'flex';
+    }
+  }
+</script>
