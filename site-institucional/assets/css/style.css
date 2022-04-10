@@ -14,8 +14,6 @@ body {
   display: flex;
 }
 
-
-
 /* EFEITOS */
 ::-webkit-scrollbar {
   width: 2px;
@@ -278,38 +276,26 @@ body {
   margin: 10px 0 50px;
 }
 
-/* Caculator */
+/* Banner-Form */
 
 .alt-banner {
   background-image: linear-gradient(to bottom right, #0253c4, #3C9DCF, #4ab2e8);
   display: flex;
 }
 
-.calculator {
+.banner-form {
   height: fit-content;
   margin-top: 104px;
   background-color: #3C9DCF;
 }
 
-.calculator .container {
+.banner-form .container {
   height: 100%;
   align-items: center;
   justify-content: center;
 }
 
-.calculator .container .organizer {
-  display: flex;
-  margin: 30px 0;
-  background-color: #fefefe;
-  border-radius: 20px;
-  width: 80%;
-  height: 80%;
-  align-items: center;
-  flex-direction: column;
-  justify-content: space-around;
-}
-
-.calculator .container .organizer {
+.banner-form .container .card {
   display: flex;
   margin: 30px 0;
   background-color: #fefefe;
@@ -321,19 +307,19 @@ body {
   justify-content: flex-start;
 }
 
-.calculator .container .organizer h2 {
+.banner-form .container .card h2 {
   font-size: 34px;
   color: #0253c4;
   margin: 20px 0 28px;
 }
 
-.calculator .container .organizer .options {
+.banner-form .container .card .options {
   display: flex;
   width: 100%;
   justify-content: space-evenly;
 }
 
-.calculator .container .organizer .options .btn-calculator {
+.banner-form .container .card .options .option {
   background-color: transparent;
   border: 0;
   padding: 2px 10px 6px;
@@ -344,12 +330,12 @@ body {
   cursor: pointer;
 }
 
-.calculator .container .organizer .options .selected {
+.banner-form .container .card .options .selected {
   border-bottom: 3px solid #0253c4;
   color: #0253c4;
 }
 
-.calculator-form {
+.form {
   margin-top: 20px;
   display: flex;
   flex-direction: column;
@@ -363,24 +349,24 @@ body {
   display: none;
 }
 
-.calculator-form p {
+.form p {
   font-size: 16px;
   width: 80%;
 }
 
-.calculator-form .field {
+.form .field {
   display: flex;
   flex-direction: column;
   width: 80%;
   margin: 8px 0;
 }
 
-.calculator-form .field label {
+.form .field label {
   font-size: 16px;
   margin-bottom: 10px;
 }
 
-.calculator-form .field input {
+.form .field input {
   font-size: 14px;
   border-radius: 5px;
   height: 24px;
@@ -388,16 +374,16 @@ body {
   padding-left: 10px;
 }
 
-.calculator-form .field input:focus {
+.form .field input:focus {
   outline: #0253c4;
   border: 2px solid #0253c4;
 }
 
-.calculator-form button {
+.form button {
   margin: 20px 0;
   background-color: #3C9DCF;
   padding: 10px 30px;
-  border: 0;
+  border: 2px solid #3C9DCF;
   border-radius: 30px;
   color: #f5f5f5;
   font-weight: bold;
@@ -405,7 +391,12 @@ body {
   cursor: pointer;
 }
 
-.calculator-form .result {
+.form button:focus {
+  outline: #0253c4;
+  border: 2px solid #0253c4;
+}
+
+.form .result {
   display: flex;
   width: 80%;
   align-items: center;
@@ -413,13 +404,13 @@ body {
   margin-bottom: 50px;
 }
 
-.calculator-form .result p {
+.form .result p {
   width: 100%;
   line-height: 26px;
   font-size: 18px;
 }
 
-.calculator-form .result p span {
+.form .result p span {
   font-weight: bold;
   color: #3C9DCF;
 }
