@@ -48,7 +48,7 @@ body {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  width: 50%;
+  width: 70%;
 }
 
 .header .container nav a {
@@ -71,6 +71,59 @@ body {
 
 .header .container nav a.here:hover {
   border-bottom: 2px solid #0253c4;
+}
+
+/* Footer */
+
+.footer {
+  display: flex;
+  background-color: #fefefe;
+  border-top: 3px solid #0253c4;
+}
+
+.footer .container .organizer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  margin: 40px 0 20px;
+}
+
+.footer .container .organizer p {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 12px;
+}
+
+.footer .container .organizer .sections {
+  display: flex;
+  width: 50%;
+  justify-content: space-between;
+}
+
+.footer .container .organizer .sections .section h4 {
+  font-size: 16px;
+  color: #0253c4;
+  margin-bottom: 8px;
+}
+
+.footer .container .organizer .sections .section ul {
+  list-style: none;
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
+  width: 300px;
+  padding: 0;
+  font-size: 14px;
+}
+
+.footer .container .organizer .sections .section ul li {
+  margin: 2px 0 4px;
+}
+
+.footer a {
+  color: #000;
+  text-decoration: underline;
 }
 
 /* Banner */
@@ -148,13 +201,14 @@ body {
   text-align: center;
 }
 
-.solution .container .organizer .boxes {
+.boxes {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-wrap: wrap;
 }
 
-.solution .container .organizer .boxes .box {
+.boxes .box {
   margin-bottom: 50px;
   display: flex;
   flex-direction: column;
@@ -163,19 +217,27 @@ body {
   width: 33.33%;
 }
 
-.solution .container .organizer .boxes .box img {
+.boxes .box img {
   height: 100px;
 }
 
-.solution .container .organizer .boxes .box p {
+.boxes .box p {
   text-align: center;
   font-size: 16px;
   width: 70%;
 }
 
-.solution .container .organizer .boxes .box h4 {
+.boxes .box h4 {
   font-size: 18px;
   color: #0253c4;
+  margin-bottom: 10px;
+}
+
+.solution .container .organizer.no-link {
+  margin-bottom: 30px;
+}
+
+.solution .container .organizer.no-link .box {
   margin-bottom: 10px;
 }
 
@@ -199,7 +261,7 @@ body {
   color: white;
 }
 
-.enterprises .container .organizer .partners {
+.partners {
   display: flex;
   width: 100%;
   margin-top: 30px;
@@ -207,56 +269,8 @@ body {
   align-items: center;
 }
 
-.enterprises .container .partners img {
+.partners img {
   height: 100px;
-}
-
-/* Footer */
-
-.footer {
-  display: flex;
-  background-color: #fefefe;
-  border-top: 3px solid #0253c4;
-}
-
-.footer .container .organizer {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 100%;
-  margin: 40px 0 20px;
-}
-
-.footer .container .organizer p {
-  margin-top: 20px;
-  text-align: center;
-  font-size: 12px;
-}
-
-.footer .container .organizer .sections {
-  display: flex;
-  width: 50%;
-  justify-content: space-between;
-}
-
-.footer .container .organizer .sections .section h4 {
-  font-size: 16px;
-  color: #0253c4;
-  margin-bottom: 8px;
-}
-
-.footer .container .organizer .sections .section ul {
-  list-style: none;
-  display: flex;
-  justify-content: space-around;
-  flex-direction: column;
-  width: 300px;
-  padding: 0;
-  font-size: 14px;
-}
-
-.footer .container .organizer .sections .section ul li {
-  margin: 2px 0;
 }
 
 /* Diagrama de Visão de Negócio */
@@ -421,4 +435,36 @@ body {
 
 #divResultadoReceita {
   display: none;
+}
+
+/* Equipe */
+
+.team {
+  background-color: #fefefe;
+  display: flex;
+}
+
+.team .container {
+  align-items: center;
+  justify-content: center;
+}
+
+.team .container .organizer {
+  display: flex;
+  flex-direction: column;
+  margin: 50px 0 30px;
+  align-items: center;
+  justify-content: center;
+}
+
+.team .container .organizer h2 {
+  font-size: 34px;
+  color: #0253c4;
+  margin-top: 10px;
+  margin-bottom: 50px;
+}
+
+.team .boxes .box img {
+  height: 150px;
+  border-radius: 75px;
 }
