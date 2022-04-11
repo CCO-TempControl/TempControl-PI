@@ -41,8 +41,8 @@ void loop(){
   Serial.println((String)"luminosidade: " +luminosidade);
 
   float lm35_temperatura = analogRead(LM35PIN);
-  lm35_temperatura = (lm35_temperatura * 5) / 1023;
-  lm35_temperatura = lm35_temperatura / 0.010;
+  lm35_temperatura = lm35_temperatura * 0.00488;
+  lm35_temperatura = lm35_temperatura * 100;
   
   Serial.println((String)"temperatura lm35: " + lm35_temperatura);  
   int chave = digitalRead(7);
@@ -59,6 +59,6 @@ void loop(){
   Serial.println();
    Serial.println();
     Serial.println("------------------------------");
-  delay(100); // o comando é executado a cada 100 milesegundos 
+  delay(1000); // o comando é executado a cada 100 milesegundos 
   
 }
