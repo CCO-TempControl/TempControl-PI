@@ -48,7 +48,7 @@ body {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  width: 70%;
+  width: 60%;
 }
 
 .header .container nav a {
@@ -452,6 +452,22 @@ body {
 
 #divResultadoReceita {
   display: none;
+}
+
+/* Sobre nós */
+
+#divAboutUs {
+  background-image: url('../img/team.jpeg');
+  background-size: cover;
+}
+
+#divAboutUs .shadow {
+  background-color: rgba(0, 0, 0, 0.349);
+}
+
+#divAboutUs p {
+  font-weight: bold;
+  width: 60%;
 }
 
 /* Equipe */

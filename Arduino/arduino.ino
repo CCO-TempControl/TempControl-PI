@@ -59,6 +59,6 @@ void loop(){
   Serial.println();
    Serial.println();
     Serial.println("------------------------------");
-  delay(100); // o comando é executado a cada 100 milesegundos 
+  delay(1000); // o comando é executado a cada 100 milesegundos 
   
 }
