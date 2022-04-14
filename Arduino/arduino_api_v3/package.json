@@ -1,0 +1,16 @@
+{
+  "name": "arduino-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js"
+  },
+  "author": "SPTECH_2022 by MariseMiranda",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.3",
+    "mysql2": "^2.3.3",
+    "serialport": "^10.4.0"
+  }
+}
