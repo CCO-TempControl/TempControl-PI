@@ -1,8 +1,8 @@
 {
-  "name": "projeto-temp-control",
+  "name": "projeto-acquatec",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon --exec node app.js",

@@ -35,7 +35,7 @@
       <div class="card">
         <h2>Cadastro</h2>
         <div class="options">
-          <button id="btnProducer" class="option selected" onclick="fabricante()">Fabricante</button>
+          <button id="btnProducer" class="option selected" onclick="farmaceutica()">Farmacêutica</button>
           <button id="btnTransporter" class="option" onclick="transportadora()">Transportadora</button>
         </div>
 
@@ -53,10 +53,10 @@
             <input id="txtCNPJ" type="text" placeholder="Ex: 87.608.614/0001-39">
           </div>
           <div id="fieldQtdEquip" class="field">
-            <label for="txtQtdEquip">
+            <label for="txtQtdSensor">
               Quantidade de sensores que será comprada:
             </label>
-            <input id="txtQtdEquip" type="text" placeholder="Ex: 5">
+            <input id="txtQtdSensor" type="text" placeholder="Ex: 5">
           </div>
           <div class="field">
             <label for="txtEmail">
@@ -65,16 +65,27 @@
             <input id="txtEmail" type="email" placeholder="Ex: seuemail@email.com">
           </div>
           <div class="field">
-            <label for="txtPassword">
-              Senha:
+            <label for="txtTelefone">
+              Telefone para contato:
             </label>
-            <input id="txtPassword" type="password" placeholder="Ex: **********">
+            <input id="txtTelefone" type="text" placeholder="Ex: 99999-8888">
           </div>
           <div class="field">
-            <label for="txtConfirmPassword">
+            <label for="txtSenha">
+              Senha:
+            </label>
+            <input id="txtSenha" type="password" placeholder="Ex: **********">
+          </div>
+          <div class="field">
+            <label for="txtConfirmaSenha">
               Confirmar senha:
             </label>
-            <input id="txtConfirmPassword" type="password" placeholder="Ex: **********">
+            <input id="txtConfirmaSenha" type="password" placeholder="Ex: **********">
+          </div>
+          <div id="divSignUpResult" class="result">            
+            <p id="pMensagem">
+              Olá meus senhores e minhas senhoras
+            </p>
           </div>
           <button id="btnCadastro" onclick="cadastrar()">Cadastrar para orçamento</button>
         </div>
@@ -134,12 +145,12 @@
 </body>
 </html>
 <script>
-  var tipoEmpresa = 'fabricante';
+  var tipoEmpresa = 'farmaceutica';
 
-  function fabricante() {
+  function farmaceutica() {
     btnProducer.classList.add('selected');
     btnTransporter.classList.remove('selected');
-    tipoEmpresa = 'fabricante';
+    tipoEmpresa = 'farmaceutica';
     fieldQtdEquip.style.display = 'flex';
     btnCadastro.innerHTML = 'Cadastrar para orçamento';
   }
@@ -150,5 +161,139 @@
     tipoEmpresa = 'transportadora';
     fieldQtdEquip.style.display = 'none';
     btnCadastro.innerHTML = 'Cadastrar';
+  }
+
+  function cadastrar() {
+    divSignUpResult.style.display = 'none';
+    pMensagem.style.color = 'black';
+    pMensagem.innerHTML = '';
+
+    var nomeVar = txtNome.value;
+    var cnpjVar = txtCNPJ.value;
+    var qtdSensorVar = Number(txtQtdSensor.value);
+    var emailVar = txtEmail.value;
+    var telefoneVar = txtTelefone.value;
+    var senhaVar = txtSenha.value;
+    var confirmarSenhaVar = txtConfirmaSenha.value;
+
+    if (
+      nomeVar == '' 
+      || cnpjVar == ''
+      || emailVar == '' 
+      || telefoneVar == ''
+      || senhaVar == '' 
+      || confirmarSenhaVar == ''
+    ) {
+      divSignUpResult.style.display = 'flex';
+      pMensagem.style.color = '#fc3636';
+      pMensagem.innerHTML = 'Todos os campos são obrigatórios';
+      return;
+    }
+
+    if (emailVar.indexOf('@') <= 0 || emailVar.indexOf('.com') <= 2) {
+      divSignUpResult.style.display = 'flex';
+      pMensagem.style.color = '#fc3636';
+      pMensagem.innerHTML = 'Endereço de email inválido';
+      return;
+    }
+
+    if (senhaVar.length < 8) {
+      divSignUpResult.style.display = 'flex';
+      pMensagem.style.color = '#fc3636';
+      pMensagem.innerHTML = 'A senha deve ter no minimo oito caracteres';
+      return;
+    }
+
+    if (senhaVar != confirmarSenhaVar) {
+      divSignUpResult.style.display = 'flex';
+      pMensagem.style.color = '#fc3636';
+      pMensagem.innerHTML = 'As senhas informadas devem ser iguais';
+      return;
+    }
+
+    if (tipoEmpresa == 'farmaceutica') {
+      if (qtdSensorVar <= 0) {
+        divSignUpResult.style.display = 'flex';
+        pMensagem.style.color = '#fc3636';
+        pMensagem.innerHTML = 'Para usar a solução, no minímo um sensor deve ser solicitado';
+        return;
+      }
+
+      fetch('/farmaceuticas/cadastrar', {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          nomeServer: nomeVar,
+          cnpjServer: cnpjVar,
+          qtdSensorServer: qtdSensorVar,
+          emailServer: emailVar,
+          telefoneServer: telefoneVar,
+          senhaServer: senhaVar
+        })
+      }).then(function (response) {
+        console.log('Resposta: ', response);
+
+        if (response.ok) {
+          divSignUpResult.style.display = 'flex';
+          pMensagem.style.color = '#34e269';
+          pMensagem.innerHTML = 'Cadastro realizado com sucesso';
+
+          setTimeout(() => {
+            window.location = './sign-in.html';
+          }, 500);
+
+        } else {
+          divSignUpResult.style.display = 'flex';
+          pMensagem.style.color = '#fc3636';
+          pMensagem.innerHTML = 'Houve um erro ao realizar o cadastro!';
+          throw ('Houve um erro ao realizar o cadastro!');
+        }
+      }).catch(function (response) {
+        console.log(`ERRO: ${response}`);
+      })
+
+      return;
+    } else {
+      fetch('/transportadoras/cadastrar', {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          nomeServer: nomeVar,
+          cnpjServer: cnpjVar,
+          emailServer: emailVar,
+          telefoneServer: telefoneVar,
+          senhaServer: senhaVar
+        })
+      }).then(function (response) {
+        console.log('Resposta: ', response);
+
+        if (response.ok) {
+          divSignUpResult.style.display = 'flex';
+          pMensagem.style.color = '#34e269';
+          pMensagem.innerHTML = 'Cadastro realizado com sucesso';
+
+          setTimeout(() => {
+            window.location = './sign-in.html';
+          }, 500);
+
+        } else {
+          divSignUpResult.style.display = 'flex';
+          pMensagem.style.color = '#fc3636';
+          pMensagem.innerHTML = 'Houve um erro ao realizar o cadastro!';
+          throw ('Houve um erro ao realizar o cadastro!');
+        }
+      }).catch(function (response) {
+        divSignUpResult.style.display = 'flex';
+        pMensagem.style.color = '#fc3636';
+        pMensagem.innerHTML = 'Houve um erro ao realizar o cadastro!';
+        console.log(`ERRO: ${response}`);
+      });
+
+      return;
+    }
   }
 </script>
