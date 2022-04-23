@@ -3,56 +3,46 @@
 -- ter este arquivo aqui não significa que a tabela em seu BD estará como abaixo!
 
 /* para workbench - local - desenvolvimento */
--- Criando a base de dados dbTempControl
+-- Criando banco de dados dbTempControl
 CREATE DATABASE dbTempControl;
 
 -- Usando dbTempControl
 USE dbTempControl;
 
--- Criando tabela farmaceutica
-CREATE TABLE farmaceutica (
-  idFarmaceutica INT PRIMARY KEY AUTO_INCREMENT,
-  nome VARCHAR(45) NOT NULL,
-  email VARCHAR(45) UNIQUE NOT NULL,
-  senha CHAR(128) NOT NULL,
-  cnpj CHAR(18) UNIQUE NOT NULL,
-  telefone CHAR(11)
+-- Tabela usuario
+CREATE TABLE usuario (
+  idUsuario INT PRIMARY KEY AUTO_INCREMENT,
+  nomeUsuario VARCHAR(45) NOT NULL,
+  emailUsuario VARCHAR(45) UNIQUE NOT NULL,
+  senhaUsuario CHAR(128) NOT NULL,
+  cnpjUsuario CHAR(14) UNIQUE NOT NULL,
+  telefoneUsuario CHAR(11),
+  tipoUsuario CHAR(1) CHECK(tipoUsuario = 'F' OR tipoUsuario = 'T') NOT NULL
 ) AUTO_INCREMENT = 1000;
 
--- Criando tabela transportadora
-CREATE TABLE transportadora (
-  idTransportadora INT PRIMARY KEY AUTO_INCREMENT,
-  nome VARCHAR(45) NOT NULL,
-  email VARCHAR(45) UNIQUE NOT NULL,
-  senha CHAR(128) NOT NULL,
-  cnpj CHAR(18) UNIQUE NOT NULL,
-  telefone CHAR(11)
-) AUTO_INCREMENT = 1000;
-
--- Criando tabela veiculo
+-- Tabela veiculo
 CREATE TABLE veiculo (
   idVeiculo INT PRIMARY KEY AUTO_INCREMENT,
   modelo VARCHAR(45) NOT NULL,
   placa CHAR(8) UNIQUE NOT NULL,
-  ano CHAR(4),
+  ano CHAR(4) NOT NULL,
   fkTransportadora INT NOT NULL,
-  FOREIGN KEY (fkTransportadora) REFERENCES transportadora (idTransportadora)
-);
+  FOREIGN KEY (fkTransportadora) REFERENCES usuario (idUsuario)
+) AUTO_INCREMENT = 100;
 
--- Criando tabela sensor
+-- Tabela sensor
 CREATE TABLE sensor (
   fkFarmaceutica INT NOT NULL,
-  FOREIGN KEY (fkFarmaceutica) REFERENCES farmaceutica (idFarmaceutica),
+  FOREIGN KEY (fkFarmaceutica) REFERENCES usuario (idUsuario),
   
   idSensor INT NOT NULL,
   PRIMARY KEY (fkFarmaceutica, idSensor),
   
-  estado ENUM('ok', 'defeito', 'conserto') DEFAULT 'ok',
-  fkTransportadora INT,
-  FOREIGN KEY (fkTransportadora) REFERENCES transportadora (idTransportadora)
+  fkTransportadora INT NOT NULL,
+  FOREIGN KEY (fkTransportadora) REFERENCES usuario (idUsuario)
 );
 
--- Criando tabela trajeto
+-- Tabela trajeto
 CREATE TABLE trajeto (
   idTrajeto INT PRIMARY KEY AUTO_INCREMENT,
   origem VARCHAR(45) NOT NULL,
@@ -60,54 +50,55 @@ CREATE TABLE trajeto (
   horaSaida DATETIME,
   horaChegada DATETIME,
   
-  fkTransportadora INT NOT NULL,
-  FOREIGN KEY (fkTransportadora) REFERENCES transportadora (idTransportadora),
+  fkVeiculo INT NULL,
+  FOREIGN KEY (fkVeiculo) REFERENCES veiculo (idVeiculo),
   
   fkFarmaceutica INT NOT NULL,
   fkSensor INT NOT NULL,
   FOREIGN KEY (fkFarmaceutica, fkSensor) REFERENCES sensor (fkFarmaceutica, idSensor),
   
-  fkVeiculo INT,
-  FOREIGN KEY (fkVeiculo) REFERENCES veiculo (idVeiculo)
+  fkTransportadora INT NOT NULL,
+  FOREIGN KEY (fkTransportadora) REFERENCES usuario (idUsuario)
 );
 
--- Criando tabela medicamento
+-- Tabela medicamento
 CREATE TABLE medicamento (
   idMedicamento INT PRIMARY KEY AUTO_INCREMENT,
   nome VARCHAR(45) NOT NULL,
-  validade VARCHAR(30),
+  validade VARCHAR(30) NULL,
   tempMin DECIMAL(3,1) NOT NULL,
   tempMax DECIMAL(3,1) NOT NULL,
-  umidMin INT,
-  umidMax INT,
+  umidMin INT NULL,
+  umidMax INT NULL,
   fkFarmaceutica INT NOT NULL,
-  FOREIGN KEY (fkFarmaceutica) REFERENCES farmaceutica (idFarmaceutica)
-);
+  FOREIGN KEY (fkFarmaceutica) REFERENCES usuario (idUsuario)
+) AUTO_INCREMENT = 100;
 
--- Criando tabela lote
+-- Tabela lote
 CREATE TABLE lote (
-  idLote INT PRIMARY KEY,
-  qtd INT NOT NULL,
+  idLote INT PRIMARY KEY AUTO_INCREMENT,
+  qtd INT,
   
   fkMedicamento INT NOT NULL,
   FOREIGN KEY (fkMedicamento) REFERENCES medicamento (idMedicamento),
   
   fkTrajeto INT NOT NULL,
   FOREIGN KEY (fkTrajeto) REFERENCES trajeto (idTrajeto)
-);
+) AUTO_INCREMENT = 10;
 
--- Criando tabela registro
+-- Tabela registro
 CREATE TABLE registro (
   fkTrajeto INT NOT NULL,
   FOREIGN KEY (fkTrajeto) REFERENCES trajeto (idTrajeto),
   
-  idRegistro INT,
+  idRegistro INT NOT NULL,
   PRIMARY KEY (fkTrajeto, idRegistro),
   
   temperatura DECIMAL(3,1) NOT NULL,
   umidade INT NOT NULL,
-  horario TIME
+  horario TIME NOT NULL
 );
+
 
 
 /* para sql server - remoto - produção */
