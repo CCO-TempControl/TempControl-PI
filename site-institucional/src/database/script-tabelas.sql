@@ -1,4 +1,3 @@
--- Arquivo de apoio, caso você queira criar tabelas como as aqui criadas para a API funcionar.
 -- Você precisa executar os comandos no banco de dados para criar as tabelas,
 -- ter este arquivo aqui não significa que a tabela em seu BD estará como abaixo!
 
@@ -15,7 +14,7 @@ CREATE TABLE usuario (
   nomeUsuario VARCHAR(45) NOT NULL,
   emailUsuario VARCHAR(45) UNIQUE NOT NULL,
   senhaUsuario CHAR(128) NOT NULL,
-  cnpjUsuario CHAR(14) UNIQUE NOT NULL,
+  cnpjUsuario CHAR(18) UNIQUE NOT NULL,
   telefoneUsuario CHAR(11),
   tipoUsuario CHAR(1) CHECK(tipoUsuario = 'F' OR tipoUsuario = 'T') NOT NULL
 ) AUTO_INCREMENT = 1000;

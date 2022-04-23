@@ -47,6 +47,11 @@
             </label>
             <input id="txtPassword" type="password" placeholder="Ex: **********">
           </div>
+          <div id="divSignInResult" class="result">
+            <p id="pMensagem">
+              Olá meus senhores e minhas senhoras
+            </p>
+          </div>
           <button onclick="entrar()">Entrar</button>
         </div>
       </div>
@@ -107,69 +112,86 @@
 <script>
 
   function entrar() {
+    var emailVar = txtEmail.value;
+    var senhaVar = txtPassword.value;
 
-
-        var emailVar = txtEmail.value;
-        var senhaVar = txtPassword.value;
-
-        if (emailVar == "" || senhaVar == "") {
-            cardErro.style.display = "block"
-            mensagem_erro.innerHTML = "Preencha todos os campos para prosseguir!";
-            return false;
-        }
-
-        if (emailVar.indexOf("@") == -1 || emailVar.indexOf(".com") == -1) {
-            cardErro.style.display = "block"
-            mensagem_erro.innerHTML = "Ops, e-mail inválido! Verifique e tente novamente.";
-            return false;
-        }
-
-        console.log("FORM LOGIN: ", emailVar);
-        console.log("FORM SENHA: ", senhaVar);
-
-        fetch("/transportadoras/autenticar", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                emailServer: emailVar,
-                senhaServer: senhaVar
-            })
-        }).then(function (resposta) {
-            console.log("ESTOU NO THEN DO entrar()!")
-
-            if (resposta.ok) {
-                console.log(resposta);
-
-                resposta.json().then(json => {
-                    console.log(json);
-                    console.log(JSON.stringify(json));
-
-                    sessionStorage.EMAIL_USUARIO = json.email;
-                    sessionStorage.NOME_USUARIO = json.nome;
-                    sessionStorage.ID_USUARIO = json.id;
-
-                    setTimeout(function () {
-                        window.location = "./solution.html";
-                    }, 1000); // apenas para exibir o loading
-
-                });
-
-            } else {
-
-                console.log("Houve um erro ao tentar realizar o login!");
-
-                resposta.text().then(texto => {
-                    console.error(texto);
-                });
-            }
-
-        }).catch(function (erro) {
-            console.log(erro);
-        })
-
-        return false;
+    if (emailVar == "" || senhaVar == "") {
+      divSignInResult.style.display = 'flex';
+      pMensagem.style.color = '#fc3636';
+      pMensagem.innerHTML = 'Todos os campos são obrigatórios';
+      return;
     }
+
+    if (emailVar.indexOf('@') <= 0 || emailVar.indexOf('.com') <= 2) {
+      divSignInResult.style.display = 'flex';
+      pMensagem.style.color = '#fc3636';
+      pMensagem.innerHTML = 'Email e/ou Senha incorreto(s)';
+      return;
+    }
+
+    if (senhaVar.length < 8) {
+      divSignInResult.style.display = 'flex';
+      pMensagem.style.color = '#fc3636';
+      pMensagem.innerHTML = 'Email e/ou Senha incorreto(s)';
+      return;
+    }
+
+    console.log("FORM LOGIN: ", emailVar);
+    console.log("FORM SENHA: ", senhaVar);
+
+    fetch("/usuarios/autenticar", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        emailServer: emailVar,
+        senhaServer: senhaVar
+      })
+    }).then(function (resposta) {
+      console.log('Resposta: ', resposta);
+
+      if (resposta.ok) {
+        console.log(resposta);
+
+        resposta.json().then(json => {
+          console.log(json);
+
+          sessionStorage.USUARIO = JSON.stringify(json);
+          sessionStorage.EMAIL_USUARIO = json.email;
+          sessionStorage.NOME_USUARIO = json.nome;
+          sessionStorage.ID_USUARIO = json.id;
+
+          divSignInResult.style.display = 'flex';
+          pMensagem.style.color = '#34e269';
+          pMensagem.innerHTML = 'Login realizado com sucesso';
+
+          setTimeout(function () {
+            window.location = "./restrito/dash.html";
+          }, 1000); // apenas para exibir o loading
+        });
+      } else {
+        if (resposta.status == 403) {
+          resposta.text().then(text => {
+            divSignInResult.style.display = 'flex';
+            pMensagem.style.color = '#fc3636';
+           pMensagem.innerHTML = text;
+          })
+        } else {
+          divSignInResult.style.display = 'flex';
+          pMensagem.style.color = '#fc3636';
+          pMensagem.innerHTML = 'Houve um erro ao realizar o login!';
+        }
+
+      }
+    }).catch(function (erro) {
+      divSignInResult.style.display = 'flex';
+      pMensagem.style.color = '#fc3636';
+      pMensagem.innerHTML = 'Houve um erro ao se autenticar!';
+      console.log(`ERRO: ${erro}`);
+    })
+
+    return false;
+  }
 
 </script>

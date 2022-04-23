@@ -460,6 +460,11 @@ body {
   margin-bottom: 0;
 }
 
+#divSignInResult {
+  display: none;
+  margin-bottom: 0;
+}
+
 /* Sobre nós */
 
 #divAboutUs {
