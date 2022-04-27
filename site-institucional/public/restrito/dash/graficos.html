@@ -71,24 +71,15 @@
                 </div>
 
 
-                <div id="temperatura">
-                    <h1>Pedidos</h1>
-                    <div id="pedidos">
-                        <div class="caminhaoContainerTitulo">
-                            <div class="tituloTabelaContainer">Número</div>
-                            <div class="tituloTabelaContainer">Temperatura</div>
-                            <div class="tituloTabelaContainer">Umidade</div>
-                        </div>
-                        <div class="caminhaoContainer">
-                            <div class="pedidoNum tituloTabelaContainer"><i class="fas fa-solid fa-truck"></i>#1</div>
-                            <div class="pedidoTemp colorStatusTemp tituloTabelaContainer">6ºC</div>
-                            <div class="pedidoUmi colorStatusUmi tituloTabelaContainer">94%</div>
-                        </div>
-                        <div class="caminhaoContainer">
-                            <div class="pedidoNum tituloTabelaContainer"><i class="fas fa-solid fa-truck"></i>#2</div>
-                            <div class="pedidoTemp colorStatusTemp tituloTabelaContainer">5ºC</div>
-                            <div class="pedidoUmi colorStatusUmi tituloTabelaContainer">85%</div>
-                        </div>
+                
+                <div id="graficos">
+                    <div class="chart-container chart" style="position: relative;width:40vw;">
+                        <h1>Média De Alertas Mensal</h1>
+                        <canvas id="myChart1"></canvas>
+                    </div>
+                    <div class="chart-container chart" style="position: relative;width:23vw;">
+                        <h2>Alertas</h2>
+                        <canvas id="myChart2"></canvas>
                     </div>
                 </div>
             </div>
