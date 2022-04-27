@@ -24,7 +24,7 @@ function cadastrar(request, response) {
   } else if (qtdSensor <= 0) {
     response.status(400).send("A quantidade de sensores deve ser maior que 0");
   } else {
-    farmaceuticaModel.cadastrar(nome, cnpj, qtdSensor, email, telefone, senha).then(
+    farmaceuticaModel.cadastrar(nome, cnpj, email, telefone, senha).then(
       function (resultado) {
         var idFarmaceutica = resultado.insertId;
 
