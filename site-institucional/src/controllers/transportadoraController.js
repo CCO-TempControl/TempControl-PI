@@ -1,4 +1,5 @@
-var transportadoraModel = require("../models/transportadoraModel");
+var clienteModel = require('../models/clienteModel');
+var usuarioModel = require('../models/usuarioModel');
 
 function cadastrar(request, response) {
   // Crie uma variável que vá recuperar os valores do arquivo cadastro.html
@@ -21,9 +22,24 @@ function cadastrar(request, response) {
     response.status(400).send("Sua senha está undefined!");
   } else {
     // Passe os valores como parâmetro e vá para o arquivo transportadoraModel.js
-    transportadoraModel.cadastrar(nome, cnpj, email, telefone, senha).then(function (resultado) {
-      response.json(resultado);
-    }).catch(function (erro) {
+    clienteModel.cadastrar(nome, cnpj, telefone, 'T').then(
+      function (resultado) {
+        var idTransportadora = resultado.insertId;
+
+        usuarioModel.cadastrar(idTransportadora, `Admin ${nome}`, email, senha, 'admin t', null)
+          .catch(function (erro) {
+            console.log(erro);
+            console.log(
+                "\nHouve um erro ao realizar o cadastro! Erro: ",
+                erro.sqlMessage
+            );
+            
+            response.status(500).json(erro.sqlMessage);
+          });
+
+        response.json(resultado);
+      }
+    ).catch(function (erro) {
       console.log(erro);
       console.log(
           "\nHouve um erro ao realizar o cadastro! Erro: ",

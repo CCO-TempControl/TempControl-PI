@@ -158,7 +158,8 @@
           console.log(json);
 
           sessionStorage.USUARIO = JSON.stringify(json);
-          sessionStorage.EMAIL_USUARIO = json.email;
+          sessionStorage.ID_CLIENTE = json.fkCliente;
+          sessionStorage.TIPO_USUARIO = json.tipoUsuario;
           sessionStorage.NOME_USUARIO = json.nome;
           sessionStorage.ID_USUARIO = json.id;
 
@@ -167,7 +168,7 @@
           pMensagem.innerHTML = 'Login realizado com sucesso';
 
           setTimeout(function () {
-            window.location = "./restrito/dash.html";
+            window.location = "./restrito/dash/index.html";
           }, 1000); // apenas para exibir o loading
         });
       } else {

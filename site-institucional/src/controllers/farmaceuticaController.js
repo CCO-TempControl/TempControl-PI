@@ -1,4 +1,5 @@
-var farmaceuticaModel = require('../models/farmaceuticaModel');
+var clienteModel = require('../models/clienteModel');
+var usuarioModel = require('../models/usuarioModel')
 var sensorModel = require('../models/sensorModel');
 
 function cadastrar(request, response) {
@@ -24,9 +25,20 @@ function cadastrar(request, response) {
   } else if (qtdSensor <= 0) {
     response.status(400).send("A quantidade de sensores deve ser maior que 0");
   } else {
-    farmaceuticaModel.cadastrar(nome, cnpj, email, telefone, senha).then(
+    clienteModel.cadastrar(nome, cnpj, telefone, 'F').then(
       function (resultado) {
         var idFarmaceutica = resultado.insertId;
+
+        usuarioModel.cadastrar(idFarmaceutica, `Admin ${nome}`, email, senha, 'admin f', null)
+          .catch(function (erro) {
+            console.log(erro);
+            console.log(
+                "\nHouve um erro ao realizar o cadastro! Erro: ",
+                erro.sqlMessage
+            );
+            
+            response.status(500).json(erro.sqlMessage);
+          });
 
         for (let index = 1; index <= qtdSensor; index++) {
           sensorModel.inserir(idFarmaceutica, index).catch(function (erro) {

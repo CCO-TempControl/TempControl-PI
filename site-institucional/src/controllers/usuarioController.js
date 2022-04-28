@@ -1,5 +1,38 @@
 var usuarioModel = require('../models/usuarioModel');
 
+function cadastrar(request, response) {
+  var nome = request.body.nomeServer;
+  var email = request.body.emailServer;
+  var senha = request.body.senhaServer;
+  var tipoUsuario = request.body.tipoUsuarioSever;
+  var cliente = request.body.clienteServer;
+  var admin = request.body.adminServer;
+
+  if (nome == undefined) {
+    response.status(400).send("Seu nome está undefined!");
+  } else if (email == undefined) {
+    response.status(400).send("Seu email está undefined!");
+  } else if (senha == undefined) {
+    response.status(400).send("Sua senha está undefined!");
+  } else if (tipoUsuario == undefined) {
+    response.status(400).send("Seu tipo de usuário está undefined!");
+  } else if (cliente == undefined) {
+    response.status(400).send("Cliente está undefined!");
+  } else if (admin == undefined) {
+    response.status(400).send("Admin está undefined!");
+  } else {
+    usuarioModel.cadastrar(cliente, nome, email, senha, tipoUsuario, admin).then(
+      function (resultado) {
+        res.json(resultado);
+      }
+    ).catch(function (erro) {
+      console.log(erro);
+      console.log("\nHouve um erro ao realizar o cadastro! Erro: ", erro.sqlMessage);
+      response.status(500).json(erro.sqlMessage);
+    })
+  }
+}
+
 function entrar(request, response) {
   var email = request.body.emailServer;
   var senha = request.body.senhaServer;
@@ -14,7 +47,7 @@ function entrar(request, response) {
       console.log(`Resultados: ${JSON.stringify(resultado)}`); // transforma JSON em String
 
       if (resultado.length == 1) {
-        console.log(resultado);
+        console.log(resultado[0]);
         response.json(resultado[0]);
       } else if (resultado.length == 0) {
         response.status(403).send("Email e/ou senha inválido(s)");
@@ -29,56 +62,7 @@ function entrar(request, response) {
   }
 }
 
-function editar(request, response) {
-  var id = request.params.idUsuario;
-
-  var nome = request.body.nomeServer;
-  var cnpj = request.body.cnpjServer;
-  var email = request.body.emailServer;
-  var telefone = request.body.telefoneServer;
-  var senha = request.body.senhaServer;
-
-  if (id < 1000 || id == undefined) {
-    response.status(400).send("Id inválido!");
-  } else if (nome == undefined) {
-    response.status(400).send("Seu nome está undefined!");
-  } else if (cnpj == undefined) {
-    response.status(400).send("Seu CNPJ está undefined!");
-  } else if (email == undefined) {
-    response.status(400).send("Seu email está undefined!");
-  } else if (telefone == undefined) {
-    response.status(400).send("Seu telefone está undefined!");
-  } else if (senha == undefined) {
-    response.status(400).send("Sua senha está undefined!");
-  } else {
-    usuarioModel.editar(id, nome, email, senha, cnpj, telefone).then(function (resposta) {
-      if (resposta.affectedRows < 1) {
-        response.status(404).send('Houve um erro ao atualizar os dados')
-      } else if (resposta.affectedRows > 1) {
-        response.status(500).send('Houve um erro ao atualizar os dados')
-      } else {
-        usuarioModel.buscarPorId(id).then(function (usuario) {
-          console.log(usuario);
-          response.json(usuario[0]);
-        }).catch(function (erro) {
-          console.log(erro);
-          console.log("\nHouve um erro ao realizar o login! Erro: ", erro.sqlMessage);
-          response.status(500).json(erro.sqlMessage);
-        })
-      }
-
-    }).catch(function (erro) {
-      console.log(erro);
-      console.log(
-          "\nHouve um erro ao realizar o atualizar! Erro: ",
-          erro.sqlMessage
-      );
-      
-      response.status(500).json(erro.sqlMessage);
-    })
-  }
-}
-
 module.exports = {
+  cadastrar,
   entrar
 }
