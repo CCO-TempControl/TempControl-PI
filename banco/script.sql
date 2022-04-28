@@ -6,7 +6,7 @@ USE dbTempControl;
 
 -- Tabela cliente
 CREATE TABLE cliente (
-  idCliente INT PRIMARY KEY,
+  idCliente INT PRIMARY KEY AUTO_INCREMENT,
   nomeCliente VARCHAR(45) NOT NULL,
   cnpjCliente CHAR(14) UNIQUE NOT NULL,
   telefoneCliente CHAR(10) NOT NULL,
@@ -15,69 +15,88 @@ CREATE TABLE cliente (
 
 -- Tabela usuario
 CREATE TABLE usuario (
-  idUsuario INT PRIMARY KEY,
+  idUsuario INT PRIMARY KEY AUTO_INCREMENT,
   nomeUsuario VARCHAR(45) NOT NULL,
   emailUsuario VARCHAR(45) UNIQUE NOT NULL,
   senhaUsuario CHAR(128) NOT NULL,
-  tipoUsuario ENUM('admin', 'laboratorio', 'logistico', 'transportadora'),
-  fkAdmin INT NOT NULL,
-  FOREIGN KEY (fkAdmin) REFERENCES usuario (idUsuario),
+  tipoUsuario ENUM('admin f', 'admin t', 'laboratorio', 'logistico', 'transportador') ,
   fkCliente INT NOT NULL,
-  FOREIGN KEY (fkCliente) REFERENCES cliente (idCliente)
-);
+  FOREIGN KEY (fkCliente) REFERENCES cliente (idCliente),
+  fkAdmin INT NULL,
+  FOREIGN KEY (fkAdmin) REFERENCES usuario (idUsuario)
+) AUTO_INCREMENT = 10;
 
 -- Tabela veiculo
 CREATE TABLE veiculo (
-  idVeiculo INT PRIMARY KEY,
+  idVeiculo INT PRIMARY KEY AUTO_INCREMENT,
   modelo VARCHAR(45) NOT NULL,
   placa CHAR(8) UNIQUE NOT NULL,
   ano CHAR(4),
   fkTransportadora INT NOT NULL,
   FOREIGN KEY (fkTransportadora) REFERENCES cliente (idCliente)
-);
+) AUTO_INCREMENT = 100;
 
 -- Tabela sensor
 CREATE TABLE sensor (
-  fkFarmaceutica INT,
-  FOREIGN KEY (fkFarmaceutica) REFERENCES cliente (idCliente),
+  fkFarmaceutica INT NOT NULL,
+  FOREIGN KEY (fkFarmaceutica) REFERENCES cliente (idCliente), 
   
-  idSensor INT,
+  idSensor INT NOT NULL,
   PRIMARY KEY (fkFarmaceutica, idSensor),
   
-  fkTransportadora INT NOT NULL,
+  fkTransportadora INT NULL,
   FOREIGN KEY (fkTransportadora) REFERENCES cliente (idCliente)
 );
 
 -- Tabela entrega
 CREATE TABLE entrega (
-  idEntrega INT PRIMARY KEY,
+  idEntrega INT PRIMARY KEY AUTO_INCREMENT,
   origem VARCHAR(45) NOT NULL,
   destino VARCHAR(45) NOT NULL,
-  horaSaida DATETIME NULL,
-  horaChegada DATETIME NULL,
+  horaSaida DATETIME,
+  horaChegada DATETIME,
+  
   fkVeiculo INT,
   FOREIGN KEY (fkVeiculo) REFERENCES veiculo (idVeiculo),
+  
+  fkFarmaceutica INT NOT NULL,
   fkSensor INT NOT NULL,
-  FOREIGN KEY (fkSensor) REFERENCES sensor (idSensor),
+  FOREIGN KEY (fkFarmaceutica, fkSensor) REFERENCES sensor (fkFarmaceutica, idSensor),
+  
   fkTransportadora INT NOT NULL,
-  FOREIGN KEY (fkTransportadora) REFERENCES cliente (fkCliente)
-);
+  FOREIGN KEY (fkTransportadora) REFERENCES cliente (idCliente)
+) AUTO_INCREMENT = 1000;
+
+-- Tabela medicamento
+CREATE TABLE medicamento (
+  idMedicamento INT PRIMARY KEY AUTO_INCREMENT,
+  nome VARCHAR(45) NOT NULL,
+  validade VARCHAR(30),
+  tempMin DECIMAL(3,1) NOT NULL,
+  tempMax DECIMAL(3,1) NOT NULL,
+  umidMin INT,
+  umidMax INT,
+  
+  fkFarmaceutica INT NOT NULL,
+  FOREIGN KEY (fkFarmaceutica) REFERENCES cliente (idCliente)
+) AUTO_INCREMENT = 100;
 
 -- Tabela lote
 CREATE TABLE lote (
-  idLote INT PRIMARY KEY,
+  idLote INT PRIMARY KEY AUTO_INCREMENT,
+  qtd INT NOT NULL,
   fkMedicamento INT NOT NULL,
   FOREIGN KEY (fkMedicamento) REFERENCES medicamento (idMedicamento),
   fkEntrega INT NOT NULL,
-  FOREIGN KEY (fkEntrega) REFERENCES entrega (idEntrega),
-  qtd INT CHECK (qtd > 0)
+  FOREIGN KEY (fkEntrega) REFERENCES entrega (idEntrega)
 );
 
 -- Tabela registro
 CREATE TABLE registro (
-  fkEntrega INT,
+  fkEntrega INT NOT NULL,
   FOREIGN KEY (fkEntrega) REFERENCES entrega (idEntrega),
-  idRegistro INT,
+  
+  idRegistro INT NOT NULL,
   PRIMARY KEY (fkEntrega, idRegistro),
   
   dht11temperatura DECIMAL(3,1),
