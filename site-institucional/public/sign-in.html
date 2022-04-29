@@ -168,7 +168,19 @@
           pMensagem.innerHTML = 'Login realizado com sucesso';
 
           setTimeout(function () {
-            window.location = "./restrito/dash/index.html";
+            if (json.tipoUsuario == 'admin f') {
+              window.location.replace('./restrito/admin-f/index.html');
+            } else if (json.tipoUsuario == 'admin t') {
+              window.location.replace('./restrito/admin-t/index.html');
+            } else if (json.tipoUsuario == 'laboratorio') {
+              window.location.replace('./restrito/laboratorio/index.html');
+            } else if (json.tipoUsuario == 'logistico') {
+              window.location.replace('./restrito/logistico/index.html');
+            } else if (json.tipoUsuario == 'transportadora') {
+              window.location.replace('./restrito/transportadora/index.html');
+            } else {
+              throw new Error('Tipo de usuário inválido')
+            }
           }, 1000); // apenas para exibir o loading
         });
       } else {
