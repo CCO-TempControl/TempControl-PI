@@ -19,48 +19,59 @@
         <div class="sidebar">
             <div class="dropdown">
                 <a href="#"><i class="fa-solid fa-circle-user" style="font-size:70px;  color: white;"></i>
-                <div class="dropdown-content">
-                    <h4>Olá {{nome.usuario}}</h4>
-                </div>
-              </div>
+                    <div class="dropdown-content">
+                        <h4>Olá {{nome.usuario}}</h4>
+                    </div>
+            </div>
             <ul>
-                <li><a href="#"><i class="fas fa-home"></i>Home</a></li>
-                <li><a href="#"><i class="fas fa-solid fa-chart-gantt"></i></i>Gráficos</a></li>
+                <li><a href="index.html"><i class="fas fa-home"></i>Home</a></li>
+                <li><a href="graficos.html"><i class="fas fa-solid fa-chart-gantt"></i></i>Gráficos</a></li>
                 <li><a href="#"><i class="fas fa-solid fa-bell"></i></i>Avisos</a></li>
                 <li><a href="#"><i class="fas fa-solid fa-file-arrow-down"></i></i></i>Arquivos</a></li>
                 <li><a href="#"><i class="fas fa-solid fa-user"></i></i>Dados Pessoais</a></li>
                 <li><a href="#"><i class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
             </ul>
-            <img src="img/logo_nome_sembg.png" >
+            
         </div>
         <div class="main_content">
             <div class="header">
-                <input type="text"  placeholder="Pesquise..">
+                <!-- <input type="text" placeholder="Pesquise.."> -->
+                <img src="img/logo_nome_sembg.png">
             </div>
             <div class="info">
                 <div id="cards">
                     <div class="card">
-                        <h2>Sensores Disponiveis</h2>
+                        <div id="teste">
+                            <h2>Sensores Disponiveis</h2>
+                        </div>
                         <h3>3</h3>
                         <small>$12.456 foram gasto com sistema</small>
                     </div>
                     <div class="card">
-                        <h2>Viagens Com Problema </h2>
+                        <div id="teste">
+                            <h2>Viagens Com Problema </h2>
+                        </div>
                         <h3>456</h3>
                         <small>20% de falha na ultima semana</small>
                     </div>
                     <div class="card">
-                        <h2>Média De Alertas Mensal</h2>
+                        <div id="teste">
+                            <h2>Média De Alertas Mensal</h2>
+                        </div>
                         <h3>3.92</h3>
                         <small>A cada 10 viagens uma da problema</small>
                     </div>
                     <div class="card">
-                        <h2>Último Transporte Realizado</h2>
+                        <div id="teste">
+                            <h2>Último Transporte Realizado</h2>
+                        </div>
                         <h3>Realizada Com Sucesso</h3>
                         <small>0 Alertas Emitidos</small>
                     </div>
                 </div>
 
+
+                
                 <div id="graficos">
                     <div class="chart-container chart" style="position: relative;width:40vw;">
                         <h1>Média De Alertas Mensal</h1>
@@ -71,11 +82,10 @@
                         <canvas id="myChart2"></canvas>
                     </div>
                 </div>
-
-                    </div>
-                </div>
             </div>
         </div>
+    </div>
+    </div>
     </div>
 </body>
 
@@ -117,7 +127,7 @@
     };
 
     const config1 = {
-        type: 'line',
+        type: 'bar',
         data: data1,
         options: {}
     };
