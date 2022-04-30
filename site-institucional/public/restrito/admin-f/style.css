@@ -221,6 +221,7 @@ input[type=text] {
     background-color: white;
     border-radius: 30px;
     overflow: hidden;
+    
 }
 
 #temperatura h3 {
@@ -230,11 +231,13 @@ input[type=text] {
 #pedidos {
     width: 90%;
     height: fit-content;
-    margin-top: 10px;
+    margin: 50px 0px 50px 0px;
+
 }
 
 .caminhaoContainerTitulo,
 .caminhaoContainer {
+
     height: 55px;
     width: 100%;
     display: flex;
@@ -249,7 +252,7 @@ input[type=text] {
     margin-top: 15px;
 }
 
-.caminhaoContainer .fa-truck {
+.caminhaoContainer .fa-truck, .fa-capsules {
     font-size: 30px;
     margin-right: 10px;
 }

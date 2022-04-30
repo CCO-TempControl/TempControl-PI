@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/2eecc47c4e.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="../../assets/js/funcoes.js"></script>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
     <title>DashBoard</title>
@@ -19,7 +18,7 @@
     <div class="wrapper">
         <div class="sidebar">
             <div class="dropdown">
-              <i class="fa-solid fa-circle-user" style="font-size:100px;  color: white;"></i>
+                <a href="#"><i class="fa-solid fa-circle-user" style="font-size:70px;  color: white;"></i>
                     <div class="dropdown-content">
                         <h4>Olá {{nome.usuario}}</h4>
                     </div>
@@ -32,9 +31,10 @@
                 <li><a href="sensores.html"><i class="fas fa-regular fa-hard-drive"></i>Solicitar Sensores</a></li>
                 <li><a href="graficos.html"><i class="fas fa-solid fa-chart-gantt"></i></i>Gráficos/Alertas</a></li>
                 <li><a href="dadosPessoais.html"><i class="fas fa-solid fa-user"></i></i>Dados Pessoais</a></li>
-                <li><a href="../../index.html" onclick="sair()"><i class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
+                <li><a href="../../index.html" onclick="sair()"><i
+                            class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
             </ul>
-            
+
         </div>
         <div class="main_content">
             <div class="header">
@@ -45,17 +45,17 @@
                 <div id="cards">
                     <div class="card">
                         <div id="teste">
-                            <h2>Sensores Disponiveis</h2>
+                            <h2>Medicamentos Cadastrados</h2>
                         </div>
-                        <h3>3</h3>
+                        <h3>250</h3>
                         <small>$12.456 foram gasto com sistema</small>
                     </div>
                     <div class="card">
                         <div id="teste">
-                            <h2>Viagens Com Problema </h2>
+                            <h2>Medicamento Mais Solicitado</h2>
                         </div>
-                        <h3>456</h3>
-                        <small>20% de falha na ultima semana</small>
+                        <h3>Vacina Covid</h3>
+                        <small>35% das entregas possuem esse medicamento</small>
                     </div>
                     <div class="card">
                         <div id="teste">
@@ -72,106 +72,35 @@
                         <small>0 Alertas Emitidos</small>
                     </div>
                 </div>
-
-
                 <div id="temperatura">
-                    <h1>Pedidos</h1>
+                    <h1>Medicamentos Cadastrados</h1>
                     <div id="pedidos">
                         <div class="caminhaoContainerTitulo">
                             <div class="tituloTabelaContainer">Número</div>
-                            <div class="tituloTabelaContainer">Temperatura</div>
-                            <div class="tituloTabelaContainer">Umidade</div>
+                            <div class="tituloTabelaContainer">Nome</div>
+                            <div class="tituloTabelaContainer">Data De Validade</div>
+                            <div class="tituloTabelaContainer">Temperatura Min/Max</div>
+                            <div class="tituloTabelaContainer">Umidade Min/Max</div>
                         </div>
                         <div class="caminhaoContainer">
-                            <div class="pedidoNum tituloTabelaContainer"><i class="fas fa-solid fa-truck"></i>#1</div>
-                            <div class="pedidoTemp colorStatusTemp tituloTabelaContainer">6ºC</div>
-                            <div class="pedidoUmi colorStatusUmi tituloTabelaContainer">94%</div>
+                            <div class="pedidoNum tituloTabelaContainer"><i class="fas fa-solid fa-capsules"></i>#1</div>
+                            <div class="pedidoTemp tituloTabelaContainer"><h5>Atomoxetina</h5></div>
+                            <div class="pedidoTemp tituloTabelaContainer"><h5>12/12/2022</h5></div>
+                            <div class="pedidoTemp tituloTabelaContainer"><h5>2/8ºC</h5></div>
+                            <div class="pedidoUmi tituloTabelaContainer"><h5>20/80%</h5></div>
                         </div>
                         <div class="caminhaoContainer">
-                            <div class="pedidoNum tituloTabelaContainer"><i class="fas fa-solid fa-truck"></i>#2</div>
-                            <div class="pedidoTemp colorStatusTemp tituloTabelaContainer">5ºC</div>
-                            <div class="pedidoUmi colorStatusUmi tituloTabelaContainer">85%</div>
+                            <div class="pedidoNum tituloTabelaContainer"><i class="fas fa-solid fa-capsules"></i>#2</div>
+                            <div class="pedidoTemp tituloTabelaContainer"><h5>Atenolol</h5></div>
+                            <div class="pedidoTemp tituloTabelaContainer"><h5>01/01/2023</h5></div>
+                            <div class="pedidoTemp tituloTabelaContainer"><h5>2/8ºC</h5></div>
+                            <div class="pedidoUmi tituloTabelaContainer"><h5>20/80%</h5></div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    </div>
-    </div>
 </body>
-
-<script>
-    const labels = [
-        'Abril',
-        'Maio',
-        'Junho',
-        'Julho',
-        'Agosto',
-    ];
-
-    const data1 = {
-        labels: labels,
-        datasets: [{
-            label: 'Alertas',
-            backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgb(255, 99, 132)',
-            data: [0, 10, 5, 2, 20, 30, 45],
-        }]
-    };
-
-    const data2 = {
-        labels: [
-            'Critico',
-            'Média',
-            'Atenção'
-        ],
-        datasets: [{
-            label: labels,
-            data: [10, 100, 30],
-            backgroundColor: [
-                'rgb(255, 99, 132)',
-                'rgb(54, 162, 235)',
-                'rgb(255, 205, 86)'
-            ],
-            hoverOffset: 4
-        }]
-    };
-
-    const config1 = {
-        type: 'bar',
-        data: data1,
-        options: {}
-    };
-    const config2 = {
-        type: 'doughnut',
-        data: data2,
-        options: {}
-    };
-
-    const myChart1 = new Chart(
-        document.getElementById('myChart1'),
-        config1
-    );
-    const myChart2 = new Chart(
-        document.getElementById('myChart2'),
-        config2
-    );
-    const myChart3 = new Chart(
-        document.getElementById('myChart3'),
-        config1
-    );
-    const myChart4 = new Chart(
-        document.getElementById('myChart4'),
-        config1
-    );
-</script>
-
-<script>
-    function sair() {
-        limparSessao();
-        window.location.replace('../../sign-in.html')
-    }
-</script>
 
 </html>

@@ -14,7 +14,7 @@ CREATE TABLE cliente (
   nomeCliente VARCHAR(45) NOT NULL,
   cnpjCliente CHAR(14) UNIQUE NOT NULL,
   telefoneCliente CHAR(10) NOT NULL,
-  tipoCliente CHAR(1) CHECK(tipoCliente = 'F' OR tipoCliente = 'T') NOT NULL
+  tipoCliente CHAR(1) CHECK(tipoCliente = 'F' OR tipoCliente = 'T')
 );
 
 -- Tabela usuario

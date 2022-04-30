@@ -1,6 +1,5 @@
 -- Criando banco de dados dbTempControl
 CREATE DATABASE dbTempControl;
-
 -- Usando dbTempControl
 USE dbTempControl;
 
@@ -40,10 +39,8 @@ CREATE TABLE veiculo (
 CREATE TABLE sensor (
   fkFarmaceutica INT NOT NULL,
   FOREIGN KEY (fkFarmaceutica) REFERENCES cliente (idCliente), 
-  
   idSensor INT NOT NULL,
   PRIMARY KEY (fkFarmaceutica, idSensor),
-  
   fkTransportadora INT NULL,
   FOREIGN KEY (fkTransportadora) REFERENCES cliente (idCliente)
 );
@@ -55,14 +52,11 @@ CREATE TABLE entrega (
   destino VARCHAR(45) NOT NULL,
   horaSaida DATETIME,
   horaChegada DATETIME,
-  
   fkVeiculo INT,
   FOREIGN KEY (fkVeiculo) REFERENCES veiculo (idVeiculo),
-  
   fkFarmaceutica INT NOT NULL,
   fkSensor INT NOT NULL,
   FOREIGN KEY (fkFarmaceutica, fkSensor) REFERENCES sensor (fkFarmaceutica, idSensor),
-  
   fkTransportadora INT NOT NULL,
   FOREIGN KEY (fkTransportadora) REFERENCES cliente (idCliente)
 ) AUTO_INCREMENT = 1000;
@@ -76,7 +70,6 @@ CREATE TABLE medicamento (
   tempMax DECIMAL(3,1) NOT NULL,
   umidMin INT,
   umidMax INT,
-  
   fkFarmaceutica INT NOT NULL,
   FOREIGN KEY (fkFarmaceutica) REFERENCES cliente (idCliente)
 ) AUTO_INCREMENT = 100;
@@ -95,10 +88,8 @@ CREATE TABLE lote (
 CREATE TABLE registro (
   fkEntrega INT NOT NULL,
   FOREIGN KEY (fkEntrega) REFERENCES entrega (idEntrega),
-  
   idRegistro INT NOT NULL,
   PRIMARY KEY (fkEntrega, idRegistro),
-  
   dht11temperatura DECIMAL(3,1),
   dht11umidade DECIMAL(3,1),
   lm35 DECIMAL(3,1),
