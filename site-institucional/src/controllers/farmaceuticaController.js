@@ -29,7 +29,7 @@ function cadastrar(request, response) {
       function (resultado) {
         var idFarmaceutica = resultado.insertId;
 
-        usuarioModel.cadastrar(idFarmaceutica, `Admin ${nome}`, email, senha, 'admin f', null)
+        usuarioModel.cadastrar(idFarmaceutica, `Admin ${nome}`, email, senha, 'admin-f', null)
           .catch(function (erro) {
             console.log(erro);
             console.log(

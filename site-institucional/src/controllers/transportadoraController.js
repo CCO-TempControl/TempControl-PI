@@ -26,7 +26,7 @@ function cadastrar(request, response) {
       function (resultado) {
         var idTransportadora = resultado.insertId;
 
-        usuarioModel.cadastrar(idTransportadora, `Admin ${nome}`, email, senha, 'admin t', null)
+        usuarioModel.cadastrar(idTransportadora, `Admin ${nome}`, email, senha, 'admin-t', null)
           .catch(function (erro) {
             console.log(erro);
             console.log(

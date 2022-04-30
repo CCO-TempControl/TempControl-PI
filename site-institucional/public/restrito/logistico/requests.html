@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://kit.fontawesome.com/2eecc47c4e.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="../../assets/js/funcoes.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
+  <title>TEMPCONTROL</title>
+</head>
+
+<body>
+  <div class="wrapper">
+    <div class="sidebar">
+      <div class="dropdown">
+        <a href="#"><i class="fa-solid fa-circle-user" style="font-size:70px;  color: white;"></i>
+          <div class="dropdown-content">
+            <h4>Olá {{nome.usuario}}</h4>
+          </div>
+      </div>
+      <ul>
+        <li><a href="index.html">
+            <i class="fas fa-home"></i>
+            Home
+          </a></li>
+        <li><a href="">
+            <i class="fas fa-solid fa-chart-gantt"></i>
+            Solicitações
+          </a></li>
+        <li><a href="">
+            <i class="fas fa-solid fa-chart-gantt"></i>
+            Entregas
+          </a></li>
+        <li><a href="">
+            <i class="fas fa-solid fa-chart-gantt"></i>
+            Dados Pessoais
+          </a></li>
+        <li><a href="" onclick="sair()">
+            <i class="fas fa-solid fa-arrow-right-from-bracket"></i>
+            Sair
+          </a></li>
+      </ul>
+
+    </div>
+    <div class="main_content">
+      <div class="header">
+        <!-- <input type="text" placeholder="Pesquise.."> -->
+        <img src="img/logo_nome_sembg.png">
+      </div>
+      <div class="info">
+        <div class="container">
+          <div class="form-card">
+            <h2>Solicitar Entrega</h2>
+            <div class="options">
+              <button id="btnRoute" class="option selected" disabled>1 - Trajeto</button>
+              <button id="btnShipment" class="option" disabled>2 - Carregamento</button>
+              <button id="btnCompany" class="option" disabled>3 - Transportadora</button>
+            </div>
+
+            <div id="divRoute" class="form">
+              <p>
+                Para que o transporte ocorra, informe a origem e destino da viagem
+              </p>
+              <div class="field">
+                <label for="txtOrigem">
+                  Informe a Origem da entrega (local onde a transportadora irá pegar o carregamento):
+                </label>
+                <input id="txtOrigem" type="text" placeholder="Ex: Rua Saturno, 386 - São Paulo, SP">
+              </div>
+              <div class="field">
+                <label for="txtDestino">
+                  Informe o Destino da entrega (local aonde a transportadora irá entregar o carregamento):
+                </label>
+                <input id="txtDestino" type="text" placeholder="Ex: Rua Saturno, 386 - São Paulo, SP">
+              </div>
+              <button onclick="validarRota()">Prosseguir</button>
+            </div>
+
+            <div id="divShipment"></div>
+            <div id="divCompany"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<script>
+  function validarRota() {
+    var origem = txtOrigem.value;
+    var destino = txtDestino.value;
+
+    if (
+      origem == ''
+      || destino == ''
+    ) {
+      Swal.fire({
+        title: 'Erro',
+        text: 'Todos os campos são obrigatórios',
+        icon: 'error',
+        confirmButtonColor: '#fc3636'
+      })
+      return;
+    }
+  }
+</script>
+<script>
+  verificarAutorizacao('logistico');
+
+  function sair() {
+    signOut();
+  }
+</script>
+</html>

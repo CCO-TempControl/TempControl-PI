@@ -7,6 +7,7 @@
   <title>CADASTRO - TempControl</title>
   <link rel="stylesheet" href="./assets/css/style.css">
   <link rel="icon" type="image/x-icon" href="./assets/img/Logo.png">
+  <script src="./assets/js/validacoes.js"></script>
 </head>
 <body>
   <!-- Header -->
@@ -190,10 +191,12 @@
       return;
     }
 
-    if (emailVar.indexOf('@') <= 0 || emailVar.indexOf('.com') <= 2) {
+    var validacaoEmail = validarEmail(emailVar);
+
+    if (validacaoEmail != 'OK') {
       divSignUpResult.style.display = 'flex';
       pMensagem.style.color = '#fc3636';
-      pMensagem.innerHTML = 'Endereço de email inválido';
+      pMensagem.innerHTML = validacaoEmail;
       return;
     }
 

@@ -18,7 +18,7 @@ CREATE TABLE usuario (
   nomeUsuario VARCHAR(45) NOT NULL,
   emailUsuario VARCHAR(45) UNIQUE NOT NULL,
   senhaUsuario CHAR(128) NOT NULL,
-  tipoUsuario ENUM('admin f', 'admin t', 'laboratorio', 'logistico', 'transportador') ,
+  tipoUsuario ENUM('admin-f', 'admin-t', 'laboratorio', 'logistico', 'transportador') ,
   fkCliente INT NOT NULL,
   FOREIGN KEY (fkCliente) REFERENCES cliente (idCliente),
   fkAdmin INT NULL,
