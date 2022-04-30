@@ -208,7 +208,7 @@ input[type=text] {
     overflow: hidden;
 }
 
-#temperatura {
+#banner {
     padding: 10px;
     width: 100%;
     height: fit-content;
@@ -223,18 +223,18 @@ input[type=text] {
     overflow: hidden;
 }
 
-#temperatura h3 {
+#banner h3 {
     font-size: 1.5em;
 }
 
-#pedidos {
+#banners {
     width: 90%;
     height: fit-content;
     margin-top: 10px;
 }
 
-.caminhaoContainerTitulo,
-.caminhaoContainer {
+.bannerContainerTitulo,
+.bannerContainer {
     height: 55px;
     width: 100%;
     display: flex;
@@ -244,19 +244,26 @@ input[type=text] {
     border-radius: 30px;
 }
 
-.caminhaoContainer {
+.bannerContainer {
     box-shadow: 0 0 5px grey;
     margin-top: 15px;
 }
 
-.caminhaoContainer .fa-truck {
-    font-size: 30px;
+.bannerContainer .fa-truck,
+.bannerContainer .fa-warehouse,  
+.bannerContainer .fa-road  {
+font-size: 30px;
     margin-right: 10px;
 }
 
-.pedidoNum,
-.pedidoTemp,
-.pedidoUmi {
+.caminhaoVeiculo,
+.caminhaoModelo,
+.caminhaoPlaca,
+.entregaModo,
+.entregaTemp,
+.entregaUmi,
+.entregaAlert,
+.entregaLocal {
     width: 34%;
     height: fit-content;
     font-size: 25px;
@@ -266,16 +273,7 @@ input[type=text] {
     align-items: center;
 }
 
-.pedidoNum {
-    margin: 0;
-}
-
-.pedidoTemp {
-    width: fit-content;
-    height: 100%;
-}
-
-.caminhaoContainerTitulo {
+.bannerContainerTitulo {
     font-size: 20px;
     font-weight: 700;
 }
@@ -288,7 +286,13 @@ input[type=text] {
     align-items: center;
 }
 
+.colorStatusModelo,
+.colorStatusPlaca {
+    color: #70c4ec;
+}
+
 .colorStatusTemp,
 .colorStatusUmi {
-    color: #85E04E;
+    color: #85E04E; 
 }
+
