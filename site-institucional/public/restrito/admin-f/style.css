@@ -442,3 +442,21 @@ input[type=text] {
     display: none;
     margin-bottom: 0;
   }
+  .fundoDados{
+    background-color: white;
+    border-radius: 10px;
+    margin: 10px;
+    padding: 10px;
+  }
+  .emailEmpresa{
+    margin-top: 40px;
+  }
+  .senhaEmpresa {
+    padding: 10px;
+  }
+  .FcardDados{
+    background-color: white;
+    box-shadow:2px 2px 2px 1px #3C9DCF;
+    margin-top: 10px;
+    height: 80px;
+  }
