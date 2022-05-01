@@ -4,7 +4,7 @@ function cadastrar(request, response) {
   var nome = request.body.nomeServer;
   var email = request.body.emailServer;
   var senha = request.body.senhaServer;
-  var tipoUsuario = request.body.tipoUsuarioSever;
+  var tipoUsuario = request.body.tipoUsuarioServer;
   var cliente = request.body.clienteServer;
   var admin = request.body.adminServer;
 
@@ -23,7 +23,7 @@ function cadastrar(request, response) {
   } else {
     usuarioModel.cadastrar(cliente, nome, email, senha, tipoUsuario, admin).then(
       function (resultado) {
-        res.json(resultado);
+        response.json(resultado);
       }
     ).catch(function (erro) {
       console.log(erro);

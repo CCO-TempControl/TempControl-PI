@@ -9,6 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
+    <script src="../../assets/js/funcoes.js"></script>
     <title>DashBoard</title>
 </head>
 
@@ -51,7 +52,7 @@
                                     <label for="txtEmail">
                                         Nome:
                                     </label>
-                                    <input id="txtEmail" type="text" placeholder="Digite nome completo do usuário">
+                                    <input id="txtNome" type="text" placeholder="Digite nome completo do usuário">
                                 </div>
                                 <div class="field">
                                     <label for="txtEmail">
@@ -63,10 +64,10 @@
                                     <label for="txtEmail">
                                         Tipo Úsuario:
                                     </label>
-                                    <select name="" id="tipoUsuario" >
-                                        <option value="1">Administrador Farmacêutica</option>
-                                        <option value="2">Logístico</option>
-                                        <option value="3">Laboratório</option>
+                                    <select name="" id="txtTipo" >
+                                        <option value="admin-f">Administrador Farmacêutica</option>
+                                        <option value="logistico">Logístico</option>
+                                        <option value="laboratorio">Laboratório</option>
                                     </select>
                                 </div>
                                 <div class="field">
@@ -77,10 +78,10 @@
                                 </div>
                                 <div id="divSignInResult" class="result">
                                     <p id="pMensagem">
-                                        Olá meus senhores e minhas senhoras
+                                      Olá meus senhores e minhas senhoras
                                     </p>
-                                </div>
-                                <button onclick="entrar()">Entrar</button>
+                                  </div>
+                                <button onclick="validarCadastro()">Cadastrar</button>
                             </div>
                         </div>
                     </div>
@@ -158,7 +159,97 @@
         config1
     );
 </script>
+<script>
+    var dadosSession =JSON.parse(pegaDadosLogado('admin-f'));
+    var fkCliente = dadosSession.fkCliente;
+    var fkAdmin = dadosSession.idUsuario;
 
+    function sair() {
+      signOut();
+    }
+</script>
+
+<script>
+
+    function validarCadastro() {
+      var nomeVar =  txtNome.value;
+      var emailVar = txtEmail.value;
+      var senhaVar = txtPassword.value;
+      var tipoUsuarioVar = txtTipo.value;
+      var fkClienteVar = fkCliente;
+      var fkAdminVar = fkAdmin;
+
+      
+  
+      if (emailVar == "" || senhaVar == "") {
+        divSignInResult.style.display = 'flex';
+        pMensagem.style.color = '#fc3636';
+        pMensagem.innerHTML = 'Todos os campos são obrigatórios';
+        return;
+      }
+  
+      if (emailVar.indexOf('@') <= 0 || emailVar.indexOf('.com') <= 2) {
+        divSignInResult.style.display = 'flex';
+        pMensagem.style.color = '#fc3636';
+        pMensagem.innerHTML = 'Email e/ou Senha incorreto(s)';
+        return;
+      }
+  
+      if (senhaVar.length < 8) {
+        divSignInResult.style.display = 'flex';
+        pMensagem.style.color = '#fc3636';
+        pMensagem.innerHTML = 'Email e/ou Senha incorreto(s)';
+        return;
+      }
+  
+      fetch("/usuarios/cadastrar", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          nomeServer: nomeVar,
+          emailServer: emailVar,
+          senhaServer: senhaVar,
+          tipoUsuarioServer: tipoUsuarioVar,
+          clienteServer: fkClienteVar,
+          adminServer: fkAdminVar
+        })
+      }).then(function (resposta) {
+        console.log('Resposta: ', resposta);
+  
+        if (resposta.ok) {
+          console.log(resposta);
+
+            divSignInResult.style.display = 'flex';
+            pMensagem.style.color = '#34e269';
+            pMensagem.innerHTML = 'Cadastrado realizado com sucesso';
+
+        } else {
+          if (resposta.status == 403) {
+            resposta.text().then(text => {
+              divSignInResult.style.display = 'flex';
+              pMensagem.style.color = '#fc3636';
+              pMensagem.innerHTML = text;
+            })
+          } else {
+            divSignInResult.style.display = 'flex';
+            pMensagem.style.color = '#fc3636';
+            pMensagem.innerHTML = 'Houve um erro ao realizar o cadastro!';
+          }
+  
+        }
+      }).catch(function (erro) {
+        divSignInResult.style.display = 'flex';
+        pMensagem.style.color = '#fc3636';
+        pMensagem.innerHTML = 'Houve um erro ao se cadastar!';
+        console.log(`ERRO: ${erro}`);
+      })
+  
+      return false;
+    }
+  
+  </script>
 
 
 

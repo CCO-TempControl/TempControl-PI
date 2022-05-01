@@ -2,6 +2,11 @@ function signOut() {
   sessionStorage.clear();
   window.location.replace('../../sign-in.html');
 }
+function pegaDadosLogado(tipoUsuario){
+  console.log(sessionStorage.USUARIO);
+  var json = sessionStorage.USUARIO;
+  return json;
+}
 
 function verificarAutorizacao(tipoUsuario) {
   var stringUsuario = sessionStorage.USUARIO;
@@ -10,7 +15,6 @@ function verificarAutorizacao(tipoUsuario) {
     window.location.replace('../../sign-in.html');
     return;
   }
-
   var usuario = JSON.parse(stringUsuario);
 
   if (usuario.tipoUsuario != tipoUsuario) {
