@@ -139,7 +139,6 @@ input[type=text] {
 }
 
 
-
 #cards {
     margin-top: 50px;
     display: flex;
@@ -186,27 +185,42 @@ input[type=text] {
     padding: 10px;
 }
 
-
-#graficos {
+#select {
     box-sizing: border-box;
+    display: flex;
+    justify-content: center;
     margin-top: 50px;
+    padding: 25px;
+}
+
+.chart1 {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 25px;
     display: flex;
     justify-content: space-evenly;
-    align-items: center;
-
 }
+
+.chart2 {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 25px;
+    display: flex;
+    justify-content: space-evenly;
+}
+
 
 .chart {
     box-sizing: border-box;
     display: flex;
-    align-items: center;
-    justify-content: space-evenly;
     flex-direction: column;
+    align-items: center;
     padding: 25px;
     background-color: white;
     border-radius: 5%;
     overflow: hidden;
 }
+
 
 #banner {
     padding: 10px;
@@ -286,13 +300,41 @@ font-size: 30px;
     align-items: center;
 }
 
-.colorStatusModelo,
-.colorStatusPlaca {
-    color: #70c4ec;
-}
-
 .colorStatusTemp,
 .colorStatusUmi {
     color: #85E04E; 
 }
 
+.fundoDados{
+    background-color: white;
+    border-radius: 10px;
+    margin: 10px;
+    padding: 10px;
+}
+  
+.fundoDados h1 {
+    margin-top: 10px;
+    margin: 10px;
+}
+  
+.FcardDados{
+    background-color: white;
+    box-shadow:2px 2px 2px 1px #3C9DCF;
+    margin-top: 5px;
+    height: 60px;
+}
+
+.conteudo{
+    margin-top: 10px;
+    margin: 10px;
+}
+
+.conteudo h3 {
+    font-size: 15px;
+    margin: 5px;
+}
+
+.conteudo small {
+    font-size: 15px;
+    margin: 10px;
+}

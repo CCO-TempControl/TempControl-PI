@@ -7,8 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/2eecc47c4e.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css">    
     <title>DashBoard</title>
 </head>
 
@@ -27,7 +26,7 @@
                 <li><a href="index.html"><i class="fas fa-home"></i>Home</a></li>
                 <li><a href="entregas.html"><i class="fas fa-solid fa-bell"></i></i>Entregas</a></li>
                 <li><a href="graficos.html"><i class="fas fa-solid fa-chart-gantt"></i></i>Gráficos</a></li>
-                <li><a href="#"><i class="fas fa-solid fa-user"></i></i>Dados Pessoais</a></li>
+                <li><a href="dadosPessoais.html"><i class="fas fa-solid fa-user"></i></i>Dados Pessoais</a></li>
                 <li><a href="#" onclick="sair()"><i class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
             </ul>
             
@@ -41,44 +40,67 @@
                 <div id="cards">
                     <div class="card">
                         <div id="teste">
-                            <h2>Sensores Disponiveis</h2>
+                            <h2>Entregas em Andamento</h2>
                         </div>
-                        <h3>3</h3>
-                        <small>$12.456 foram gasto com sistema</small>
+                        <h3>20</h3>
+                        <small>Dia 04/05/2022</small>
                     </div>
                     <div class="card">
                         <div id="teste">
-                            <h2>Viagens Com Problema </h2>
+                            <h2>Temperatura Ideal</h2>
                         </div>
-                        <h3>456</h3>
-                        <small>20% de falha na ultima semana</small>
+                        <h3>14</h3>
+                        <small>70% das viagens</small>
                     </div>
                     <div class="card">
                         <div id="teste">
-                            <h2>Média De Alertas Mensal</h2>
+                            <h2>Temperatura Alerta</h2>
                         </div>
-                        <h3>3.92</h3>
-                        <small>A cada 10 viagens uma da problema</small>
+                        <h3>4</h3>
+                        <small>20% das viagens</small>
                     </div>
                     <div class="card">
                         <div id="teste">
-                            <h2>Último Transporte Realizado</h2>
+                            <h2>Temperatura Crítica</h2>
                         </div>
-                        <h3>Realizada Com Sucesso</h3>
-                        <small>0 Alertas Emitidos</small>
+                        <h3>2</h3>
+                        <small>10% das viagens</small>
                     </div>
                 </div>
 
-
+                <div id="select">
+                    <select id="sel" onchange="ver()">
+                        <option value="0">Selecione um caminhão</option>
+                        <option value="1">Caminhão 1</option>
+                        <option value="2">Caminhão 2</option>
+                    </select>
+                </div>
                 
-                <div id="graficos">
-                    <div class="chart-container chart" style="position: relative;width:40vw;">
-                        <h1>Média De Alertas Mensal</h1>
-                        <canvas id="myChart1"></canvas>
+                <div id="grafico1" style="display: none;">
+                    <div class="chart1">
+                        <div class="chart" style="width:40vw;">
+                            <h1>Caminhão 1</h1>
+                            <canvas id="myChart1"></canvas>
+                        </div>
+
+                        <div class="chart" style="width:23vw;">
+                            <h2>Alertas</h2>                            
+                            <canvas id="myChart2"></canvas>
+                        </div>
                     </div>
-                    <div class="chart-container chart" style="position: relative;width:23vw;">
-                        <h2>Alertas</h2>
-                        <canvas id="myChart2"></canvas>
+                </div>
+
+                <div id="grafico2" style="display: none;">
+                    <div class="chart2">
+                        <div class="chart" style="width:40vw;">
+                            <h1>Caminhão 2</h1>
+                            <canvas id="myChart3"></canvas>
+                        </div>
+
+                        <div class="chart" style="width:23vw;">
+                            <h2>Alertas</h2>                            
+                            <canvas id="myChart4"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -88,22 +110,26 @@
     </div>
 </body>
 
+</html>
+
 <script>
+    // Grafico caminhao 1
     const labels = [
-        'Abril',
-        'Maio',
-        'Junho',
-        'Julho',
-        'Agosto',
+        '10:00',
+        '10:30',
+        '11:00',
+        '11:30',
+        '12:00',
+        '12:30',
     ];
 
     const data1 = {
         labels: labels,
         datasets: [{
-            label: 'Alertas',
-            backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgb(255, 99, 132)',
-            data: [0, 10, 5, 2, 20, 30, 45],
+            label: 'Temperatura',
+            backgroundColor: '#347cd8',
+            borderColor: '#347cd8',
+            data: [2, 2.4, 2.4, 2.3, 1.9, 2.2, 2.4],
         }]
     };
 
@@ -115,11 +141,11 @@
         ],
         datasets: [{
             label: labels,
-            data: [10, 100, 30],
+            data: [5, 80, 15],
             backgroundColor: [
-                'rgb(255, 99, 132)',
-                'rgb(54, 162, 235)',
-                'rgb(255, 205, 86)'
+                '#347cd8',
+                '#487498',
+                '#92c2e6'
             ],
             hoverOffset: 4
         }]
@@ -144,18 +170,83 @@
         document.getElementById('myChart2'),
         config2
     );
+
+    // Grafico caminhao 2
+    const labels3 = [
+        '15:30',
+        '16:00',
+        '16:30',
+        '17:00',
+        '17:30',
+        '18:00',
+        '18:30',
+    ];
+
+    const data3 = {
+        labels: labels3,
+        datasets: [{
+            label: 'Temperatura',
+            backgroundColor: '#347cd8',
+            borderColor: '#347cd8',
+            data: [5.1, 5.4, 5.2, 4.8, 4.5, 4.8, 5, 5.1],
+        }]
+    };
+
+    const data4 = {
+        labels: [
+            'Critico',
+            'Média',
+            'Atenção'
+        ],
+        datasets: [{
+            label: labels,
+            data: [10, 60, 30],
+            backgroundColor: [
+                '#347cd8',
+                '#487498',
+                '#92c2e6'
+            ],
+            hoverOffset: 4
+        }]
+    };
+
+    const config3 = {
+        type: 'bar',
+        data: data3,
+        options: {}
+    };
+    const config4 = {
+        type: 'doughnut',
+        data: data4,
+        options: {}
+    };
+
     const myChart3 = new Chart(
         document.getElementById('myChart3'),
-        config1
+        config3
     );
     const myChart4 = new Chart(
         document.getElementById('myChart4'),
-        config1
+        config4
     );
+
+    // Função
+    function ver() {        
+        var grafico = sel.value
+
+        if (grafico == 0) {
+            grafico1.style.display = 'none';
+            grafico2.style.display = 'none';
+        }
+
+        if (grafico == 1) {
+            grafico1.style.display = 'block';
+            grafico2.style.display = 'none';
+        }
+
+        if (grafico == 2) {
+            grafico1.style.display = 'none';
+            grafico2.style.display = 'block';
+        }
+    }
 </script>
-
-
-</script>
-
-
-</html>
