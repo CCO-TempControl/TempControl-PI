@@ -20,10 +20,10 @@ var sqlServerConfig = {
 // CONEXÃO DO MYSQL WORKBENCH (LOCAL)
 var mySqlConfig = {
     host: "localhost",
-    port: 3306,
-    user: "SEU_USUARIO",
+    port: 3308,
+    user: "root",
     database: "dbTempControl",
-    password: "SUA_SENHA",
+    password: "docker",
 };
 
 function executar(instrucao) {

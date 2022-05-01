@@ -63,9 +63,6 @@
             </div>
 
             <div id="divRoute" class="form">
-              <p>
-                Para que o transporte ocorra, informe a origem e destino da viagem
-              </p>
               <div class="field">
                 <label for="txtOrigem">
                   Informe a Origem da entrega (local onde a transportadora irá pegar o carregamento):
@@ -81,8 +78,124 @@
               <button onclick="validarRota()">Prosseguir</button>
             </div>
 
-            <div id="divShipment"></div>
-            <div id="divCompany"></div>
+            <div id="divShipment" class="form">
+              <div class="boxes">
+                <div class="box">
+                  <div class="upper-box">
+                    Temperatura Miníma
+                  </div>
+                  <p>8</p>
+                </div>
+                <div class="box">
+                  <div class="upper-box">
+                    Temperatura Máxima
+                  </div>
+                  <p>18</p>
+                </div>
+                <div class="box">
+                  <div class="upper-box">
+                    Umidade Miníma
+                  </div>
+                  <p>40</p>
+                </div>
+                <div class="box">
+                  <div class="upper-box">
+                    Umidade Máxima
+                  </div>
+                  <p>60</p>
+                </div>
+              </div>
+              <div>
+                <button onclick="adicionarMedicamento()">Adicionar Medicamento</button>
+              </div>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Quantidade</th>
+                    <th>Medicamento</th>
+                    <th>Temperatura</th>
+                    <th>Umidade</th>
+                    <th>Ação</th>
+                  </tr>
+                </thead>
+                <tbody id="tbShipment">
+                  <tr>
+                    <td><input type="number" min="1" value="1"></td>
+                    <td>Atenolol</td>
+                    <td>8 - 24</td>
+                    <td>10 - 60</td>
+                    <td><i class="fa-solid fa-trash-can"></i></td>
+                  </tr>
+                  <tr class="alternative">
+                    <td><input type="number" min="1" value="1"></td>
+                    <td>Atenolol</td>
+                    <td>8 - 24</td>
+                    <td>10 - 60</td>
+                    <td><i class="fa-solid fa-trash-can"></i></td>
+                  </tr>
+                  <tr>
+                    <td><input type="number" min="1" value="1"></td>
+                    <td>Atenolol</td>
+                    <td>8 - 24</td>
+                    <td>10 - 60</td>
+                    <td><i class="fa-solid fa-trash-can"></i></td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="buttons">
+                <button onclick="mudarRota()">Mudar Rota</button>
+                <button onclick="validarCarregamento()">Prosseguir</button>
+              </div>
+            </div>
+            <div id="divCompany" class="form">
+              <div class="field">
+                <label for="txtTransportadora">Selecione a Transportadora responsável por essa entrega</label>
+                <input id="txtTransportadora" list="cmbTransportadora" placeholder="Transportadora">
+                <datalist id="cmbTransportadora">
+                  <option value="Polar">Polar</option>
+                  <option value="KGT">KGT</option>
+                  <option value="Norte">Norte</option>
+                  <option value="Friaca">Friaca</option>
+                  <option value="Freeza">Freeza</option>
+                  <option value="Congelando">Congelando</option>
+                </datalist>
+              </div>
+              <p>Selecione um sensor para se utilizado durante o transporte</p>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Equipamento</th>
+                    <th>Disponibilidade</th>
+                    <th>Selecionar</th>
+                  </tr>
+                </thead>
+                <tbody id="tbShipment">
+                  <tr>
+                    <td>101</td>
+                    <td>Sensor 1</td>
+                    <td>Livre</td>
+                    <td><input name="radSensor" type="radio"></td>
+                  </tr>
+                  <tr class="alternative">
+                    <td>101</td>
+                    <td>Sensor 1</td>
+                    <td>Livre</td>
+                    <td><input name="radSensor" type="radio"></td>
+                  </tr>
+                  <tr>
+                    <td>103</td>
+                    <td>Sensor 3</td>
+                    <td>Em uso</td>
+                    <td><input name="radSensor" type="radio"></td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="buttons">
+                <button onclick="mudarCarregamento()">Mudar Carregamento</button>
+                <button onclick="finalizar()">Finalizar</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -90,9 +203,13 @@
   </div>
 </body>
 <script>
+  var origem = '';
+  var destino = '';
+  var carregamento = [];
+
   function validarRota() {
-    var origem = txtOrigem.value;
-    var destino = txtDestino.value;
+    origem = txtOrigem.value;
+    destino = txtDestino.value;
 
     if (
       origem == ''
@@ -106,6 +223,36 @@
       })
       return;
     }
+
+    btnRoute.classList.remove('selected');
+    divRoute.style.display = 'none';
+    
+    divShipment.style.display = 'flex';
+    btnShipment.classList.add('selected');
+  }
+
+  function mudarRota() {
+    btnShipment.classList.remove('selected');
+    divShipment.style.display = 'none';
+    
+    divRoute.style.display = 'flex';
+    btnRoute.classList.add('selected');
+  }
+
+  function validarCarregamento() {
+    btnShipment.classList.remove('selected');
+    divShipment.style.display = 'none';
+    
+    divCompany.style.display = 'flex';
+    btnCompany.classList.add('selected');
+  }
+
+  function mudarCarregamento() {
+    btnCompany.classList.remove('selected');
+    divCompany.style.display = 'none';
+    
+    divShipment.style.display = 'flex';
+    btnShipment.classList.add('selected');
   }
 </script>
 <script>
