@@ -7,6 +7,7 @@
   <title>CADASTRO - TempControl</title>
   <link rel="stylesheet" href="./assets/css/style.css">
   <link rel="icon" type="image/x-icon" href="./assets/img/Logo.png">
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="./assets/js/validacoes.js"></script>
 </head>
 <body>
@@ -178,47 +179,95 @@
     var confirmarSenhaVar = txtConfirmaSenha.value;
 
     if (
-      nomeVar == '' 
-      || cnpjVar == ''
-      || emailVar == '' 
-      || telefoneVar == ''
-      || senhaVar == '' 
+      nomeVar == ''
       || confirmarSenhaVar == ''
     ) {
-      divSignUpResult.style.display = 'flex';
-      pMensagem.style.color = '#fc3636';
-      pMensagem.innerHTML = 'Todos os campos são obrigatórios';
+      Swal.fire({
+        title: 'Erro',
+        text: 'Todos os campos são obrigatórios',
+        icon: 'error',
+        showConfirmButton: false,
+        showDenyButton: true,
+        denyButtonText: 'OK'
+      });
       return;
     }
 
     var validacaoEmail = validarEmail(emailVar);
+    var validacaoCNPJ = validarCNPJ(cnpjVar);
+    var validacaoTelefone = validarTelefone(telefoneVar);
+    var validacaoSenha = validarSenha(senhaVar);
 
     if (validacaoEmail != 'OK') {
-      divSignUpResult.style.display = 'flex';
-      pMensagem.style.color = '#fc3636';
-      pMensagem.innerHTML = validacaoEmail;
+      Swal.fire({
+        title: 'Erro',
+        text: validacaoEmail,
+        icon: 'error',
+        showConfirmButton: false,
+        showDenyButton: true,
+        denyButtonText: 'OK'
+      });
       return;
     }
 
-    if (senhaVar.length < 8) {
-      divSignUpResult.style.display = 'flex';
-      pMensagem.style.color = '#fc3636';
-      pMensagem.innerHTML = 'A senha deve ter no minimo oito caracteres';
+    if (validacaoCNPJ != 'OK') {
+      Swal.fire({
+        title: 'Erro',
+        text: validacaoCNPJ,
+        icon: 'error',
+        showConfirmButton: false,
+        showDenyButton: true,
+        denyButtonText: 'OK'
+      });
+      return;
+    }
+
+    if (validacaoTelefone != 'OK') {
+      Swal.fire({
+        title: 'Erro',
+        text: validacaoTelefone,
+        icon: 'error',
+        showConfirmButton: false,
+        showDenyButton: true,
+        denyButtonText: 'OK'
+      });
+      return;
+    }
+
+    if (validacaoSenha != 'OK') {
+      Swal.fire({
+        title: 'Erro',
+        text: validacaoSenha,
+        icon: 'error',
+        showConfirmButton: false,
+        showDenyButton: true,
+        denyButtonText: 'OK'
+      });
       return;
     }
 
     if (senhaVar != confirmarSenhaVar) {
-      divSignUpResult.style.display = 'flex';
-      pMensagem.style.color = '#fc3636';
-      pMensagem.innerHTML = 'As senhas informadas devem ser iguais';
+      Swal.fire({
+        title: 'Erro',
+        text: 'As senhas informadas devem ser iguais',
+        icon: 'error',
+        showConfirmButton: false,
+        showDenyButton: true,
+        denyButtonText: 'OK'
+      });
       return;
     }
 
     if (tipoEmpresa == 'farmaceutica') {
       if (qtdSensorVar <= 0) {
-        divSignUpResult.style.display = 'flex';
-        pMensagem.style.color = '#fc3636';
-        pMensagem.innerHTML = 'Para usar a solução, no minímo um sensor deve ser solicitado';
+        Swal.fire({
+          title: 'Erro',
+          text: 'Para usar a solução, no minímo um sensor deve ser solicitado',
+          icon: 'error',
+          showConfirmButton: false,
+        showDenyButton: true,
+        denyButtonText: 'OK'
+        });
         return;
       }
 
@@ -239,18 +288,27 @@
         console.log('Resposta: ', response);
 
         if (response.ok) {
-          divSignUpResult.style.display = 'flex';
-          pMensagem.style.color = '#34e269';
-          pMensagem.innerHTML = 'Cadastro realizado com sucesso';
-
-          setTimeout(() => {
-            window.location = './sign-in.html';
-          }, 500);
+          Swal.fire({
+            title: 'Suceso',
+            text: 'Cadastro realizado com sucesso',
+            icon: 'success',
+            timer: 2000,
+            timerProgressBar: true,
+            confirmButtonColor: '#34e269',
+            willClose: () => {
+              window.location = './sign-in.html';
+            }
+          });
 
         } else {
-          divSignUpResult.style.display = 'flex';
-          pMensagem.style.color = '#fc3636';
-          pMensagem.innerHTML = 'Houve um erro ao realizar o cadastro!';
+          Swal.fire({
+            title: 'Erro',
+            text: 'Houve um erro ao realizar o cadastro!',
+            icon: 'error',
+            showConfirmButton: false,
+            showDenyButton: true,
+            denyButtonText: 'OK'
+          });
           throw ('Houve um erro ao realizar o cadastro!');
         }
       }).catch(function (response) {
@@ -275,24 +333,38 @@
         console.log('Resposta: ', response);
 
         if (response.ok) {
-          divSignUpResult.style.display = 'flex';
-          pMensagem.style.color = '#34e269';
-          pMensagem.innerHTML = 'Cadastro realizado com sucesso';
-
-          setTimeout(() => {
-            window.location = './sign-in.html';
-          }, 500);
+          Swal.fire({
+            title: 'Suceso',
+            text: 'Cadastro realizado com sucesso',
+            icon: 'success',
+            timer: 2000,
+            timerProgressBar: true,
+            confirmButtonColor: '#34e269',
+            willClose: () => {
+              window.location = './sign-in.html';
+            }
+          });
 
         } else {
-          divSignUpResult.style.display = 'flex';
-          pMensagem.style.color = '#fc3636';
-          pMensagem.innerHTML = 'Houve um erro ao realizar o cadastro!';
+          Swal.fire({
+            title: 'Erro',
+            text: 'Houve um erro ao realizar o cadastro!',
+            icon: 'error',
+            showConfirmButton: false,
+            showDenyButton: true,
+            denyButtonText: 'OK'
+          });
           throw ('Houve um erro ao realizar o cadastro!');
         }
       }).catch(function (response) {
-        divSignUpResult.style.display = 'flex';
-        pMensagem.style.color = '#fc3636';
-        pMensagem.innerHTML = 'Houve um erro ao realizar o cadastro!';
+        Swal.fire({
+          title: 'Erro',
+          text: 'Houve um erro ao realizar o cadastro!',
+          icon: 'error',
+          showConfirmButton: false,
+          showDenyButton: true,
+          denyButtonText: 'OK'
+        });
         console.log(`ERRO: ${response}`);
       });
 

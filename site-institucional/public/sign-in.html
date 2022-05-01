@@ -7,6 +7,7 @@
   <title>LOGIN - TempControl</title>
   <link rel="stylesheet" href="./assets/css/style.css">
   <link rel="icon" type="image/x-icon" href="./assets/img/Logo.png">
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
   <!-- Header -->
@@ -110,29 +111,19 @@
 </body>
 </html>
 <script>
-
   function entrar() {
     var emailVar = txtEmail.value;
     var senhaVar = txtPassword.value;
 
     if (emailVar == "" || senhaVar == "") {
-      divSignInResult.style.display = 'flex';
-      pMensagem.style.color = '#fc3636';
-      pMensagem.innerHTML = 'Todos os campos são obrigatórios';
-      return;
-    }
-
-    if (emailVar.indexOf('@') <= 0 || emailVar.indexOf('.com') <= 2) {
-      divSignInResult.style.display = 'flex';
-      pMensagem.style.color = '#fc3636';
-      pMensagem.innerHTML = 'Email e/ou Senha incorreto(s)';
-      return;
-    }
-
-    if (senhaVar.length < 8) {
-      divSignInResult.style.display = 'flex';
-      pMensagem.style.color = '#fc3636';
-      pMensagem.innerHTML = 'Email e/ou Senha incorreto(s)';
+      Swal.fire({
+        title: 'Erro',
+        text: 'Todos os campos são obrigatórios',
+        icon: 'error',
+        showConfirmButton: false,
+        showDenyButton: true,
+        denyButtonText: 'OK'
+      });
       return;
     }
 
@@ -163,36 +154,55 @@
           sessionStorage.NOME_USUARIO = json.nomeUsuario;
           sessionStorage.ID_USUARIO = json.idUsuario;
 
-          divSignInResult.style.display = 'flex';
-          pMensagem.style.color = '#34e269';
-          pMensagem.innerHTML = 'Login realizado com sucesso';
-
-          setTimeout(function () {
-            if (json.tipoUsuario != '' && json.tipoUsuario != undefined) {
-              window.location.replace(`./restrito/${json.tipoUsuario}/index.html`);
-            } else {
-              throw new Error('Tipo de usuário inválido')
+          Swal.fire({
+            title: 'Suceso',
+            text: 'Login realizado com sucesso',
+            icon: 'success',
+            timer: 2000,
+            timerProgressBar: true,
+            confirmButtonColor: '#34e269',
+            willClose: () => {
+              if (json.tipoUsuario != '' && json.tipoUsuario != undefined) {
+                window.location.replace(`./restrito/${json.tipoUsuario}/index.html`);
+              } else {
+                throw new Error('Tipo de usuário inválido')
+              }
             }
-          }, 1000); // apenas para exibir o loading
+          });
         });
       } else {
         if (resposta.status == 403) {
           resposta.text().then(text => {
-            divSignInResult.style.display = 'flex';
-            pMensagem.style.color = '#fc3636';
-           pMensagem.innerHTML = text;
+            Swal.fire({
+              title: 'Erro',
+              text: text,
+              icon: 'error',
+              showConfirmButton: false,
+              showDenyButton: true,
+              denyButtonText: 'OK'
+            });
           })
         } else {
-          divSignInResult.style.display = 'flex';
-          pMensagem.style.color = '#fc3636';
-          pMensagem.innerHTML = 'Houve um erro ao realizar o login!';
+          Swal.fire({
+            title: 'Erro',
+            text: 'Houve um erro ao realizar o login!',
+            icon: 'error',
+            showConfirmButton: false,
+            showDenyButton: true,
+            denyButtonText: 'OK'
+          });
         }
 
       }
     }).catch(function (erro) {
-      divSignInResult.style.display = 'flex';
-      pMensagem.style.color = '#fc3636';
-      pMensagem.innerHTML = 'Houve um erro ao se autenticar!';
+      Swal.fire({
+        title: 'Erro',
+        text: 'Houve um erro ao realizar o login!',
+        icon: 'error',
+        showConfirmButton: false,
+        showDenyButton: true,
+        denyButtonText: 'OK'
+      });
       console.log(`ERRO: ${erro}`);
     })
 
