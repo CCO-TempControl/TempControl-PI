@@ -6,6 +6,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
     <script src="http://www.chartjs.org/dist/2.7.1/Chart.js"></script>
     <script src="http://www.chartjs.org/samples/latest/utils.js"></script>
+    <link rel="stylesheet" href="estiloo.css">
     <style>
         canvas {
             -moz-user-select: none;
@@ -16,28 +17,43 @@
 </head>
 
 <body>
-    <div>
-        <h1>Sensor DHT 11 - Umidade</h1>
-        <section style="width:100%">
-            <canvas id="dht11Umidade"></canvas>
-        </section>
-        <h1>Sensor DHT 11 - Temperatura</h1>
-        <section style="width: 100%;">
-            <canvas id="dht11Temperatura"></canvas>
-        </section>
-        <h1>Sensor Luminosidade</h1>
-        <section style="width: 100%;">
-            <canvas id="luminosidade"></canvas>
-        </section>
-        <h1>Sensor LM 35 - Temperatura</h1>
-        <section style="width: 100%;">
-            <canvas id="lm35Temperatura"></canvas>
-        </section>
-        <h1>Sensor Chave</h1>
-        <section style="width: 100%;">
-            <canvas id="chave"></canvas>
-        </section>
+    <div class="card">
+        <div class="cards">
+            <h1>Sensor DHT 11 - Umidade</h1>
+            <div class="chart-container" style="position: relative; height:40vh; width:45vw">
+                <canvas id="dht11Umidade"></canvas>
+            </div>
+        </div>
+        <div class="cards">
+            <h1>Sensor DHT 11 - Temperatura</h1>
+            <div class="chart-container" style="position: relative; height:40vh; width:45vw">
+                <canvas id="dht11Temperatura"></canvas>
+            </div>
+        </div>
     </div>
+    <div class="card">
+        <div class="cards">
+            <h1>Sensor Luminosidade</h1>
+            <div class="chart-container" style="position: relative; height:40vh; width:45vw">
+                <canvas id="luminosidade"></canvas>
+            </div>
+        </div>
+        <div class="cards">
+            <h1>Sensor LM 35 - Temperatura</h1>
+            <div class="chart-container" style="position: relative; height:40vh; width:45vw">
+                <canvas id="lm35Temperatura"></canvas>
+            </div>
+        </div>
+    </div>
+    <div style="display: flex; justify-content: center;">
+        <div style="display: flex; flex-direction: column;">
+            <h1>Sensor Chave</h1>
+            <div class="chart-container" style="position: relative; height:40vh; width:60vw">
+                <canvas id="chave"></canvas>
+            </div>
+        </div>
+    </div>
+
 
     <script>
         /* -- dht11Umidade -- */
@@ -172,8 +188,8 @@
                     datasets: [{
                         label: 'Temperatura',
                         type: 'line',
-                        borderColor: ['#ffd902'],
-                        backgroundColor: ['#ffe135']
+                        borderColor: ['#4bc0c0'],
+                        backgroundColor: ['#4bc0c0']
                     }]
                 },
                 options: {
@@ -212,8 +228,8 @@
                     datasets: [{
                         label: 'Chave',
                         type: 'line',
-                        borderColor: ['#ffd902'],
-                        backgroundColor: ['#ffe135']
+                        borderColor: ['#c9cbcf'],
+                        backgroundColor: ['#c9cbcf']
                     }]
                 },
                 options: {
