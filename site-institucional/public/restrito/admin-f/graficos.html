@@ -21,7 +21,7 @@
             <div class="dropdown">
                 <a href="#"><i class="fa-solid fa-circle-user" style="font-size:70px;  color: white;"></i></a>
                 <div class="dropdown-content">
-                    <h4>Olá {{nome.usuario}}</h4>
+                    <h4>Olá <span id="spanNome"></span></h4>
                 </div>
             </div>
             <ul>
@@ -50,32 +50,19 @@
                 <div id="idOperacao">
                     <div id="cards">
                         <div class="card">
-                            <div id="teste">
-                                <h2>Temperatura Mínima</h2>
-                            </div>
-                            <h3>2°C</h3>
-                            <small>Temperatura mínima de vacina</small>
+                                <h2  id="teste">Temperatura</h2>
+                            <h3>-2/12°C</h3>
+                            <small>Menor/Maior Temperatura Alcançada</small>
                         </div>
                         <div class="card">
-                            <div id="teste">
-                                <h2>Temperatura Máxima</h2>
-                            </div>
-                            <h3>8°C</h3>
-                            <small>Temperatura máxima de vacina</small>
+                                <h2>Umidade Relativa</h2>
+                            <h3>20/80%</h3>
+                            <small>Menor/Maior Umidade Alcançada</small>
                         </div>
                         <div class="card">
-                            <div id="teste">
-                                <h2>Umidade Mínima</h2>
-                            </div>
-                            <h3>20%</h3>
-                            <small>Umidade mínima de vacina</small>
-                        </div>
-                        <div class="card">
-                            <div id="teste">
-                                <h2>Umidade Máxima</h2>
-                            </div>
-                            <h3>80%</h3>
-                            <small>Umidade máxima de vacina</small>
+                                <h2>Alertas Emitidos</h2>
+                            <h3>20</h3>
+                            <small>Na viagem atual 20 alertas emitidos</small>
                         </div>
                     </div>
 
@@ -92,33 +79,23 @@
 
                     <div id="cards" class="analytic">
                         <div class="card">
-                            <div id="teste">
                                 <h2 class="critico">Crítico</h2>
-                            </div>
                             <h3>2°C</h3>
                         </div>
                         <div class="card">
-                            <div id="teste">
                                 <h2 class="alerta">Alerta</h2>
-                            </div>
                             <h3>4°C</h3>
                         </div>
                         <div class="card">
-                            <div id="teste">
                                 <h2 class="ideal">Ideal</h2>
-                            </div>
                             <h3>5°C</h3>
                         </div>
                         <div class="card">
-                            <div id="teste">
                                 <h2 class="alerta">Alerta</h2>
-                            </div>
                             <h3>6°C</h3>
                         </div>
                         <div class="card">
-                            <div id="teste">
                                 <h2 class="critico">Crítico</h2>
-                            </div>
                             <h3>8°C</h3>
                         </div>
                     </div>
@@ -129,32 +106,24 @@
                 <div id="idEstrategico" style="display: none;">
                     <div id="cards">
                         <div class="card">
-                            <div id="teste">
-                                <h2>Temperatura Mínima</h2>
-                            </div>
-                            <h3>2°C</h3>
-                            <small>Temperatura mínima de vacina</small>
+                                <h2>Alertas Por Temperatura</h2>
+                            <h3>75%</h3>
+                            <small>750 dos alertas ocorreram por temperatura</small>
                         </div>
                         <div class="card">
-                            <div id="teste">
-                                <h2>Temperatura Máxima</h2>
-                            </div>
-                            <h3>8°C</h3>
-                            <small>Temperatura máxima de vacina</small>
+                            <h2>Alertas Por Umidade Relativa</h2>
+                            <h3>25%</h3>
+                            <small>250 dos alertas ocorreram por umidade</small>
                         </div>
                         <div class="card">
-                            <div id="teste">
-                                <h2>Umidade Mínima</h2>
-                            </div>
-                            <h3>20%</h3>
-                            <small>Umidade mínima de vacina</small>
+                                <h2>Transportadora Mais Confiável</h2>
+                            <h3>Polar</h3>
+                            <small>Emitiu Apenas 25 Alertas</small>
                         </div>
                         <div class="card">
-                            <div id="teste">
-                                <h2>Umidade Máxima</h2>
-                            </div>
-                            <h3>80%</h3>
-                            <small>Umidade máxima de vacina</small>
+                            <h2>Transportadora Mais Utilizada</h2>
+                            <h3>Polar</h3>
+                            <small>Realizou 120 Viagens</small>
                         </div>
                     </div>
 
@@ -184,12 +153,11 @@
                             <h1>Relação Alerta/Viagem</h1>
                
                             <canvas id="myChart6"></canvas>
-                            <p style="margin: 20px;">Nota-se uma Correlação positiva (aglomeração dos pontos em tendência crescente) entre o tempo de viagem a quantidade de alertas emetidos</p>
+                           
                         </div>
                         <div class="chart-container chart" style="position: relative;width:23vw;">
                             <h2>Observação Geral</h2>
                             <canvas id="myChart5"></canvas>
-                            <p style="margin: 20px;">De todos as viagens realizadas, 70% delas manteram a temperatura ideal, 20% se manteram em alerta e 10% em estado crítico</p>
                         </div>
                         
                     </div>
@@ -359,7 +327,7 @@
 
                 y: {
                     title: {
-                        color: 'red',
+                        color: '#3C9DCF',
                         display: true,
                         text: 'Alertas'
                     }
@@ -375,7 +343,7 @@
 
                 y: {
                     title: {
-                        color: 'red',
+                        color: '#3C9DCF',
                         display: true,
                         text: 'Alertas'
                     }
@@ -391,7 +359,7 @@
 
                 y: {
                     title: {
-                        color: 'red',
+                        color: '#3C9DCF',
                         display: true,
                         text: 'Alertas'
                     }
@@ -407,7 +375,7 @@
 
                 y: {
                     title: {
-                        color: 'red',
+                        color: '#3C9DCF',
                         display: true,
                         text: 'Alertas'
                     }
@@ -547,12 +515,19 @@
 </script>
 
 <script>
-    verificarAutorizacao('admin-f');
+    var dadosSession = obterDadosSession();
+    var nome=  dadosSession.nomeUsuario;
+    var email= dadosSession.emailUsuario;
+    spanNome.innerHTML = dadosSession.nomeUsuario;
+
+    nomeSmall.innerHTML = nome;
+    emailSmall.innerHTML = email;
 
     function sair() {
-        signOut();
+      signOut();
     }
 </script>
+
 
 
 </html>

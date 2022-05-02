@@ -14,14 +14,12 @@
 </head>
 
 <body>
-
-
     <div class="wrapper">
         <div class="sidebar">
             <div class="dropdown">
                 <a href="#"><i class="fa-solid fa-circle-user" style="font-size:70px;  color: white;"></i></a>
                 <div class="dropdown-content">
-                    <h4>Olá {{nome.usuario}}</h4>
+                    <h4>Olá <span id="spanNome"></span></h4>
                 </div>
             </div>
             <ul>
@@ -168,10 +166,16 @@
 </script>
 
 <script>
-    verificarAutorizacao('admin-f');
+    var dadosSession = obterDadosSession();
+    var nome=  dadosSession.nomeUsuario;
+    var email= dadosSession.emailUsuario;
+    spanNome.innerHTML = dadosSession.nomeUsuario;
+
+    nomeSmall.innerHTML = nome;
+    emailSmall.innerHTML = email;
 
     function sair() {
-        signOut();
+      signOut();
     }
 </script>
 

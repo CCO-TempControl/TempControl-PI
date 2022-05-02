@@ -234,7 +234,11 @@ input[type=text] {
   border-radius: 5%;
   overflow: hidden;
 }
-
+#teste{
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
 #temperatura {
   padding: 10px;
   width: 100%;
@@ -505,18 +509,18 @@ select {
 }
 
 #cards.analytic .card h2.critico {
-  color: wheat;
+  color: white;
   background-color: #F04A5B;
 }
 
 #cards.analytic .card h2.alerta {
-  color: wheat;
-  background-color: #A39F1A;
+  color: white;
+  background-color: rgb(255, 205, 86);
 }
 
 #cards.analytic .card h2.ideal {
-  color: wheat;
-  background-color: #1273A3;
+  color:white;
+  background-color: rgb(54, 162, 235);
 
 }
 
