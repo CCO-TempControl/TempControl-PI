@@ -11,6 +11,18 @@ function inserir(fkFarmaceutica, idSensor) {
   return database.executar(instrucao);
 }
 
+function listarPorFarmaceutica(idFarmaceutica) {
+  console.log("ACESSEI O SENSOR MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function listarPorFarmaceutica():", idFarmaceutica);
+
+  var instrucao = `
+    SELECT * FROM sensor WHERE fkFarmaceutica = ${idFarmaceutica};
+  `;
+
+  console.log("Executando a instrução SQL: \n" + instrucao);
+  return database.executar(instrucao);
+}
+
 module.exports = {
-  inserir
+  inserir,
+  listarPorFarmaceutica
 }

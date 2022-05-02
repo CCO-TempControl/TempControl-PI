@@ -12,6 +12,8 @@ var indexRouter = require("./src/routes/index");
 var transportadorasRouter = require('./src/routes/transportadoras');
 var farmaceuticasRouter = require('./src/routes/farmaceuticas');
 var usuariosRouter = require('./src/routes/usuarios');
+var medicamentosRouter = require('./src/routes/medicamentos');
+var sensoresRouter = require('./src/routes/sensores');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -23,6 +25,8 @@ app.use("/", indexRouter);
 app.use('/transportadoras', transportadorasRouter);
 app.use('/farmaceuticas', farmaceuticasRouter);
 app.use('/usuarios', usuariosRouter);
+app.use('/medicamentos', medicamentosRouter);
+app.use('/sensores', sensoresRouter);
 
 app.listen(PORTA, function () {
     console.log(`Servidor do seu site já está rodando! Acesse o caminho a seguir para visualizar: http://localhost:${PORTA} \n

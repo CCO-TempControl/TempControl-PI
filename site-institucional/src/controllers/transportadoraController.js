@@ -51,6 +51,34 @@ function cadastrar(request, response) {
   }
 }
 
+function listar(request, response) {
+  var idCliente = request.params.idCliente;
+
+  if (idCliente == undefined) {
+    response.status(400).send("Id da Farmacêtica é indefinido");
+  } else if (idCliente <= 0) {
+    response.status(400).send("Id da Farmacêtica é inválido");
+  } else {
+    clienteModel.listar(idCliente, 'T').then(function (resultado) {
+      console.log(`\nResultados encontrados: ${resultado.length}`);
+      console.log(`Resultados: ${JSON.stringify(resultado)}`);
+
+      console.log(resultado);
+
+      response.json(resultado);
+    }).catch(function (erro) {
+      console.log(erro);
+      console.log(
+          "\nHouve um erro ao realizar o cadastro! Erro: ",
+          erro.sqlMessage
+      );
+      
+      response.status(500).json(erro.sqlMessage);
+    })
+  }
+}
+
 module.exports = {
-  cadastrar
+  cadastrar,
+  listar
 }

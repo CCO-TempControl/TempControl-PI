@@ -404,6 +404,7 @@ body {
   border: 2px solid #3C9DCF;
   padding: 5px 10px;
   resize: none;
+  font-family: sans-serif;
 }
 
 .form .field textarea:focus {
