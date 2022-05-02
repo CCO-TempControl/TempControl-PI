@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/2eecc47c4e.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../../assets/js/funcoes.js"></script>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
     <title>DashBoard</title>
@@ -89,7 +90,6 @@
                         </div>
                     </div>
 
-             >
                     <div id="cards" class="analytic">
                         <div class="card">
                             <div id="teste">
@@ -543,6 +543,14 @@
         btnOperacao.classList.remove('selected');
         idOperacao.style.display = 'none';
         idEstrategico.style.display = 'block';
+    }
+</script>
+
+<script>
+    verificarAutorizacao('admin-f');
+
+    function sair() {
+        signOut();
     }
 </script>
 
