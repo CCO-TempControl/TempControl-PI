@@ -89,6 +89,32 @@ body {
     margin: 20px;
     color: #717171;
 }
+.info .options{
+  display:flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+.info .options .options {
+  display: flex;
+  width: 100%;
+  justify-content: space-evenly;
+}
+
+.info .options .option {
+  background-color: transparent;
+  border: 0;
+  padding: 2px 10px 6px;
+  border-bottom: 3px solid #4ab2e8;
+  color: #4ab2e8;
+  font-weight: bold;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.info .options .selected {
+  border-bottom: 3px solid #0253c4;
+  color: #0253c4;
+}
 
 .dropdown {
     margin-bottom: 10px;
@@ -460,3 +486,30 @@ input[type=text] {
     margin-top: 10px;
     height: 80px;
   }
+
+  .info .fundoDados h2{
+    padding-top: 15px;
+  }
+
+  #idOperacao  .titulo{
+    margin-top: 35px;
+    text-align: center;
+  }
+
+  #cards.analytic .card h2.critico{
+    color: wheat;
+    background-color: #F04A5B;
+}
+#cards.analytic .card h2.alerta{
+    color: wheat;
+    background-color: #A39F1A;
+}
+#cards.analytic .card h2.ideal{
+    color: wheat;
+    background-color:#1273A3;
+
+}
+ #cards.analytic .card h3{
+    padding-top: 20px;
+    padding-bottom: 20px; 
+}

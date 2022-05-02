@@ -9,6 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
+    <script src="../../assets/js/funcoes.js"></script>
     <title>DashBoard</title>
 </head>
 
@@ -42,25 +43,23 @@
             </div>
             <div class="info">
                 <div class="fundoDados">
-
-                    <h2>NOME DA EMPRESA</h2>
+                    <h2 id="Nome Da Empresa">NOME DA EMPRESA</h2>
                     <div class="FcardDados">
-
                         <div class="emailEmpresa senhaEmpresa">
+                            <h3>Nome</h3>
+                            <small id="nomeSmall"></small>
+                        </div>
+                    </div>
+                    <div class="FcardDados">
+                        <div class="senhaEmpresa">
                             <h3>Email</h3>
-                            <small>xxxx@email.com</small>
+                            <small id="emailSmall"></small>
                         </div>
                     </div>
                     <div class="FcardDados">
                         <div class="senhaEmpresa">
                             <h3>Senha</h3>
                             <small><a href="">modificar senha</a></small>
-                        </div>
-                    </div>
-                    <div class="FcardDados">
-                        <div class=" senhaEmpresa">
-                            <h3>Quantidade de Sensores</h3>
-                            <small>3</small>
                         </div>
                     </div>
                 </div>
@@ -73,12 +72,18 @@
 </body>
 
 <script>
-    
+    var dadosSession =JSON.parse(pegaDadosLogado('admin-f'));
+    var nome=  dadosSession.nomeUsuario;
+    var email= dadosSession.emailUsuario;
 
+    nomeSmall.innerHTML = nome;
+    emailSmall.innerHTML = email;
+
+    //var senhaAtual =
+
+    function sair() {
+      signOut();
+    }
 </script>
-
-
-</script>
-
 
 </html>

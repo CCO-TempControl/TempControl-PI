@@ -422,6 +422,10 @@ body {
   font-size: 18px;
   cursor: pointer;
 }
+.form button a {
+  text-decoration: none;
+  color: white;
+}
 
 .form button:focus {
   outline: #0253c4;

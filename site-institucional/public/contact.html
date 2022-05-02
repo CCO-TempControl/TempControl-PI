@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,16 +9,14 @@
   <link rel="stylesheet" href="./assets/css/style.css">
   <link rel="icon" type="image/x-icon" href="./assets/img/Logo.png">
 </head>
+
 <body>
   <!-- Header -->
   <div class="header">
     <div class="container">
       <a href="./index.html">
-        <img 
-          src="./assets/img/logo_nome_sembg.png" 
-          alt="TempControl"
-        >
-      </a>      
+        <img src="./assets/img/logo_nome_sembg.png" alt="TempControl">
+      </a>
       <nav>
         <a href="./about-us.html">Quem somos</a>
         <a href="./solution.html">Solução</a>
@@ -49,7 +48,7 @@
             <label for="txtSubject">
               Assunto:
             </label>
-            <input id="txtSubject" type="password" placeholder="Ex: Mais informações">
+            <input id="txtSubject" type="text" placeholder="Ex: Mais informações">
           </div>
           <div class="field">
             <label for="txtMessage">
@@ -58,7 +57,7 @@
             <!-- Serve para criar "inputs" de texto com várias linhas -->
             <textarea id="txtMessage" type="text" cols="50" rows="15" placeholder="Ex: Mais informações"></textarea>
           </div>
-          <button>Enviar</button>
+          <button onclick="enviar()">Eviar</button>
         </div>
       </div>
     </div>
@@ -114,4 +113,15 @@
     </div>
   </div>
 </body>
+
+<script>
+  function enviar() {
+    const emailVar = txtEmail.value;
+    const assuntoVar = txtSubject.value;
+    const mensagemVar = txtMessage.value;
+    alert(txtMessage);
+    window.location = `mailto:tempControl@sptech.school?subject=${assuntoVar}&body=${mensagemVar}`; 
+  }
+</script>
+
 </html>

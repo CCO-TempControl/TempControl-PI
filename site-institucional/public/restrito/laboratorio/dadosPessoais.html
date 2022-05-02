@@ -7,9 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/2eecc47c4e.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <link rel="stylesheet" href="style.css">
-    <title>DashBoard</title>
+    <link rel="stylesheet" href="../admin-f/style.css">
+    <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
+    <script src="../../assets/js/funcoes.js"></script>
+    <title>Dados Pessoais</title>
 </head>
 
 <body>
@@ -35,124 +36,48 @@
                 <img src="img/logo_nome_sembg.png">
             </div>
             <div class="info">
-                <div id="cards">
-                    <div class="card">
-                        <div id="teste">
-                            <h2>Sensores Disponiveis</h2>
+                <div class="fundoDados">
+                    <h2 id="Nome Da Empresa">NOME DA EMPRESA</h2>
+                    <div class="FcardDados">
+                        <div class="emailEmpresa senhaEmpresa">
+                            <h3>Nome</h3>
+                            <small id="nomeSmall"></small>
                         </div>
-                        <h3>3</h3>
-                        <small>$12.456 foram gasto com sistema</small>
                     </div>
-                    <div class="card">
-                        <div id="teste">
-                            <h2>Viagens Com Problema </h2>
+                    <div class="FcardDados">
+                        <div class="senhaEmpresa">
+                            <h3>Email</h3>
+                            <small id="emailSmall"></small>
                         </div>
-                        <h3>456</h3>
-                        <small>20% de falha na ultima semana</small>
                     </div>
-                    <div class="card">
-                        <div id="teste">
-                            <h2>Média De Alertas Mensal</h2>
+                    <div class="FcardDados">
+                        <div class="senhaEmpresa">
+                            <h3>Senha</h3>
+                            <small><a href="">modificar senha</a></small>
                         </div>
-                        <h3>3.92</h3>
-                        <small>A cada 10 viagens uma da problema</small>
-                    </div>
-                    <div class="card">
-                        <div id="teste">
-                            <h2>Último Transporte Realizado</h2>
-                        </div>
-                        <h3>Realizada Com Sucesso</h3>
-                        <small>0 Alertas Emitidos</small>
                     </div>
                 </div>
-
-
-                
-                <div id="graficos">
-                    <div class="chart-container chart" style="position: relative;width:40vw;">
-                        <h1>Média De Alertas Mensal</h1>
-                        <canvas id="myChart1"></canvas>
-                    </div>
-                    <div class="chart-container chart" style="position: relative;width:23vw;">
-                        <h2>Alertas</h2>
-                        <canvas id="myChart2"></canvas>
-                    </div>
+                    
                 </div>
             </div>
-        </div>
     </div>
     </div>
     </div>
 </body>
 
 <script>
-    const labels = [
-        'Abril',
-        'Maio',
-        'Junho',
-        'Julho',
-        'Agosto',
-    ];
+    var dadosSession =JSON.parse(pegaDadosLogado('admin-f'));
+    var nome=  dadosSession.nomeUsuario;
+    var email= dadosSession.emailUsuario;
 
-    const data1 = {
-        labels: labels,
-        datasets: [{
-            label: 'Alertas',
-            backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgb(255, 99, 132)',
-            data: [0, 10, 5, 2, 20, 30, 45],
-        }]
-    };
+    nomeSmall.innerHTML = nome;
+    emailSmall.innerHTML = email;
 
-    const data2 = {
-        labels: [
-            'Critico',
-            'Média',
-            'Atenção'
-        ],
-        datasets: [{
-            label: labels,
-            data: [10, 100, 30],
-            backgroundColor: [
-                'rgb(255, 99, 132)',
-                'rgb(54, 162, 235)',
-                'rgb(255, 205, 86)'
-            ],
-            hoverOffset: 4
-        }]
-    };
+    //var senhaAtual =
 
-    const config1 = {
-        type: 'bar',
-        data: data1,
-        options: {}
-    };
-    const config2 = {
-        type: 'doughnut',
-        data: data2,
-        options: {}
-    };
-
-    const myChart1 = new Chart(
-        document.getElementById('myChart1'),
-        config1
-    );
-    const myChart2 = new Chart(
-        document.getElementById('myChart2'),
-        config2
-    );
-    const myChart3 = new Chart(
-        document.getElementById('myChart3'),
-        config1
-    );
-    const myChart4 = new Chart(
-        document.getElementById('myChart4'),
-        config1
-    );
+    function sair() {
+      signOut();
+    }
 </script>
-
-
-</script>
-
 
 </html>
