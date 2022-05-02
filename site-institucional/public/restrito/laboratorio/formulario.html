@@ -143,7 +143,16 @@
         var temperaturaMaxima = tempMax.value;
         var umidadeMinima = umiMin.value;
         var umidadeMaxima = umiMax.value;
-        if (nome == "" || temperaturaMinima == "" || temperaturaMaxima == "" || umidadeMinima == "" || umidadeMaxima == "") {
+        console.log({
+            "idCliente": dadosDaSessao.fkCliente,
+            "nome": nome,
+            "validade": validade,
+            "tempMin": temperaturaMinima,
+            "tempMax": temperaturaMaxima,
+            "umiMin": umidadeMinima,
+            "umiMax": umidadeMaxima
+        });
+        if (nome == "" || validade =="" || temperaturaMinima == "" || temperaturaMaxima == "" || umidadeMinima == "" || umidadeMaxima == "") {
             Swal.fire({
                 title: 'Erro',
                 text: 'Todos os campos são obrigatórios',
@@ -154,22 +163,13 @@
             });
             return;
         }
-        console.log({
-            "idCliente": dadosDaSessao.fkCliente,
-            "nome": nome,
-            "validade": validade,
-            "tempMin": temperaturaMinima,
-            "tempMax": temperaturaMaxima,
-            "umiMin": umidadeMinima,
-            "umiMax": umidadeMaxima
-        });
-        fetch("/adicionarMedicamento", {
+        fetch("/medicamentos", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                "idCliente": dadosDaSessao.fkCliente,
+                "idCliente": String(dadosDaSessao.fkCliente),
                 "nome": nome,
                 "validade": validade,
                 "tempMin": temperaturaMinima,
@@ -193,7 +193,7 @@
         window.location.replace('../../sign-in.html')
     }
 </script>
-<script>
+<!-- <script>
     function cadastrarMedicamento() {
         new Promise(() => {
         }).then(function (resposta) {
@@ -266,6 +266,6 @@
         return false;
     }
 
-</script>
+</script> -->
 
 </html>

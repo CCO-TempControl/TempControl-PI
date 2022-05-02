@@ -13,11 +13,11 @@ function listarPorFarmaceutica(idFarmaceutica) {
 }
 
 /* Adiciona um Medicamento no Banco */
-function adicionar(nomeMedicamento, validadeMedicamento, temperaturaMinima, temperaturaMaxima, umidadeMinima, umidadeMaxima, idFarmaceutica) {
+function cadastrar(nomeMedicamento, validadeMedicamento, temperaturaMinima, temperaturaMaxima, umidadeMinima, umidadeMaxima, idFarmaceutica) {
   console.log("ACESSEI O MEDICAMENTO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function adicionarMedicamento():", idFarmaceutica);
 
   var instrucao = `
-    INSERT INTO medicamento values (null, ${nomeMedicamento}, ${validadeMedicamento}, ${temperaturaMinima}, ${temperaturaMaxima}, ${umidadeMinima}, ${umidadeMaxima}, ${idFarmaceutica});
+    INSERT INTO medicamento values (null, '${nomeMedicamento}', '${validadeMedicamento}', ${temperaturaMinima}, ${temperaturaMaxima}, ${umidadeMinima}, ${umidadeMaxima}, ${idFarmaceutica});
   `;
 
   console.log("Executando a instrução SQL: \n" + instrucao);
@@ -26,5 +26,5 @@ function adicionar(nomeMedicamento, validadeMedicamento, temperaturaMinima, temp
 
 module.exports = {
   listarPorFarmaceutica,
-  adicionar
+  cadastrar
 }

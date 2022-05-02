@@ -27,7 +27,7 @@ function listarPorFarmaceutica(request, response) {
   }
 }
 /* Adiciona um Medicamento no Banco */
-function adicionarMedicamento(request, response) {
+function cadastrarMedicamento(request, response) {
   var idFarmaceutica = request.body.idCliente;
   var nomeMedicamento = request.body.nome;
   var validadeMedicamento = request.body.validade;
@@ -49,11 +49,11 @@ function adicionarMedicamento(request, response) {
   } else if (umidadeMaxima == undefined) {
     response.status(400).send("Umi.Max não definida");
   } else {
-    medicamentoModel.adicionar(nomeMedicamento, validadeMedicamento ,temperaturaMinima, temperaturaMaxima, umidadeMinima, umidadeMaxima, idFarmaceutica);
+    medicamentoModel.cadastrar(nomeMedicamento, validadeMedicamento ,temperaturaMinima, temperaturaMaxima, umidadeMinima, umidadeMaxima, idFarmaceutica);
   }
 }
 
 module.exports = {
   listarPorFarmaceutica,
-  adicionarMedicamento
+  cadastrarMedicamento
 }
