@@ -93,26 +93,25 @@ body {
 .dropdown {
     margin-bottom: 10px;
     align-self: center;
-}
-
-.dropdown-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .dropdown-content {
+    text-align: center;
     display: none;
-    position: absolute;
-    justify-content: center;
     min-width: 100px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     padding: 12px 16px;
-}
-
-.dropdown:hover {
-    padding-bottom: 70px;
-}
-
-.dropdown:hover .dropdown-content {
+  }
+  
+  .dropdown:hover .dropdown-content {
     display: flex;
     align-self: center;
     cursor: pointer;
-}
+  }
 
 input[type=text] {
 

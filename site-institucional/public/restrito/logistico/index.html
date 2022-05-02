@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,112 +12,113 @@
     <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
     <title>TEMPCONTROL</title>
 </head>
+
 <body>
     <div class="wrapper">
         <div class="sidebar">
             <div class="dropdown">
-                <a href="#"><i class="fa-solid fa-circle-user" style="font-size:70px;  color: white;"></i>
-                    <div class="dropdown-content">
-                        <h4>Olá {{nome.usuario}}</h4>
-                    </div>
+                <a href="#"><i class="fa-solid fa-circle-user" style="font-size:70px;  color: white;"></i></a>
+                <div class="dropdown-content">
+                    <h4>Olá {{nome.usuario}}</h4>
                 </div>
-                <ul>
-                    <li><a href="">
+            </div>
+            <ul>
+                <li><a href="">
                         <i class="fas fa-home"></i>
                         Home
-                      </a></li>
-                    <li><a href="./requests.html">
+                    </a></li>
+                <li><a href="./requests.html">
                         <i class="fas fa-solid fa-file-contract"></i>
                         Solicitações
-                      </a></li>
-                    <li><a href="./deliveries.html">
+                    </a></li>
+                <li><a href="./deliveries.html">
                         <i class="fas fa-regular fa-truck-ramp-box"></i>
                         Entregas
-                      </a></li>
-                    <li><a href="">
+                    </a></li>
+                <li><a href="">
                         <i class="fas fa-solid fa-user"></i>
                         Dados Pessoais
-                      </a></li>
-                    <li><a href="" onclick="sair()">
+                    </a></li>
+                <li><a href="" onclick="sair()">
                         <i class="fas fa-solid fa-arrow-right-from-bracket"></i>
                         Sair
-                      </a></li>
-                  </ul>
-                
+                    </a></li>
+            </ul>
+
+        </div>
+        <div class="main_content">
+            <div class="header">
+                <!-- <input type="text" placeholder="Pesquise.."> -->
+                <img src="img/logo_nome_sembg.png">
             </div>
-            <div class="main_content">
-                <div class="header">
-                    <!-- <input type="text" placeholder="Pesquise.."> -->
-                    <img src="img/logo_nome_sembg.png">
+            <div class="info">
+                <div id="cards">
+                    <div class="card">
+                        <div id="teste">
+                            <h2>Sensores Disponiveis</h2>
+                        </div>
+                        <h3>3</h3>
+                        <small>$12.456 foram gasto com sistema</small>
+                    </div>
+                    <div class="card">
+                        <div id="teste">
+                            <h2>Viagens Com Problema </h2>
+                        </div>
+                        <h3>456</h3>
+                        <small>20% de falha na ultima semana</small>
+                    </div>
+                    <div class="card">
+                        <div id="teste">
+                            <h2>Média De Alertas Mensal</h2>
+                        </div>
+                        <h3>3.92</h3>
+                        <small>A cada 10 viagens uma da problema</small>
+                    </div>
+                    <div class="card">
+                        <div id="teste">
+                            <h2>Último Transporte Realizado</h2>
+                        </div>
+                        <h3>Realizada Com Sucesso</h3>
+                        <small>0 Alertas Emitidos</small>
+                    </div>
                 </div>
-                <div class="info">
-                    <div id="cards">
-                        <div class="card">
-                            <div id="teste">
-                                <h2>Sensores Disponiveis</h2>
-                            </div>
-                            <h3>3</h3>
-                            <small>$12.456 foram gasto com sistema</small>
-                        </div>
-                        <div class="card">
-                            <div id="teste">
-                                <h2>Viagens Com Problema </h2>
-                            </div>
-                            <h3>456</h3>
-                            <small>20% de falha na ultima semana</small>
-                        </div>
-                        <div class="card">
-                            <div id="teste">
-                                <h2>Média De Alertas Mensal</h2>
-                            </div>
-                            <h3>3.92</h3>
-                            <small>A cada 10 viagens uma da problema</small>
-                        </div>
-                        <div class="card">
-                            <div id="teste">
-                                <h2>Último Transporte Realizado</h2>
-                            </div>
-                            <h3>Realizada Com Sucesso</h3>
-                            <small>0 Alertas Emitidos</small>
-                        </div>
-                    </div>
-                    
-                    
-                    <div id="temperatura">
-                        <h1>Pedidos</h1>
-                        <ul id="pedidos">
-                            <li class="caminhaoContainerTitulo">
-                                <div class="tituloTabelaContainer">Número</div>
-                                <div class="tituloTabelaContainer">Temperatura</div>
-                                <div class="tituloTabelaContainer">Umidade</div>
-                            </li>
-                            <li class="caminhaoContainer">
-                                <div class="pedidoNum tituloTabelaContainer"><i class="fas fa-solid fa-truck"></i>#1</div>
-                                <div class="pedidoTemp colorStatusTemp tituloTabelaContainer">6ºC</div>
-                                <div class="pedidoUmi colorStatusUmi tituloTabelaContainer">94%</div>
-                            </li>
-                            <li class="caminhaoContainer">
-                                <div class="pedidoNum tituloTabelaContainer"><i class="fas fa-solid fa-truck"></i>#2</div>
-                                <div class="pedidoTemp colorStatusTemp tituloTabelaContainer">5ºC</div>
-                                <div class="pedidoUmi colorStatusUmi tituloTabelaContainer">85%</div>
-                            </li>
-                        </ul>
-                    </div>
+
+
+                <div id="temperatura">
+                    <h1>Pedidos</h1>
+                    <ul id="pedidos">
+                        <li class="caminhaoContainerTitulo">
+                            <div class="tituloTabelaContainer">Número</div>
+                            <div class="tituloTabelaContainer">Temperatura</div>
+                            <div class="tituloTabelaContainer">Umidade</div>
+                        </li>
+                        <li class="caminhaoContainer">
+                            <div class="pedidoNum tituloTabelaContainer"><i class="fas fa-solid fa-truck"></i>#1</div>
+                            <div class="pedidoTemp colorStatusTemp tituloTabelaContainer">6ºC</div>
+                            <div class="pedidoUmi colorStatusUmi tituloTabelaContainer">94%</div>
+                        </li>
+                        <li class="caminhaoContainer">
+                            <div class="pedidoNum tituloTabelaContainer"><i class="fas fa-solid fa-truck"></i>#2</div>
+                            <div class="pedidoTemp colorStatusTemp tituloTabelaContainer">5ºC</div>
+                            <div class="pedidoUmi colorStatusUmi tituloTabelaContainer">85%</div>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
+    </div>
     </div>
 </body>
 
 <script>
     const labels = [
-    'Abril',
-    'Maio',
-    'Junho',
-    'Julho',
-    'Agosto',
+        'Abril',
+        'Maio',
+        'Junho',
+        'Julho',
+        'Agosto',
     ];
-    
+
     const data1 = {
         labels: labels,
         datasets: [{
@@ -126,25 +128,25 @@
             data: [0, 10, 5, 2, 20, 30, 45],
         }]
     };
-    
+
     const data2 = {
         labels: [
-        'Critico',
-        'Média',
-        'Atenção'
+            'Critico',
+            'Média',
+            'Atenção'
         ],
         datasets: [{
             label: labels,
             data: [10, 100, 30],
             backgroundColor: [
-            'rgb(255, 99, 132)',
-            'rgb(54, 162, 235)',
-            'rgb(255, 205, 86)'
+                'rgb(255, 99, 132)',
+                'rgb(54, 162, 235)',
+                'rgb(255, 205, 86)'
             ],
             hoverOffset: 4
         }]
     };
-    
+
     const config1 = {
         type: 'bar',
         data: data1,
@@ -155,22 +157,22 @@
         data: data2,
         options: {}
     };
-    
+
     const myChart1 = new Chart(
-    document.getElementById('myChart1'),
-    config1
+        document.getElementById('myChart1'),
+        config1
     );
     const myChart2 = new Chart(
-    document.getElementById('myChart2'),
-    config2
+        document.getElementById('myChart2'),
+        config2
     );
     const myChart3 = new Chart(
-    document.getElementById('myChart3'),
-    config1
+        document.getElementById('myChart3'),
+        config1
     );
     const myChart4 = new Chart(
-    document.getElementById('myChart4'),
-    config1
+        document.getElementById('myChart4'),
+        config1
     );
 </script>
 
