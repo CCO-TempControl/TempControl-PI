@@ -16,10 +16,10 @@
     <div class="wrapper">
         <div class="sidebar">
             <div class="dropdown">
-                <a href="#"><i class="fa-solid fa-circle-user" style="font-size:70px;  color: white;"></i>
-                    <div class="dropdown-content">
-                        <h4>Olá {{nome.usuario}}</h4>
-                    </div>
+                <a href="#"><i class="fa-solid fa-circle-user" style="font-size:70px;  color: white;"></i></a>
+                <div class="dropdown-content">
+                    <h4>Olá {{nome.usuario}}</h4>
+                </div>
             </div>
             <ul>
                 <li><a href="index.html"><i class="fas fa-home"></i>Home</a></li>
@@ -35,32 +35,32 @@
                 <img src="img/logo_nome_sembg.png">
             </div>
             <div class="info">
-                    <div class="card">
-                        <h2 >Adicionar medicamento</h2>
-                        <div class="field">
-                            <label for="nomeMedicamento">Nome medicamento:</label>
-                            <input id="nomeMedicamento" class="inputMedicamento" placeholder="Ex: Medicamento X">
-                        </div>
-                        <div class="field">
-                            <label for="tempMin">Temperatura Mínima:</label>
-                            <input id="tempMin" class="inputMedicamento" placeholder="Ex: 2" type="Number">
-                        </div>
-                        <div class="field">
-                            <label for="tempMax">Temperatura Máxima:</label>
-                            <input id="tempMax" class="inputMedicamento" placeholder="Ex: 5" type="Number">
-                        </div>
-                        <div class="field">
-                            <label for="umiMin">Umidade Mínima:</label>
-                            <input id="umiMin" class="inputMedicamento" placeholder="Ex: 30" type="Number">
-                        </div>
-                        <div class="field">
-                            <label for="umiMax">Umidade Máxima:</label>
-                            <input id="umiMax" class="inputMedicamento" placeholder="Ex: 40" type="Number">
-                        </div>
-                        <button onclick="adicionarMedicamento()">Adicionar Medicamento</button>
+                <div class="card">
+                    <h2>Adicionar medicamento</h2>
+                    <div class="field">
+                        <label for="nomeMedicamento">Nome medicamento:</label>
+                        <input id="nomeMedicamento" class="inputMedicamento" placeholder="Ex: Medicamento X">
                     </div>
+                    <div class="field">
+                        <label for="tempMin">Temperatura Mínima:</label>
+                        <input id="tempMin" class="inputMedicamento" placeholder="Ex: 2" type="Number">
+                    </div>
+                    <div class="field">
+                        <label for="tempMax">Temperatura Máxima:</label>
+                        <input id="tempMax" class="inputMedicamento" placeholder="Ex: 5" type="Number">
+                    </div>
+                    <div class="field">
+                        <label for="umiMin">Umidade Mínima:</label>
+                        <input id="umiMin" class="inputMedicamento" placeholder="Ex: 30" type="Number">
+                    </div>
+                    <div class="field">
+                        <label for="umiMax">Umidade Máxima:</label>
+                        <input id="umiMax" class="inputMedicamento" placeholder="Ex: 40" type="Number">
+                    </div>
+                    <button onclick="adicionarMedicamento()">Adicionar Medicamento</button>
+                </div>
 
-                    <!-- <table class="tabela"style="border-collapse: collapse;">
+                <!-- <table class="tabela"style="border-collapse: collapse;">
                         <tr class="tituloTabela">
                             <th colspan="6">Temperatura</th>
                         </tr>
@@ -103,26 +103,26 @@
                             <td class="valor"></td>
                         </tr>
                     </table> -->
-                    <div id="listaMedicamentos">
-                        <h1>Medicamentos</h1>
-                        <ul id="medicamentos">
-                            <li class="medicamentoContainerTitulo">
-                                <span class="tituloTabelaContainer">Nome</span>
-                                <span class="tituloTabelaContainer">Temp. Mín / Temp. Máx</span>
-                                <span class="tituloTabelaContainer">Umi. Mín/ Máx</span>
-                            </li>
-                            <li class="medicamentoContainer">
-                                <span class="pedidoNum tituloTabelaContainer" id="nomePedido">Nome Medicamento</span>
-                                <span class="pedidoTemp tituloTabelaContainer" id="tempMinPedido">6ºC/12ºC</span>
-                                <span class="pedidoUmi tituloTabelaContainer" id="UmiMinPedido">91%/94%</span>
-                            </li>
-                            <li class="medicamentoContainer">
-                                <span class="pedidoNum tituloTabelaContainer" id="nomePedido">Nome Medicamento</span>
-                                <span class="pedidoTemp tituloTabelaContainer" id="tempMinPedido">6ºC/10ºC</span>
-                                <span class="pedidoUmi tituloTabelaContainer" id="UmiMinPedido">90%/94%</span>
-                            </li>
-                        </ul>
-                    </div>
+                <div id="listaMedicamentos">
+                    <h1>Medicamentos</h1>
+                    <ul id="medicamentos">
+                        <li class="medicamentoContainerTitulo">
+                            <span class="tituloTabelaContainer">Nome</span>
+                            <span class="tituloTabelaContainer">Temp. Mín / Temp. Máx</span>
+                            <span class="tituloTabelaContainer">Umi. Mín/ Máx</span>
+                        </li>
+                        <li class="medicamentoContainer">
+                            <span class="pedidoNum tituloTabelaContainer" id="nomePedido">Nome Medicamento</span>
+                            <span class="pedidoTemp tituloTabelaContainer" id="tempMinPedido">6ºC/12ºC</span>
+                            <span class="pedidoUmi tituloTabelaContainer" id="UmiMinPedido">91%/94%</span>
+                        </li>
+                        <li class="medicamentoContainer">
+                            <span class="pedidoNum tituloTabelaContainer" id="nomePedido">Nome Medicamento</span>
+                            <span class="pedidoTemp tituloTabelaContainer" id="tempMinPedido">6ºC/10ºC</span>
+                            <span class="pedidoUmi tituloTabelaContainer" id="UmiMinPedido">90%/94%</span>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>

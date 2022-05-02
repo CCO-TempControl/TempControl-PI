@@ -18,10 +18,10 @@
   <div class="wrapper">
     <div class="sidebar">
       <div class="dropdown">
-        <a href="#"><i class="fa-solid fa-circle-user" style="font-size:70px;  color: white;"></i>
-          <div class="dropdown-content">
-            <h4>Olá {{nome.usuario}}</h4>
-          </div>
+        <a href="#"><i class="fa-solid fa-circle-user" style="font-size:70px;  color: white;"></i></a>
+        <div class="dropdown-content">
+          <h4>Olá {{nome.usuario}}</h4>
+        </div>
       </div>
       <ul>
         <li><a href="./index.html">
@@ -198,7 +198,7 @@
         });
 
         return true;
-      } else {        
+      } else {
         Swal.fire({
           title: 'Erro',
           text: 'Houve um erro ao carregar os medicamentos',
@@ -207,7 +207,7 @@
           showDenyButton: true,
           denyButtonText: 'OK'
         });
-        
+
         return false;
       }
 
@@ -254,7 +254,7 @@
         });
 
         return true;
-      } else {        
+      } else {
         Swal.fire({
           title: 'Erro',
           text: 'Houve um erro ao carregar as transportadoras',
@@ -263,7 +263,7 @@
           showDenyButton: true,
           denyButtonText: 'OK'
         });
-        
+
         return false;
       }
 
@@ -329,7 +329,7 @@
         });
 
         return true;
-      } else {        
+      } else {
         Swal.fire({
           title: 'Erro',
           text: 'Houve um erro ao carregar os sensores',
@@ -338,7 +338,7 @@
           showDenyButton: true,
           denyButtonText: 'OK'
         });
-        
+
         return false;
       }
 
@@ -387,7 +387,7 @@
 
     btnRoute.classList.remove('selected');
     divRoute.style.display = 'none';
-    
+
     divShipment.style.display = 'flex';
     btnShipment.classList.add('selected');
   }
@@ -395,7 +395,7 @@
   function mudarRota() {
     btnShipment.classList.remove('selected');
     divShipment.style.display = 'none';
-    
+
     divRoute.style.display = 'flex';
     btnRoute.classList.add('selected');
   }
@@ -403,7 +403,7 @@
   function validarCarregamento() {
     btnShipment.classList.remove('selected');
     divShipment.style.display = 'none';
-    
+
     divCompany.style.display = 'flex';
     btnCompany.classList.add('selected');
   }
@@ -411,7 +411,7 @@
   function mudarCarregamento() {
     btnCompany.classList.remove('selected');
     divCompany.style.display = 'none';
-    
+
     divShipment.style.display = 'flex';
     btnShipment.classList.add('selected');
   }
@@ -432,12 +432,12 @@
 </script>
 <script>
   var usuario = {};
-  
+
   function setUp() {
     usuario = obterDadosSession();
 
     var carregouMedicamentos = carregarMedicamentos();
-    
+
     if (!carregouMedicamentos) {
       return;
     }
@@ -454,8 +454,9 @@
       return;
     }
   }
-  
+
   verificarAutorizacao('logistico');
   setUp();
 </script>
+
 </html>

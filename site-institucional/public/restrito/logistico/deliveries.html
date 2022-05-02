@@ -18,10 +18,10 @@
   <div class="wrapper">
     <div class="sidebar">
       <div class="dropdown">
-        <a href="#"><i class="fa-solid fa-circle-user" style="font-size:70px;  color: white;"></i>
-          <div class="dropdown-content">
-            <h4>Olá {{nome.usuario}}</h4>
-          </div>
+        <a href="#"><i class="fa-solid fa-circle-user" style="font-size:70px;  color: white;"></i></a>
+        <div class="dropdown-content">
+          <h4>Olá {{nome.usuario}}</h4>
+        </div>
       </div>
       <ul>
         <li><a href="./index.html">
@@ -37,7 +37,7 @@
             Entregas
           </a></li>
         <li><a href="">
-          <i class="fas fa-solid fa-user"></i>
+            <i class="fas fa-solid fa-user"></i>
             Dados Pessoais
           </a></li>
         <li><a href="" onclick="sair()">
@@ -271,7 +271,7 @@
   function entregas() {
     btnRequests.classList.remove('selected');
     divRequests.style.display = 'none';
-    
+
     divDeliveries.style.display = 'flex';
     btnDeliveries.classList.add('selected');
   }
@@ -279,7 +279,7 @@
   function solicitacoes() {
     btnDeliveries.classList.remove('selected');
     divDeliveries.style.display = 'none';
-    
+
     divRequests.style.display = 'flex';
     btnRequests.classList.add('selected');
   }
@@ -302,4 +302,5 @@
     signOut();
   }
 </script>
+
 </html>
