@@ -36,28 +36,32 @@
             </div>
             <div class="info">
                 <div class="card">
-                    <h2>Adicionar medicamento</h2>
+                    <h2>Cadastrar medicamento</h2>
                     <div class="field">
-                        <label for="nomeMedicamento">Nome medicamento:</label>
+                        <label for="nomeMedicamento">Nome:</label>
                         <input id="nomeMedicamento" class="inputMedicamento" placeholder="Ex: Medicamento X">
                     </div>
                     <div class="field">
+                        <label for="validadeMedicamento">Validade:</label>
+                        <input id="validadeMedicamento" class="inputMedicamento" placeholder="Ex: 2" type="date" min="2022-01-01">
+                    </div>
+                    <div class="field">
                         <label for="tempMin">Temperatura Mínima:</label>
-                        <input id="tempMin" class="inputMedicamento" placeholder="Ex: 2" type="Number">
+                        <input id="tempMin" class="inputMedicamento" placeholder="Ex: 2" type="number">
                     </div>
                     <div class="field">
                         <label for="tempMax">Temperatura Máxima:</label>
-                        <input id="tempMax" class="inputMedicamento" placeholder="Ex: 5" type="Number">
+                        <input id="tempMax" class="inputMedicamento" placeholder="Ex: 5" type="number">
                     </div>
                     <div class="field">
                         <label for="umiMin">Umidade Mínima:</label>
-                        <input id="umiMin" class="inputMedicamento" placeholder="Ex: 30" type="Number">
+                        <input id="umiMin" class="inputMedicamento" placeholder="Ex: 30" type="number">
                     </div>
                     <div class="field">
                         <label for="umiMax">Umidade Máxima:</label>
-                        <input id="umiMax" class="inputMedicamento" placeholder="Ex: 40" type="Number">
+                        <input id="umiMax" class="inputMedicamento" placeholder="Ex: 40" type="number">
                     </div>
-                    <button onclick="adicionarMedicamento()">Adicionar Medicamento</button>
+                    <button onclick="cadastrarMedicamento()">Adicionar Medicamento</button>
                 </div>
 
                 <!-- <table class="tabela"style="border-collapse: collapse;">
@@ -131,13 +135,53 @@
 </body>
 
 <script>
-    function adicionarMedicamento() {
+    var dadosDaSessao = obterDadosSession();
+    function cadastrarMedicamento() {
         var nome = nomeMedicamento.value;
+        var validade = validadeMedicamento.value
         var temperaturaMinima = tempMin.value;
         var temperaturaMaxima = tempMax.value;
         var umidadeMinima = umiMin.value;
         var umidadeMaxima = umiMax.value;
+        if (nome == "" || temperaturaMinima == "" || temperaturaMaxima == "" || umidadeMinima == "" || umidadeMaxima == "") {
+            Swal.fire({
+                title: 'Erro',
+                text: 'Todos os campos são obrigatórios',
+                icon: 'error',
+                showConfirmButton: false,
+                showDenyButton: true,
+                denyButtonText: 'OK'
+            });
+            return;
+        }
+        console.log({
+            "idCliente": dadosDaSessao.fkCliente,
+            "nome": nome,
+            "validade": validade,
+            "tempMin": temperaturaMinima,
+            "tempMax": temperaturaMaxima,
+            "umiMin": umidadeMinima,
+            "umiMax": umidadeMaxima
+        });
+        fetch("/adicionarMedicamento", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                "idCliente": dadosDaSessao.fkCliente,
+                "nome": nome,
+                "validade": validade,
+                "tempMin": temperaturaMinima,
+                "tempMax": temperaturaMaxima,
+                "umiMin": umidadeMinima,
+                "umiMax": umidadeMaxima
+            })
+        }).then(function (response) {
+            console.log(response);
+        });
         // Faz o insert no banco
+        // if () não der erro ao adicionar
         medicamentos.innerHTML += `<li class="medicamentoContainer">
                                 <span class="pedidoNum tituloTabelaContainer" id="nomePedido">${nome}</span>
                                 <span class="pedidoTemp tituloTabelaContainer" id="tempMinPedido">${temperaturaMinima}ºC/${temperaturaMaxima}ºC</span>
@@ -148,6 +192,80 @@
         signOut();
         window.location.replace('../../sign-in.html')
     }
+</script>
+<script>
+    function cadastrarMedicamento() {
+        new Promise(() => {
+        }).then(function (resposta) {
+            console.log('Resposta: ', resposta);
+
+            if (resposta.ok) {
+                console.log(resposta);
+
+                resposta.json().then(json => {
+                    console.log(json);
+
+                    sessionStorage.USUARIO = JSON.stringify(json);
+                    sessionStorage.ID_CLIENTE = json.fkCliente;
+                    sessionStorage.TIPO_USUARIO = json.tipoUsuario;
+                    sessionStorage.NOME_USUARIO = json.nomeUsuario;
+                    sessionStorage.ID_USUARIO = json.idUsuario;
+
+                    Swal.fire({
+                        title: 'Suceso',
+                        text: 'Login realizado com sucesso',
+                        icon: 'success',
+                        timer: 2000,
+                        timerProgressBar: true,
+                        confirmButtonColor: '#34e269',
+                        willClose: () => {
+                            if (json.tipoUsuario != '' && json.tipoUsuario != undefined) {
+                                window.location.replace(`./restrito/${json.tipoUsuario}/index.html`);
+                            } else {
+                                throw new Error('Tipo de usuário inválido')
+                            }
+                        }
+                    });
+                });
+            } else {
+                if (resposta.status == 403) {
+                    resposta.text().then(text => {
+                        Swal.fire({
+                            title: 'Erro',
+                            text: text,
+                            icon: 'error',
+                            showConfirmButton: false,
+                            showDenyButton: true,
+                            denyButtonText: 'OK'
+                        });
+                    })
+                } else {
+                    Swal.fire({
+                        title: 'Erro',
+                        text: 'Houve um erro ao realizar o login!',
+                        icon: 'error',
+                        showConfirmButton: false,
+                        showDenyButton: true,
+                        denyButtonText: 'OK'
+                    });
+                }
+
+            }
+        }).catch(function (erro) {
+            Swal.fire({
+                title: 'Erro',
+                text: 'Houve um erro ao realizar o login!',
+                icon: 'error',
+                showConfirmButton: false,
+                showDenyButton: true,
+                denyButtonText: 'OK'
+            });
+            console.log(`ERRO: ${erro}`);
+        })
+
+        return false;
+    }
+
 </script>
 
 </html>
