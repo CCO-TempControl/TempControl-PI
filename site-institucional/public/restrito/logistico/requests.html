@@ -37,10 +37,10 @@
             Entregas
           </a></li>
         <li><a href="">
-            <i class="fas fa-solid fa-chart-gantt"></i>
+            <i class="fas fa-solid fa-user"></i>
             Dados Pessoais
           </a></li>
-        <li><a href="" onclick="sair()">
+        <li><a href="" onclick="signOut()">
             <i class="fas fa-solid fa-arrow-right-from-bracket"></i>
             Sair
           </a></li>
@@ -124,21 +124,21 @@
                     <td>Atenolol</td>
                     <td>8 - 24</td>
                     <td>10 - 60</td>
-                    <td><i class="fa-solid fa-trash-can"></i></td>
+                    <td><i class="fa-solid fa-trash-can" style="color: #ec2020;"></i></td>
                   </tr>
                   <tr class="alternative">
                     <td><input type="number" min="1" value="1"></td>
                     <td>Atenolol</td>
                     <td>8 - 24</td>
                     <td>10 - 60</td>
-                    <td><i class="fa-solid fa-trash-can"></i></td>
+                    <td><i class="fa-solid fa-trash-can" style="color: #ec2020;"></i></td>
                   </tr>
                   <tr>
                     <td><input type="number" min="1" value="1"></td>
                     <td>Atenolol</td>
                     <td>8 - 24</td>
                     <td>10 - 60</td>
-                    <td><i class="fa-solid fa-trash-can"></i></td>
+                    <td><i class="fa-solid fa-trash-can" style="color: #ec2020;"></i></td>
                   </tr>
                 </tbody>
               </table>
@@ -150,15 +150,8 @@
             <div id="divCompany" class="form">
               <div class="field">
                 <label for="txtTransportadora">Selecione a Transportadora responsável por essa entrega</label>
-                <input id="txtTransportadora" list="cmbTransportadora" placeholder="Transportadora">
-                <datalist id="cmbTransportadora">
-                  <option value="Polar">Polar</option>
-                  <option value="KGT">KGT</option>
-                  <option value="Norte">Norte</option>
-                  <option value="Friaca">Friaca</option>
-                  <option value="Freeza">Freeza</option>
-                  <option value="Congelando">Congelando</option>
-                </datalist>
+                <input id="txtTransportadora" list="cmbTransportadoras" placeholder="Transportadora">
+                <datalist id="cmbTransportadoras"></datalist>
               </div>
               <p>Selecione um sensor para se utilizado durante o transporte</p>
               <table class="table">
@@ -170,26 +163,7 @@
                     <th>Selecionar</th>
                   </tr>
                 </thead>
-                <tbody id="tbShipment">
-                  <tr>
-                    <td>101</td>
-                    <td>Sensor 1</td>
-                    <td>Livre</td>
-                    <td><input name="radSensor" type="radio"></td>
-                  </tr>
-                  <tr class="alternative">
-                    <td>101</td>
-                    <td>Sensor 1</td>
-                    <td>Livre</td>
-                    <td><input name="radSensor" type="radio"></td>
-                  </tr>
-                  <tr>
-                    <td>103</td>
-                    <td>Sensor 3</td>
-                    <td>Em uso</td>
-                    <td><input name="radSensor" type="radio"></td>
-                  </tr>
-                </tbody>
+                <tbody id="tbSensors"></tbody>
               </table>
               <div class="buttons">
                 <button onclick="mudarCarregamento()">Mudar Carregamento</button>
@@ -203,8 +177,195 @@
   </div>
 </body>
 <script>
+  var medicamentos = [];
+  var transportadoras = [];
+  var sensores = [];
+
+  function carregarMedicamentos() {
+    return fetch(`/medicamentos/fabricante/${usuario.fkCliente}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }).then(function (resposta) {
+      console.log('Resposta: ', resposta);
+
+      if (resposta.ok) {
+        resposta.json().then(json => {
+          console.log(json);
+
+          medicamentos = json;
+        });
+
+        return true;
+      } else {        
+        Swal.fire({
+          title: 'Erro',
+          text: 'Houve um erro ao carregar os medicamentos',
+          icon: 'error',
+          showConfirmButton: false,
+          showDenyButton: true,
+          denyButtonText: 'OK'
+        });
+        
+        return false;
+      }
+
+    }).catch(function (erro) {
+      Swal.fire({
+        title: 'Erro',
+        text: 'Houve um erro ao carregar os medicamentos',
+        icon: 'error',
+        showConfirmButton: false,
+        showDenyButton: true,
+        denyButtonText: 'OK'
+      });
+      console.log(`ERRO: ${erro}`);
+
+      return false;
+    })
+  }
+
+  function carregarTransportadoras() {
+    return fetch(`/transportadoras/${usuario.fkCliente}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }).then(function (resposta) {
+      console.log('Resposta: ', resposta);
+
+      if (resposta.ok) {
+        resposta.json().then(json => {
+          console.log(json);
+
+          transportadoras = json;
+          var index = 0;
+
+          while (index < transportadoras.length) {
+            var transportadora = transportadoras[index];
+
+            cmbTransportadoras.innerHTML += `
+              <option value="${transportadora.idCliente}">${transportadora.nomeCliente}</option>
+            `;
+
+            index++;
+          }
+        });
+
+        return true;
+      } else {        
+        Swal.fire({
+          title: 'Erro',
+          text: 'Houve um erro ao carregar as transportadoras',
+          icon: 'error',
+          showConfirmButton: false,
+          showDenyButton: true,
+          denyButtonText: 'OK'
+        });
+        
+        return false;
+      }
+
+    }).catch(function (erro) {
+      Swal.fire({
+        title: 'Erro',
+        text: 'Houve um erro ao carregar as transportadoras',
+        icon: 'error',
+        showConfirmButton: false,
+        showDenyButton: true,
+        denyButtonText: 'OK'
+      });
+      console.log(`ERRO: ${erro}`);
+
+      return false;
+    })
+  }
+
+  function carregarSensores() {
+    return fetch(`/sensores/fabricante/${usuario.fkCliente}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }).then(function (resposta) {
+      console.log('Resposta: ', resposta);
+
+      if (resposta.ok) {
+        resposta.json().then(json => {
+          console.log(json);
+
+          sensores = json;
+          var index = 0;
+
+          while (index < sensores.length) {
+            var sensor = sensores[index];
+
+            var livre = 'Em Uso'
+            var radioInput = '<input name="radSensor" type="radio" disabled>'
+
+            if (sensor.fkCliente == null) {
+              livre = 'Livre';
+              radioInput = '<input name="radSensor" type="radio">'
+            }
+
+            var estiloLinha = '<tr>'
+
+            if (index % 2 != 0) {
+              estiloLinha = '<tr class="alternative">'
+            }
+
+            tbSensors.innerHTML += `
+              ${estiloLinha}
+                <td>${sensor.fkFarmaceutica}${sensor.idSensor}</td>
+                <td>Sensor ${sensor.idSensor}</td>
+                <td>${livre}</td>
+                <td>${radioInput}</td>
+              </tr>
+            `;
+
+            index++;
+          }
+        });
+
+        return true;
+      } else {        
+        Swal.fire({
+          title: 'Erro',
+          text: 'Houve um erro ao carregar os sensores',
+          icon: 'error',
+          showConfirmButton: false,
+          showDenyButton: true,
+          denyButtonText: 'OK'
+        });
+        
+        return false;
+      }
+
+    }).catch(function (erro) {
+      Swal.fire({
+        title: 'Erro',
+        text: 'Houve um erro ao carregar os sensores',
+        icon: 'error',
+        showConfirmButton: false,
+        showDenyButton: true,
+        denyButtonText: 'OK'
+      });
+      console.log(`ERRO: ${erro}`);
+
+      return false;
+    })
+  }
+</script>
+<script>
   var origem = '';
   var destino = '';
+
+  var minTemperatura = 0;
+  var maxTemperatura = 0;
+  var minUmidade = 0;
+  var maxUmidade = 0;
+
   var carregamento = [];
 
   function validarRota() {
@@ -270,10 +431,31 @@
   }
 </script>
 <script>
-  verificarAutorizacao('logistico');
+  var usuario = {};
+  
+  function setUp() {
+    usuario = obterDadosSession();
 
-  function sair() {
-    signOut();
+    var carregouMedicamentos = carregarMedicamentos();
+    
+    if (!carregouMedicamentos) {
+      return;
+    }
+
+    var carregouTransportadoras = carregarTransportadoras();
+
+    if (!carregouTransportadoras) {
+      return;
+    }
+
+    var carregouSensores = carregarSensores();
+
+    if (!carregouSensores) {
+      return;
+    }
   }
+  
+  verificarAutorizacao('logistico');
+  setUp();
 </script>
 </html>

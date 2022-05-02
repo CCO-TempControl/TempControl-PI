@@ -7,6 +7,8 @@
   <title>CONTATO - TempControl</title>
   <link rel="stylesheet" href="./assets/css/style.css">
   <link rel="icon" type="image/x-icon" href="./assets/img/Logo.png">
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="./assets/js/validacoes.js"></script>
 </head>
 <body>
   <!-- Header -->
@@ -46,19 +48,19 @@
             <input id="txtEmail" type="email" placeholder="Ex: seuemail@email.com">
           </div>
           <div class="field">
-            <label for="txtSubject">
+            <label for="txtAssunto">
               Assunto:
             </label>
-            <input id="txtSubject" type="password" placeholder="Ex: Mais informações">
+            <input id="txtAssunto" type="text" placeholder="Ex: Mais informações">
           </div>
           <div class="field">
-            <label for="txtMessage">
+            <label for="txtMensagem">
               Mensagem:
             </label>
             <!-- Serve para criar "inputs" de texto com várias linhas -->
-            <textarea id="txtMessage" type="text" cols="50" rows="15" placeholder="Ex: Mais informações"></textarea>
+            <textarea id="txtMensagem" type="text" cols="50" rows="15" placeholder="Ex: Mais informações"></textarea>
           </div>
-          <button>Enviar</button>
+          <button onclick="enviar()">Enviar</button>
         </div>
       </div>
     </div>
@@ -115,3 +117,43 @@
   </div>
 </body>
 </html>
+<script>
+  function enviar() {
+    var emailVar = txtEmail.value;
+    var assuntoVar = txtAssunto.value;
+    var mensagemVar = txtMensagem.value;
+
+    var validacaoEmail = validarEmail(emailVar);
+
+    if (
+      assuntoVar == ''
+      || mensagemVar == ''
+    ) {
+      Swal.fire({
+        title: 'Erro',
+        text: 'Todos os campos são obrigatórios',
+        icon: 'error',
+        showConfirmButton: false,
+        showDenyButton: true,
+        denyButtonText: 'OK'
+      });
+    }
+
+    if (validacaoEmail != 'OK') {
+      Swal.fire({
+        title: 'Erro',
+        text: validacaoEmail,
+        icon: 'error',
+        showConfirmButton: false,
+        showDenyButton: true,
+        denyButtonText: 'OK'
+      });
+    }
+
+    var emailToLink = `
+      mailto:PI-ControlenoTransporteeArmazenamentodeMedicamentos@sptech.school?subject=${assuntoVar}&body=Email ${emailVar} envia ${mensagemVar}
+    `;
+
+    window.location.assign(emailToLink);
+  }
+</script>

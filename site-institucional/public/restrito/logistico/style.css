@@ -311,7 +311,7 @@ input[type=text] {
     justify-content: flex-start;
 }
 
-.form-card h2 {
+.form-card h2, #temperatura h2 {
     font-size: 34px;
     color: #0253c4;
     margin: 20px 0 28px;
@@ -321,13 +321,13 @@ input[type=text] {
     margin-bottom: 8px;
 }
 
-.form-card .options {
+.options {
     display: flex;
     width: 100%;
     justify-content: space-evenly;
 }
 
-.form-card .options .option {
+.options .option {
     background-color: transparent;
     border: 0;
     padding: 2px 10px 6px;
@@ -337,9 +337,13 @@ input[type=text] {
     font-size: 20px;
 }
 
-.form-card .options .selected {
+.options .selected {
     border-bottom: 3px solid #0253c4;
     color: #0253c4;
+}
+
+#temperatura .options {
+    margin-bottom: 20px;
 }
 
 .form {
@@ -466,6 +470,7 @@ input[type=text] {
     width: 90%;
     border-radius: 10px;
     border: 1px solid #717171;
+    margin-bottom: 30px;
 }
 
 .table thead {
@@ -502,15 +507,20 @@ input[type=text] {
     justify-content: space-evenly;
     align-items: center;
     padding: 10px 0;
+    border-radius: 0 0 10px 10px;
 }
 
 .table tbody tr.alternative {
    background-color: #f5f5f5;
+   border-radius: 0 0 10px 10px;
 }
 
 .table tbody tr td {
     width: 19%;
     text-align: center;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
 }
 
 .table input {
@@ -530,4 +540,15 @@ input[type=text] {
 
 #divCompany p {
     margin: 16px 0 10px;
+}
+
+div.data-table {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+}
+
+#divRequests {
+    display: none;
 }

@@ -2,9 +2,8 @@ function signOut() {
   sessionStorage.clear();
   window.location.replace('../../sign-in.html');
 }
-function pegaDadosLogado(){
-  console.log(sessionStorage.USUARIO);
-  var json = sessionStorage.USUARIO;
+function obterDadosSession(){
+  var json = JSON.parse(sessionStorage.USUARIO);
   return json;
 }
 

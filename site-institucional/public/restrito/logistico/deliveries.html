@@ -37,7 +37,7 @@
             Entregas
           </a></li>
         <li><a href="">
-            <i class="fas fa-solid fa-chart-gantt"></i>
+          <i class="fas fa-solid fa-user"></i>
             Dados Pessoais
           </a></li>
         <li><a href="" onclick="sair()">
@@ -52,149 +52,215 @@
         <img src="img/logo_nome_sembg.png">
       </div>
       <div class="info">
-        <div class="container">
-          <div class="form-card">
-            <h2>Solicitar Entrega</h2>
-            <div class="options">
-              <button id="btnRoute" class="option selected" disabled>1 - Trajeto</button>
-              <button id="btnShipment" class="option" disabled>2 - Carregamento</button>
-              <button id="btnCompany" class="option" disabled>3 - Transportadora</button>
-            </div>
+        <div id="temperatura">
+          <h2>
+            Entregas
+          </h2>
+          <div class="options">
+            <button onclick="entregas()" id="btnDeliveries" class="option selected">Entregas</button>
+            <button onclick="solicitacoes()" id="btnRequests" class="option">Solicitações</button>
+          </div>
+          <div id="divDeliveries" class="data-table">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Transportadora</th>
+                  <th>Trajeto</th>
+                  <th>Carregamento</th>
+                  <th>Métricas</th>
+                  <th>Data Entrega</th>
+                  <th>Situação</th>
+                  <th>Ação</th>
+                </tr>
+              </thead>
+              <tbody id="tbShipment">
+                <tr>
+                  <td>Polar</td>
+                  <td>
+                    <ul>
+                      <li>Rua Vermelha</li>
+                      <li>Rua Amarela</li>
+                    </ul>
+                  </td>
+                  <td>
+                    <ul>
+                      <li>250 - Atenol</li>
+                      <li>250 - Atenol</li>
+                      <li>250 - Atenol</li>
+                      <li>250 - Atenol</li>
+                    </ul>
+                  </td>
+                  <td>
+                    <ul>
+                      <li>Temperatura: 8 - 18</li>
+                      <li>Umidade: 20 - 80</li>
+                    </ul>
+                  </td>
+                  <td>01/05/2022</td>
+                  <td>Entregue</td>
+                  <td></td>
+                </tr>
+                <tr class="alternative">
+                  <td>Polar</td>
+                  <td>
+                    <ul>
+                      <li>Rua Vermelha</li>
+                      <li>Rua Amarela</li>
+                    </ul>
+                  </td>
+                  <td>
+                    <ul>
+                      <li>250 - Atenol</li>
+                      <li>250 - Atenol</li>
+                      <li>250 - Atenol</li>
+                      <li>250 - Atenol</li>
+                    </ul>
+                  </td>
+                  <td>
+                    <ul>
+                      <li>Temperatura: 8 - 18</li>
+                      <li>Umidade: 20 - 80</li>
+                    </ul>
+                  </td>
+                  <td>04/05/2022</td>
+                  <td>Em andamento</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>Polar</td>
+                  <td>
+                    <ul>
+                      <li>Rua Vermelha</li>
+                      <li>Rua Amarela</li>
+                    </ul>
+                  </td>
+                  <td>
+                    <ul>
+                      <li>250 - Atenol</li>
+                      <li>250 - Atenol</li>
+                      <li>250 - Atenol</li>
+                      <li>250 - Atenol</li>
+                    </ul>
+                  </td>
+                  <td>
+                    <ul>
+                      <li>Temperatura: 8 - 18</li>
+                      <li>Umidade: 20 - 80</li>
+                    </ul>
+                  </td>
+                  <td>07/10/2022</td>
+                  <td>Agendado</td>
+                  <td>
+                    <i class="fas fa-regular fa-pen-to-square"></i>
+                    <i class="fas fa-solid fa-trash-can" onclick="deletar()" style="color: #ec2020;"></i>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
-            <div id="divRoute" class="form">
-              <div class="field">
-                <label for="txtOrigem">
-                  Informe a Origem da entrega (local onde a transportadora irá pegar o carregamento):
-                </label>
-                <input id="txtOrigem" type="text" placeholder="Ex: Rua Saturno, 386 - São Paulo, SP">
-              </div>
-              <div class="field">
-                <label for="txtDestino">
-                  Informe o Destino da entrega (local aonde a transportadora irá entregar o carregamento):
-                </label>
-                <input id="txtDestino" type="text" placeholder="Ex: Rua Saturno, 386 - São Paulo, SP">
-              </div>
-              <button onclick="validarRota()">Prosseguir</button>
-            </div>
-
-            <div id="divShipment" class="form">
-              <div class="boxes">
-                <div class="box">
-                  <div class="upper-box">
-                    Temperatura Miníma
-                  </div>
-                  <p>8</p>
-                </div>
-                <div class="box">
-                  <div class="upper-box">
-                    Temperatura Máxima
-                  </div>
-                  <p>18</p>
-                </div>
-                <div class="box">
-                  <div class="upper-box">
-                    Umidade Miníma
-                  </div>
-                  <p>40</p>
-                </div>
-                <div class="box">
-                  <div class="upper-box">
-                    Umidade Máxima
-                  </div>
-                  <p>60</p>
-                </div>
-              </div>
-              <div>
-                <button onclick="adicionarMedicamento()">Adicionar Medicamento</button>
-              </div>
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>Quantidade</th>
-                    <th>Medicamento</th>
-                    <th>Temperatura</th>
-                    <th>Umidade</th>
-                    <th>Ação</th>
-                  </tr>
-                </thead>
-                <tbody id="tbShipment">
-                  <tr>
-                    <td><input type="number" min="1" value="1"></td>
-                    <td>Atenolol</td>
-                    <td>8 - 24</td>
-                    <td>10 - 60</td>
-                    <td><i class="fa-solid fa-trash-can"></i></td>
-                  </tr>
-                  <tr class="alternative">
-                    <td><input type="number" min="1" value="1"></td>
-                    <td>Atenolol</td>
-                    <td>8 - 24</td>
-                    <td>10 - 60</td>
-                    <td><i class="fa-solid fa-trash-can"></i></td>
-                  </tr>
-                  <tr>
-                    <td><input type="number" min="1" value="1"></td>
-                    <td>Atenolol</td>
-                    <td>8 - 24</td>
-                    <td>10 - 60</td>
-                    <td><i class="fa-solid fa-trash-can"></i></td>
-                  </tr>
-                </tbody>
-              </table>
-              <div class="buttons">
-                <button onclick="mudarRota()">Mudar Rota</button>
-                <button onclick="validarCarregamento()">Prosseguir</button>
-              </div>
-            </div>
-            <div id="divCompany" class="form">
-              <div class="field">
-                <label for="txtTransportadora">Selecione a Transportadora responsável por essa entrega</label>
-                <input id="txtTransportadora" list="cmbTransportadora" placeholder="Transportadora">
-                <datalist id="cmbTransportadora">
-                  <option value="Polar">Polar</option>
-                  <option value="KGT">KGT</option>
-                  <option value="Norte">Norte</option>
-                  <option value="Friaca">Friaca</option>
-                  <option value="Freeza">Freeza</option>
-                  <option value="Congelando">Congelando</option>
-                </datalist>
-              </div>
-              <p>Selecione um sensor para se utilizado durante o transporte</p>
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Equipamento</th>
-                    <th>Disponibilidade</th>
-                    <th>Selecionar</th>
-                  </tr>
-                </thead>
-                <tbody id="tbShipment">
-                  <tr>
-                    <td>101</td>
-                    <td>Sensor 1</td>
-                    <td>Livre</td>
-                    <td><input name="radSensor" type="radio"></td>
-                  </tr>
-                  <tr class="alternative">
-                    <td>101</td>
-                    <td>Sensor 1</td>
-                    <td>Livre</td>
-                    <td><input name="radSensor" type="radio"></td>
-                  </tr>
-                  <tr>
-                    <td>103</td>
-                    <td>Sensor 3</td>
-                    <td>Em uso</td>
-                    <td><input name="radSensor" type="radio"></td>
-                  </tr>
-                </tbody>
-              </table>
-              <div class="buttons">
-                <button onclick="mudarCarregamento()">Mudar Carregamento</button>
-                <button onclick="finalizar()">Finalizar</button>
-              </div>
-            </div>
+          <div id="divRequests" class="data-table">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Transportadora</th>
+                  <th>Trajeto</th>
+                  <th>Carregamento</th>
+                  <th>Métricas</th>
+                  <th>Data Entrega</th>
+                  <th>Situação</th>
+                  <th>Ação</th>
+                </tr>
+              </thead>
+              <tbody id="tbShipment">
+                <tr>
+                  <td>Polar</td>
+                  <td>
+                    <ul>
+                      <li>Rua Vermelha</li>
+                      <li>Rua Amarela</li>
+                    </ul>
+                  </td>
+                  <td>
+                    <ul>
+                      <li>250 - Atenol</li>
+                      <li>250 - Atenol</li>
+                      <li>250 - Atenol</li>
+                      <li>250 - Atenol</li>
+                    </ul>
+                  </td>
+                  <td>
+                    <ul>
+                      <li>Temperatura: 8 - 18</li>
+                      <li>Umidade: 20 - 80</li>
+                    </ul>
+                  </td>
+                  <td>01/05/2022</td>
+                  <td>Pendente</td>
+                  <td>
+                    <i class="fas fa-regular fa-pen-to-square"></i>
+                    <i class="fas fa-solid fa-trash-can" onclick="deletar()" style="color: #ec2020;"></i>
+                  </td>
+                </tr>
+                <tr class="alternative">
+                  <td>Polar</td>
+                  <td>
+                    <ul>
+                      <li>Rua Vermelha</li>
+                      <li>Rua Amarela</li>
+                    </ul>
+                  </td>
+                  <td>
+                    <ul>
+                      <li>250 - Atenol</li>
+                      <li>250 - Atenol</li>
+                      <li>250 - Atenol</li>
+                      <li>250 - Atenol</li>
+                    </ul>
+                  </td>
+                  <td>
+                    <ul>
+                      <li>Temperatura: 8 - 18</li>
+                      <li>Umidade: 20 - 80</li>
+                    </ul>
+                  </td>
+                  <td>04/05/2022</td>
+                  <td>Pendente</td>
+                  <td>
+                    <i class="fas fa-regular fa-pen-to-square"></i>
+                    <i class="fas fa-solid fa-trash-can" onclick="deletar()" style="color: #ec2020;"></i>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Polar</td>
+                  <td>
+                    <ul>
+                      <li>Rua Vermelha</li>
+                      <li>Rua Amarela</li>
+                    </ul>
+                  </td>
+                  <td>
+                    <ul>
+                      <li>250 - Atenol</li>
+                      <li>250 - Atenol</li>
+                      <li>250 - Atenol</li>
+                      <li>250 - Atenol</li>
+                    </ul>
+                  </td>
+                  <td>
+                    <ul>
+                      <li>Temperatura: 8 - 18</li>
+                      <li>Umidade: 20 - 80</li>
+                    </ul>
+                  </td>
+                  <td>07/10/2022</td>
+                  <td>Cancelada</td>
+                  <td>
+                    <i class="fas fa-solid fa-trash-can" onclick="deletar()" style="color: #ec2020;"></i>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -202,69 +268,30 @@
   </div>
 </body>
 <script>
-  var origem = '';
-  var destino = '';
-  var carregamento = [];
-
-  function validarRota() {
-    origem = txtOrigem.value;
-    destino = txtDestino.value;
-
-    if (
-      origem == ''
-      || destino == ''
-    ) {
-      Swal.fire({
-        title: 'Erro',
-        text: 'Todos os campos são obrigatórios',
-        icon: 'error',
-        confirmButtonColor: '#fc3636'
-      })
-      return;
-    }
-
-    btnRoute.classList.remove('selected');
-    divRoute.style.display = 'none';
+  function entregas() {
+    btnRequests.classList.remove('selected');
+    divRequests.style.display = 'none';
     
-    divShipment.style.display = 'flex';
-    btnShipment.classList.add('selected');
+    divDeliveries.style.display = 'flex';
+    btnDeliveries.classList.add('selected');
   }
 
-  function mudarRota() {
-    btnShipment.classList.remove('selected');
-    divShipment.style.display = 'none';
+  function solicitacoes() {
+    btnDeliveries.classList.remove('selected');
+    divDeliveries.style.display = 'none';
     
-    divRoute.style.display = 'flex';
-    btnRoute.classList.add('selected');
+    divRequests.style.display = 'flex';
+    btnRequests.classList.add('selected');
   }
 
-  function validarCarregamento() {
-    btnShipment.classList.remove('selected');
-    divShipment.style.display = 'none';
-    
-    divCompany.style.display = 'flex';
-    btnCompany.classList.add('selected');
-  }
-
-  function mudarCarregamento() {
-    btnCompany.classList.remove('selected');
-    divCompany.style.display = 'none';
-    
-    divShipment.style.display = 'flex';
-    btnShipment.classList.add('selected');
-  }
-
-  function finalizar() {
+  function deletar() {
     Swal.fire({
-      title: 'Suceso',
-      text: 'Solicitação de entrega enviada para transportadora',
-      icon: 'success',
-      timer: 2000,
-      timerProgressBar: true,
-      confirmButtonColor: '#34e269',
-      willClose: () => {
-        window.location.replace('./index.html');
-      }
+      title: 'Atenção',
+      text: 'Tem certeza que deseja cancelar essa entrega?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dd6b55',
+      cancelButtonText: 'Cancelar',
     });
   }
 </script>
