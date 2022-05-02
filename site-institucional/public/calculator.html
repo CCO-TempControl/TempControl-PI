@@ -49,13 +49,13 @@
             <label for="txtDistancia">
               Insira a Distancia Percorrida em KM (Entre o Remetente e o Destinatário): 
             </label>
-            <input id="txtDistancia" type="text" placeholder="Ex: 2 ">
+            <input id="txtDistancia" type="number" placeholder="Ex: 2 ">
           </div>
           <div class="field">
             <label for="txtEixo">
               Insira o Número de Eixos do Caminhão:
             </label>
-            <input id="txtEixo" type="text" placeholder="Ex: 7 ">
+            <input id="txtEixo" type="number" placeholder="Ex: 7 ">
           </div>
           <button onclick="calcularFrete()">Verificar Valor</button>
 
@@ -76,25 +76,25 @@
             <label for="txtLotesComprados">
               Quantos lotes você comprou?
             </label>
-            <input id="txtLotesComprados" type="text" placeholder="Ex: 100">
+            <input id="txtLotesComprados" type="number" placeholder="Ex: 100">
           </div>
           <div class="field">
             <label for="txtLotesPerdidos">
               Quantos lotes você perdeu na viagem?
             </label>
-            <input id="txtLotesPerdidos" type="text" placeholder="Ex: 40">
+            <input id="txtLotesPerdidos" type="number" placeholder="Ex: 40">
           </div>
           <div class="field">
             <label for="txtValorLotes">
               Por quanto você comprou cada lote?
             </label>
-            <input id="txtValorLotes" type="text" placeholder="Ex: 2">
+            <input id="txtValorLotes" type="number" placeholder="Ex: 2">
           </div>
           <div class="field">
             <label for="txtVendaLotes">
               Por quanto você vendeu cada lote?
             </label>
-            <input id="txtVendaLotes" type="text" placeholder="Ex: 4">
+            <input id="txtVendaLotes" type="number" placeholder="Ex: 4">
           </div>
           <button onclick="calcularReceita()">Calcular</button>
 

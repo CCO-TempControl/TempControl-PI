@@ -242,6 +242,7 @@ input[type=text] {
 }
 
 #banners {
+    list-style-type: none;
     width: 90%;
     height: fit-content;
     margin-top: 10px;
