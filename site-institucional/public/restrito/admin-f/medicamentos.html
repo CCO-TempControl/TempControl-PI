@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
@@ -7,14 +7,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/2eecc47c4e.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../../assets/js/funcoes.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
     <title>DashBoard</title>
 </head>
 
 <body>
-
-
     <div class="wrapper">
         <div class="sidebar">
             <div class="dropdown">
@@ -27,12 +26,11 @@
                 <li><a href="index.html"><i class="fas fa-home"></i>Home</a></li>
                 <li><a href="medicamentos.html"><i class="fas fa-solid fa-file-medical"></i>Ver Medicamentos</a></li>
                 <li><a href="usuarios.html"><i class="fas fa-solid fa-users"></i>Cadastrar Úsuarios</a></li>
-                <li><a href="entregas.html"><i class="fas fa-solid fa-calendar-check"></i>Ver Entregas</a></li>
-                <li><a href="sensores.html"><i class="fas fa-regular fa-hard-drive"></i>Solicitar Sensores</a></li>
+                <li><a href="deliveries.html"><i class="fas fa-regular fa-truck-ramp-box"></i>Ver Entregas</a></li>
+                <li><a href="formulario.html"><i class="fas fa-solid fa-file-contract"></i>Solicitar Sensores</a></li>
                 <li><a href="graficos.html"><i class="fas fa-solid fa-chart-gantt"></i></i>Gráficos/Alertas</a></li>
                 <li><a href="dadosPessoais.html"><i class="fas fa-solid fa-user"></i></i>Dados Pessoais</a></li>
-                <li><a href="../../index.html" onclick="sair()"><i
-                            class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
+                <li><a href="../../index.html" onclick="sair()"><i class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
             </ul>
 
         </div>
@@ -42,74 +40,244 @@
                 <img src="img/logo_nome_sembg.png">
             </div>
             <div class="info">
-                <div id="cards">
-                    <div class="card">
-                        <div id="teste">
-                            <h2>Medicamentos Cadastrados</h2>
-                        </div>
-                        <h3>250</h3>
-                        <small>$12.456 foram gasto com sistema</small>
+                <div class="card">
+                    <h2 id="formulario">Cadastrar medicamento</h2>
+                    <div class="field">
+                        <label for="nomeMedicamento">Nome:</label>
+                        <input id="nomeMedicamento" class="inputMedicamento" placeholder="Ex: Medicamento X">
                     </div>
-                    <div class="card">
-                        <div id="teste">
-                            <h2>Medicamento Mais Solicitado</h2>
-                        </div>
-                        <h3>Vacina Covid</h3>
-                        <small>35% das entregas possuem esse medicamento</small>
+                    <div class="field">
+                        <label for="validadeMedicamento">Validade:</label>
+                        <input id="validadeMedicamento" class="inputMedicamento" placeholder="Ex: 2" type="date" min="2022-01-01">
                     </div>
-                    <div class="card">
-                        <div id="teste">
-                            <h2>Média De Alertas Mensal</h2>
-                        </div>
-                        <h3>3.92</h3>
-                        <small>A cada 10 viagens uma da problema</small>
+                    <div class="field">
+                        <label for="tempMin">Temperatura Mínima:</label>
+                        <input id="tempMin" class="inputMedicamento" placeholder="Ex: 2" type="number">
                     </div>
-                    <div class="card">
-                        <div id="teste">
-                            <h2>Último Transporte Realizado</h2>
-                        </div>
-                        <h3>Realizada Com Sucesso</h3>
-                        <small>0 Alertas Emitidos</small>
+                    <div class="field">
+                        <label for="tempMax">Temperatura Máxima:</label>
+                        <input id="tempMax" class="inputMedicamento" placeholder="Ex: 5" type="number">
                     </div>
+                    <div class="field">
+                        <label for="umiMin">Umidade Mínima:</label>
+                        <input id="umiMin" class="inputMedicamento" placeholder="Ex: 30" type="number">
+                    </div>
+                    <div class="field">
+                        <label for="umiMax">Umidade Máxima:</label>
+                        <input id="umiMax" class="inputMedicamento" placeholder="Ex: 40" type="number">
+                    </div>
+                    <button onclick="cadastrarMedicamento()">Adicionar Medicamento</button>
                 </div>
-                <div id="temperatura">
-                    <h1>Medicamentos Cadastrados</h1>
-                    <div id="pedidos">
-                        <div class="caminhaoContainerTitulo">
-                            <div class="tituloTabelaContainer">Número</div>
-                            <div class="tituloTabelaContainer">Nome</div>
-                            <div class="tituloTabelaContainer">Data De Validade</div>
-                            <div class="tituloTabelaContainer">Temperatura Min/Max</div>
-                            <div class="tituloTabelaContainer">Umidade Min/Max</div>
-                        </div>
-                        <div class="caminhaoContainer">
-                            <div class="pedidoNum tituloTabelaContainer"><i class="fas fa-solid fa-capsules"></i>#1</div>
-                            <div class="pedidoTemp tituloTabelaContainer"><h5>Atomoxetina</h5></div>
-                            <div class="pedidoTemp tituloTabelaContainer"><h5>12/12/2022</h5></div>
-                            <div class="pedidoTemp tituloTabelaContainer"><h5>2/8ºC</h5></div>
-                            <div class="pedidoUmi tituloTabelaContainer"><h5>20/80%</h5></div>
-                        </div>
-                        <div class="caminhaoContainer">
-                            <div class="pedidoNum tituloTabelaContainer"><i class="fas fa-solid fa-capsules"></i>#2</div>
-                            <div class="pedidoTemp tituloTabelaContainer"><h5>Atenolol</h5></div>
-                            <div class="pedidoTemp tituloTabelaContainer"><h5>01/01/2023</h5></div>
-                            <div class="pedidoTemp tituloTabelaContainer"><h5>2/8ºC</h5></div>
-                            <div class="pedidoUmi tituloTabelaContainer"><h5>20/80%</h5></div>
-                        </div>
-                    </div>
+
+                <!-- <table class="tabela"style="border-collapse: collapse;">
+                        <tr class="tituloTabela">
+                            <th colspan="6">Temperatura</th>
+                        </tr>
+                        <tr class="metricas">
+                            <td class="critico">Crítico</td>
+                            <td class="alerta">Alerta</td>
+                            <td class="ideal">Ideal</td>
+                            <td class="ideal">Ideal</td>
+                            <td class="alerta2">Alerta</td>
+                            <td class="critico">Crítico</td>
+                        </tr>
+                        <tr class="valorMetrica">
+                            <td class="valor"><input type="number" id="tempCritica1"></td>
+                            <td class="valor"><input type="number" id="tempAlerta"></td>
+                            <td class="valor"><input type="number" id="tempIdeal"></td>
+                            <td class="valor"><input type="number" id="tempIdeal2"></td>
+                            <td class="valor"><input type="number" id="tempAlerta2"></td>
+                            <td class="valor"><input type="number" id="tempCritica2"></td>
+                        </tr>
+                    </table>
+                    <br>
+                    <table class="tabela"style="border-collapse: collapse;">
+                        <tr class="tituloTabela">
+                            <th colspan="6">Umidade</th>
+                        </tr>
+                        <tr class="metricas">
+                            <td class="critico">Crítico</td>
+                            <td class="alerta">Alerta</td>
+                            <td class="ideal">Ideal</td>
+                            <td class="ideal">Ideal</td>
+                            <td class="alerta2">Alerta</td>
+                            <td class="critico">Crítico</td>
+                        </tr>
+                        <tr class="valorMetrica">
+                            <td class="valor"></td>
+                            <td class="valor"></td>
+                            <td class="valor"></td>
+                            <td class="valor"></td>
+                            <td class="valor"></td>
+                            <td class="valor"></td>
+                        </tr>
+                    </table> -->
+                <div id="listaMedicamentos">
+                    <h1>Medicamentos</h1>
+                    <ul id="medicamentos">
+                        <li class="medicamentoContainerTitulo">
+                            <span class="tituloTabelaContainer">Nome</span>
+                            <span class="tituloTabelaContainer">Temp. Mín / Temp. Máx</span>
+                            <span class="tituloTabelaContainer">Umi. Mín/ Máx</span>
+                        </li>
+                        <li class="medicamentoContainer">
+                            <span class="pedidoNum tituloTabelaContainer" id="nomePedido">Nome Medicamento</span>
+                            <span class="pedidoTemp tituloTabelaContainer" id="tempMinPedido">6ºC/12ºC</span>
+                            <span class="pedidoUmi tituloTabelaContainer" id="UmiMinPedido">91%/94%</span>
+                        </li>
+                        <li class="medicamentoContainer">
+                            <span class="pedidoNum tituloTabelaContainer" id="nomePedido">Nome Medicamento</span>
+                            <span class="pedidoTemp tituloTabelaContainer" id="tempMinPedido">6ºC/10ºC</span>
+                            <span class="pedidoUmi tituloTabelaContainer" id="UmiMinPedido">90%/94%</span>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
+    </div>
+    </div>
 </body>
+
+<script>
+    var dadosDaSessao = obterDadosSession();
+    function cadastrarMedicamento() {
+        var nome = nomeMedicamento.value;
+        var validade = validadeMedicamento.value
+        var temperaturaMinima = tempMin.value;
+        var temperaturaMaxima = tempMax.value;
+        var umidadeMinima = umiMin.value;
+        var umidadeMaxima = umiMax.value;
+        console.log({
+            "idCliente": dadosDaSessao.fkCliente,
+            "nome": nome,
+            "validade": validade,
+            "tempMin": temperaturaMinima,
+            "tempMax": temperaturaMaxima,
+            "umiMin": umidadeMinima,
+            "umiMax": umidadeMaxima
+        });
+        if (nome == "" || validade =="" || temperaturaMinima == "" || temperaturaMaxima == "" || umidadeMinima == "" || umidadeMaxima == "") {
+            Swal.fire({
+                title: 'Erro',
+                text: 'Todos os campos são obrigatórios',
+                icon: 'error',
+                showConfirmButton: false,
+                showDenyButton: true,
+                denyButtonText: 'OK'
+            });
+            return;
+        }
+        fetch("/medicamentos", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                "idCliente": String(dadosDaSessao.fkCliente),
+                "nome": nome,
+                "validade": validade,
+                "tempMin": temperaturaMinima,
+                "tempMax": temperaturaMaxima,
+                "umiMin": umidadeMinima,
+                "umiMax": umidadeMaxima
+            })
+        }).then(function (response) {
+            console.log(response);
+        });
+        // Faz o insert no banco
+        // if () não der erro ao adicionar
+        medicamentos.innerHTML += `<li class="medicamentoContainer">
+                                <span class="pedidoNum tituloTabelaContainer" id="nomePedido">${nome}</span>
+                                <span class="pedidoTemp tituloTabelaContainer" id="tempMinPedido">${temperaturaMinima}ºC/${temperaturaMaxima}ºC</span>
+                                <span class="pedidoUmi tituloTabelaContainer" id="UmiMinPedido">${umidadeMinima}%/${umidadeMaxima}%</span>
+                            </li>`;
+    }
+    function sair() {
+        signOut();
+        window.location.replace('../../sign-in.html')
+    }
+</script>
+<!-- <script>
+    function cadastrarMedicamento() {
+        new Promise(() => {
+        }).then(function (resposta) {
+            console.log('Resposta: ', resposta);
+
+            if (resposta.ok) {
+                console.log(resposta);
+
+                resposta.json().then(json => {
+                    console.log(json);
+
+                    sessionStorage.USUARIO = JSON.stringify(json);
+                    sessionStorage.ID_CLIENTE = json.fkCliente;
+                    sessionStorage.TIPO_USUARIO = json.tipoUsuario;
+                    sessionStorage.NOME_USUARIO = json.nomeUsuario;
+                    sessionStorage.ID_USUARIO = json.idUsuario;
+
+                    Swal.fire({
+                        title: 'Suceso',
+                        text: 'Login realizado com sucesso',
+                        icon: 'success',
+                        timer: 2000,
+                        timerProgressBar: true,
+                        confirmButtonColor: '#34e269',
+                        willClose: () => {
+                            if (json.tipoUsuario != '' && json.tipoUsuario != undefined) {
+                                window.location.replace(`./restrito/${json.tipoUsuario}/index.html`);
+                            } else {
+                                throw new Error('Tipo de usuário inválido')
+                            }
+                        }
+                    });
+                });
+            } else {
+                if (resposta.status == 403) {
+                    resposta.text().then(text => {
+                        Swal.fire({
+                            title: 'Erro',
+                            text: text,
+                            icon: 'error',
+                            showConfirmButton: false,
+                            showDenyButton: true,
+                            denyButtonText: 'OK'
+                        });
+                    })
+                } else {
+                    Swal.fire({
+                        title: 'Erro',
+                        text: 'Houve um erro ao realizar o login!',
+                        icon: 'error',
+                        showConfirmButton: false,
+                        showDenyButton: true,
+                        denyButtonText: 'OK'
+                    });
+                }
+
+            }
+        }).catch(function (erro) {
+            Swal.fire({
+                title: 'Erro',
+                text: 'Houve um erro ao realizar o login!',
+                icon: 'error',
+                showConfirmButton: false,
+                showDenyButton: true,
+                denyButtonText: 'OK'
+            });
+            console.log(`ERRO: ${erro}`);
+        })
+
+        return false;
+    }
+
+</script> -->
+
 <script>
     var dadosSession = obterDadosSession();
-    var nome=  dadosSession.nomeUsuario;
-    var email= dadosSession.emailUsuario;
-    spanNome.innerHTML = dadosSession.nomeUsuario;
-
-    nomeSmall.innerHTML = nome;
-    emailSmall.innerHTML = email;
+    var fkCliente = dadosSession.fkCliente;
+    var fkAdmin = dadosSession.idUsuario;
+    spanNome.innerHTML = dadosSession.nomeUsuario
 
     function sair() {
       signOut();
