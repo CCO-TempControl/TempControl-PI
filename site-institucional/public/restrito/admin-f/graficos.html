@@ -10,12 +10,11 @@
     <script src="../../assets/js/funcoes.js"></script>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
-    <title>DashBoard</title>
+    <title>ESTATÍSTICAS - TempControl</title>
+    <script src="../../assets/js/funcoes.js"></script>
 </head>
 
-<body>
-
-
+<body onload="setUp('admin-f')">
     <div class="wrapper">
         <div class="sidebar">
             <div class="dropdown">
@@ -32,8 +31,7 @@
                 <li><a href="sensores.html"><i class="fas fa-regular fa-hard-drive"></i>Solicitar Sensores</a></li>
                 <li><a href="graficos.html"><i class="fas fa-solid fa-chart-gantt"></i></i>Gráficos/Alertas</a></li>
                 <li><a href="dadosPessoais.html"><i class="fas fa-solid fa-user"></i></i>Dados Pessoais</a></li>
-                <li><a href="../../index.html" onclick="sair()"><i
-                            class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
+                <li><a href="" onclick="signOut()"><i class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
             </ul>
 
         </div>
@@ -513,21 +511,5 @@
         idEstrategico.style.display = 'block';
     }
 </script>
-
-<script>
-    var dadosSession = obterDadosSession();
-    var nome=  dadosSession.nomeUsuario;
-    var email= dadosSession.emailUsuario;
-    spanNome.innerHTML = dadosSession.nomeUsuario;
-
-    nomeSmall.innerHTML = nome;
-    emailSmall.innerHTML = email;
-
-    function sair() {
-      signOut();
-    }
-</script>
-
-
 
 </html>

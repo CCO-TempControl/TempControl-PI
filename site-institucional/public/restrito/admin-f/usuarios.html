@@ -7,21 +7,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/2eecc47c4e.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
+    <title>CADASTRAR USUÁRIOS - TempControl</title>
     <script src="../../assets/js/funcoes.js"></script>
-    <title>DashBoard</title>
 </head>
 
-<body>
-
-
+<body onload="setUp('admin-f')">
     <div class="wrapper">
         <div class="sidebar">
             <div class="dropdown">
                 <a href="#"><i class="fa-solid fa-circle-user" style="font-size:70px;  color: white;"></i></a>
                 <div class="dropdown-content">
-                    <h4>Olá {{nome.usuario}}</h4>
+                    <h4>Olá <span id="spanNome"></span></h4>
                 </div>
             </div>
             <ul>
@@ -31,8 +30,8 @@
                 <li><a href="index.html"><i class="fas fa-solid fa-calendar-check"></i>Ver Entregas</a></li>
                 <li><a href="index.html"><i class="fas fa-regular fa-hard-drive"></i>Cadastar Sensores</a></li>
                 <li><a href="graficos.html"><i class="fas fa-solid fa-chart-gantt"></i></i>Gráficos/Alertas</a></li>
-                <li><a href="#"><i class="fas fa-solid fa-user"></i></i>Dados Pessoais</a></li>
-                <li><a href="../../index.html" onclick="sair()"><i class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
+                <li><a href=""><i class="fas fa-solid fa-user"></i></i>Dados Pessoais</a></li>
+                <li><a href="" onclick="signOut()"><i class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
             </ul>
 
         </div>
@@ -90,115 +89,50 @@
             </div>
         </div>
     </div>
-    </div>
-    </div>
 </body>
 
 <script>
-    const labels = [
-        'Abril',
-        'Maio',
-        'Junho',
-        'Julho',
-        'Agosto',
-    ];
-
-    const data1 = {
-        labels: labels,
-        datasets: [{
-            label: 'Alertas',
-            backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgb(255, 99, 132)',
-            data: [0, 10, 5, 2, 20, 30, 45],
-        }]
-    };
-
-    const data2 = {
-        labels: [
-            'Critico',
-            'Média',
-            'Atenção'
-        ],
-        datasets: [{
-            label: labels,
-            data: [10, 100, 30],
-            backgroundColor: [
-                'rgb(255, 99, 132)',
-                'rgb(54, 162, 235)',
-                'rgb(255, 205, 86)'
-            ],
-            hoverOffset: 4
-        }]
-    };
-
-    const config1 = {
-        type: 'bar',
-        data: data1,
-        options: {}
-    };
-    const config2 = {
-        type: 'doughnut',
-        data: data2,
-        options: {}
-    };
-
-    const myChart1 = new Chart(
-        document.getElementById('myChart1'),
-        config1
-    );
-    const myChart2 = new Chart(
-        document.getElementById('myChart2'),
-        config2
-    );
-    const myChart3 = new Chart(
-        document.getElementById('myChart3'),
-        config1
-    );
-    const myChart4 = new Chart(
-        document.getElementById('myChart4'),
-        config1
-    );
-</script>
-<script>
-    var dadosSession = obterDadosSession();
-    var fkCliente = dadosSession.fkCliente;
-    var fkAdmin = dadosSession.idUsuario;
-
-    function sair() {
-      signOut();
-    }
-</script>
-
-<script>
-
     function validarCadastro() {
       var nomeVar =  txtNome.value;
       var emailVar = txtEmail.value;
       var senhaVar = txtPassword.value;
       var tipoUsuarioVar = txtTipo.value;
-      var fkClienteVar = fkCliente;
-      var fkAdminVar = fkAdmin;
+      var fkClienteVar = usuario.fkCliente;
+      var fkAdminVar = usuario.idUsuario;
 
-      
-  
       if (emailVar == "" || senhaVar == "") {
-        divSignInResult.style.display = 'flex';
-        pMensagem.style.color = '#fc3636';
-        pMensagem.innerHTML = 'Todos os campos são obrigatórios';
+        Swal.fire({
+            title: 'Erro',
+            text: 'Todos os campos são obrigatórios',
+            icon: 'error',
+            showConfirmButton: false,
+            showDenyButton: true,
+            denyButtonText: 'OK'
+        });
         return;
       }
   
       if (emailVar.indexOf('@') <= 0 || emailVar.indexOf('.com') <= 2) {
-        divSignInResult.style.display = 'flex';
-        pMensagem.style.color = '#fc3636';
-        pMensagem.innerHTML = 'Email e/ou Senha incorreto(s)';
+        Swal.fire({
+            title: 'Erro',
+            text: 'Email inválido',
+            icon: 'error',
+            showConfirmButton: false,
+            showDenyButton: true,
+            denyButtonText: 'OK'
+        });
         return;
       }
   
       if (senhaVar.length < 8) {
-        divSignInResult.style.display = 'flex';
-        pMensagem.style.color = '#fc3636';
-        pMensagem.innerHTML = 'Email e/ou Senha incorreto(s)';
+        Swal.fire({
+            title: 'Erro',
+            text: 'Senha inválido',
+            icon: 'error',
+            showConfirmButton: false,
+            showDenyButton: true,
+            denyButtonText: 'OK'
+        });
         return;
       }
   
@@ -221,37 +155,58 @@
         if (resposta.ok) {
           console.log(resposta);
 
-            divSignInResult.style.display = 'flex';
-            pMensagem.style.color = '#34e269';
-            pMensagem.innerHTML = 'Cadastrado realizado com sucesso';
+          Swal.fire({
+            title: 'Suceso',
+            text: 'Cadastro de usuário realizado com sucesso',
+            icon: 'success',
+            timer: 2000,
+            timerProgressBar: true,
+            confirmButtonColor: '#34e269',
+            willClose: () => {
+              window.location.reload();
+            }
+          });
+          return;
 
         } else {
           if (resposta.status == 403) {
             resposta.text().then(text => {
-              divSignInResult.style.display = 'flex';
-              pMensagem.style.color = '#fc3636';
-              pMensagem.innerHTML = text;
+                Swal.fire({
+                    title: 'Erro',
+                    text: text,
+                    icon: 'error',
+                    showConfirmButton: false,
+                    showDenyButton: true,
+                    denyButtonText: 'OK'
+                });
             })
           } else {
-            divSignInResult.style.display = 'flex';
-            pMensagem.style.color = '#fc3636';
-            pMensagem.innerHTML = 'Houve um erro ao realizar o cadastro!';
+            Swal.fire({
+                title: 'Erro',
+                text: 'Houve um erro ao realizar o cadastro!',
+                icon: 'error',
+                showConfirmButton: false,
+                showDenyButton: true,
+                denyButtonText: 'OK'
+            });
+            return;
           }
   
         }
       }).catch(function (erro) {
-        divSignInResult.style.display = 'flex';
-        pMensagem.style.color = '#fc3636';
-        pMensagem.innerHTML = 'Houve um erro ao se cadastar!';
-        console.log(`ERRO: ${erro}`);
+        Swal.fire({
+            title: 'Erro',
+            text: 'Houve um erro ao realizar o cadastro!',
+            icon: 'error',
+            showConfirmButton: false,
+            showDenyButton: true,
+            denyButtonText: 'OK'
+        });
+        return;
       })
   
-      return false;
+      return;
     }
   
-  </script>
-
-
-
-
+</script>
 </html>

@@ -14,13 +14,13 @@
   <title>SOLICITAÇÕES - TempControl</title>
 </head>
 
-<body>
+<body onload="setUp('logistico')">
   <div class="wrapper">
     <div class="sidebar">
       <div class="dropdown">
         <a href="#"><i class="fa-solid fa-circle-user" style="font-size:70px;  color: white;"></i></a>
         <div class="dropdown-content">
-          <h4>Olá {{nome.usuario}}</h4>
+          <h4>Olá <span id="spanNome"></span></h4>
         </div>
       </div>
       <ul>
@@ -431,11 +431,7 @@
   }
 </script>
 <script>
-  var usuario = {};
-
-  function setUp() {
-    usuario = obterDadosSession();
-
+  function carregarDados() {
     var carregouMedicamentos = carregarMedicamentos();
 
     if (!carregouMedicamentos) {
@@ -454,9 +450,6 @@
       return;
     }
   }
-
-  verificarAutorizacao('logistico');
-  setUp();
 </script>
 
 </html>

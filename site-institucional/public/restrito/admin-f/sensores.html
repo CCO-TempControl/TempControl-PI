@@ -9,18 +9,17 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
-    <title>DashBoard</title>
+    <title>SENSORES - TempControl</title>
+    <script src="../../assets/js/funcoes.js"></script>
 </head>
 
-<body>
-
-
+<body onload="setUp('admin-f')">
     <div class="wrapper">
         <div class="sidebar">
             <div class="dropdown">
                 <a href="#"><i class="fa-solid fa-circle-user" style="font-size:70px;  color: white;"></i></a>
                 <div class="dropdown-content">
-                    <h4>Olá {{nome.usuario}}</h4>
+                    <h4>Olá <span id="spanNome"></span></h4>
                 </div>
             </div>
             <ul>
@@ -31,7 +30,7 @@
                 <li><a href="sensores.html"><i class="fas fa-regular fa-hard-drive"></i>Solicitar Sensores</a></li>
                 <li><a href="graficos.html"><i class="fas fa-solid fa-chart-gantt"></i></i>Gráficos/Alertas</a></li>
                 <li><a href="dadosPessoais.html"><i class="fas fa-solid fa-user"></i></i>Dados Pessoais</a></li>
-                <li><a href="../../index.html" onclick="sair()"><i class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
+                <li><a href="" onclick="signOut()"><i class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
             </ul>
 
         </div>
@@ -108,8 +107,6 @@
                 </div>
             </div>
         </div>
-    </div>
-    </div>
     </div>
 </body>
 
@@ -253,9 +250,6 @@
         document.getElementById('myChart6'),
         config6
     );
-
-
-</script>
 
 
 </script>
