@@ -62,7 +62,7 @@
                         <label for="umiMax">Umidade Máxima:</label>
                         <input id="umiMax" class="inputMedicamento" placeholder="Ex: 40" type="number">
                     </div>
-                    <button onclick="cadastrarMedicamento()">Adicionar Medicamento</button>
+                    <button onclick="cadastrarMedicamento()">Cadastrar Medicamento</button>
                 </div>
 
                 <!-- <table class="tabela"style="border-collapse: collapse;">
@@ -108,9 +108,9 @@
                             <td class="valor"></td>
                         </tr>
                     </table> -->
-                <div id="listaMedicamentos">
+                <div id="listaMedicamentosContainer">
                     <h1>Medicamentos</h1>
-                    <ul id="medicamentos">
+                    <ul id="listaMedicamentos">
                         <li class="medicamentoContainerTitulo">
                             <span class="tituloTabelaContainer">Nome</span>
                             <span class="tituloTabelaContainer">Temp. Mín / Temp. Máx</span>
@@ -137,6 +137,7 @@
 
 <script>
     var dadosDaSessao = obterDadosSession();
+    obterMedicamentos();
     function cadastrarMedicamento() {
         var nome = nomeMedicamento.value;
         var validade = validadeMedicamento.value
@@ -144,15 +145,6 @@
         var temperaturaMaxima = tempMax.value;
         var umidadeMinima = umiMin.value;
         var umidadeMaxima = umiMax.value;
-        console.log({
-            "idCliente": dadosDaSessao.fkCliente,
-            "nome": nome,
-            "validade": validade,
-            "tempMin": temperaturaMinima,
-            "tempMax": temperaturaMaxima,
-            "umiMin": umidadeMinima,
-            "umiMax": umidadeMaxima
-        });
         if (nome == "" || validade =="" || temperaturaMinima == "" || temperaturaMaxima == "" || umidadeMinima == "" || umidadeMaxima == "") {
             Swal.fire({
                 title: 'Erro',
@@ -181,8 +173,8 @@
         }).then(function (response) {
             console.log(response);
         });
-        // Faz o insert no banco
-        // if () não der erro ao adicionar
+        // Devolver uma lista com todos os medicamentos
+        
         medicamentos.innerHTML += `<li class="medicamentoContainer">
                                 <span class="pedidoNum tituloTabelaContainer" id="nomePedido">${nome}</span>
                                 <span class="pedidoTemp tituloTabelaContainer" id="tempMinPedido">${temperaturaMinima}ºC/${temperaturaMaxima}ºC</span>
@@ -193,80 +185,26 @@
         signOut();
         window.location.replace('../../sign-in.html')
     }
-</script>
-<!-- <script>
-    function cadastrarMedicamento() {
-        new Promise(() => {
-        }).then(function (resposta) {
-            console.log('Resposta: ', resposta);
-
-            if (resposta.ok) {
-                console.log(resposta);
-
-                resposta.json().then(json => {
-                    console.log(json);
-
-                    sessionStorage.USUARIO = JSON.stringify(json);
-                    sessionStorage.ID_CLIENTE = json.fkCliente;
-                    sessionStorage.TIPO_USUARIO = json.tipoUsuario;
-                    sessionStorage.NOME_USUARIO = json.nomeUsuario;
-                    sessionStorage.ID_USUARIO = json.idUsuario;
-
-                    Swal.fire({
-                        title: 'Suceso',
-                        text: 'Login realizado com sucesso',
-                        icon: 'success',
-                        timer: 2000,
-                        timerProgressBar: true,
-                        confirmButtonColor: '#34e269',
-                        willClose: () => {
-                            if (json.tipoUsuario != '' && json.tipoUsuario != undefined) {
-                                window.location.replace(`./restrito/${json.tipoUsuario}/index.html`);
-                            } else {
-                                throw new Error('Tipo de usuário inválido')
-                            }
-                        }
-                    });
-                });
-            } else {
-                if (resposta.status == 403) {
-                    resposta.text().then(text => {
-                        Swal.fire({
-                            title: 'Erro',
-                            text: text,
-                            icon: 'error',
-                            showConfirmButton: false,
-                            showDenyButton: true,
-                            denyButtonText: 'OK'
-                        });
-                    })
-                } else {
-                    Swal.fire({
-                        title: 'Erro',
-                        text: 'Houve um erro ao realizar o login!',
-                        icon: 'error',
-                        showConfirmButton: false,
-                        showDenyButton: true,
-                        denyButtonText: 'OK'
-                    });
-                }
-
-            }
-        }).catch(function (erro) {
-            Swal.fire({
-                title: 'Erro',
-                text: 'Houve um erro ao realizar o login!',
-                icon: 'error',
-                showConfirmButton: false,
-                showDenyButton: true,
-                denyButtonText: 'OK'
-            });
-            console.log(`ERRO: ${erro}`);
-        })
-
-        return false;
+    function obterMedicamentos() {
+        var idCliente = String(dadosDaSessao.fkCliente);
+        fetch(`/medicamentos/fabricante/${idCliente}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            },
+        }).then(function (response) {
+            console.log(response);
+        });
+        /* for (var i = 0; i < medicamentos.length; i++) {
+            medicamentos.innerHTML += `
+                            <li class="medicamentoContainer">
+                                <span class="pedidoNum tituloTabelaContainer" id="nomePedido">${nome}</span>
+                                <span class="pedidoTemp tituloTabelaContainer" id="tempMinPedido">${temperaturaMinima}ºC/${temperaturaMaxima}ºC</span>
+                                <span class="pedidoUmi tituloTabelaContainer" id="UmiMinPedido">${umidadeMinima}%/${umidadeMaxima}%</span>
+                            </li>`;
+        } */
+        
     }
-
-</script> -->
+</script>
 
 </html>

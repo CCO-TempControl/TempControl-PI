@@ -49,7 +49,10 @@ function cadastrarMedicamento(request, response) {
   } else if (umidadeMaxima == undefined) {
     response.status(400).send("Umi.Max não definida");
   } else {
-    medicamentoModel.cadastrar(nomeMedicamento, validadeMedicamento ,temperaturaMinima, temperaturaMaxima, umidadeMinima, umidadeMaxima, idFarmaceutica);
+    medicamentoModel.cadastrar(nomeMedicamento, validadeMedicamento ,temperaturaMinima, temperaturaMaxima, umidadeMinima, umidadeMaxima, idFarmaceutica)
+    .then(function(resultado) {
+      response.json(resultado);
+    });
   }
 }
 

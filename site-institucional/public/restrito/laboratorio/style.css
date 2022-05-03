@@ -198,7 +198,7 @@ body {
     cursor: pointer;
 }
 
-#listaMedicamentos {
+#listaMedicamentosContainer {
     padding: 10px;
     width: 100%;
     height: fit-content;
@@ -214,13 +214,13 @@ body {
 
 }
 
-#listaMedicamentos h1 {
+#listaMedicamentosContainer h1 {
     color: #0253c4;
     font-size: 34px;
     margin: 20px 0 15px;
 }
 
-#medicamentos {
+#listaMedicamentos {
     list-style-type: none;
     width: 90%;
     height: fit-content;
