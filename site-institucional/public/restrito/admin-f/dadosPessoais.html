@@ -10,10 +10,12 @@
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
     <script src="../../assets/js/funcoes.js"></script>
-    <title>DADOS PESSOAIS - TempControl</title>
+    <title>DashBoard</title>
 </head>
 
-<body onload="setUp('admin-f')">
+<body>
+
+
     <div class="wrapper">
         <div class="sidebar">
             <div class="dropdown">
@@ -30,7 +32,8 @@
                 <li><a href="sensores.html"><i class="fas fa-regular fa-hard-drive"></i>Solicitar Sensores</a></li>
                 <li><a href="graficos.html"><i class="fas fa-solid fa-chart-gantt"></i></i>Gráficos/Alertas</a></li>
                 <li><a href="dadosPessoais.html"><i class="fas fa-solid fa-user"></i></i>Dados Pessoais</a></li>
-                <li><a href="" onclick="signOut()"><i class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
+                <li><a href="../../index.html" onclick="sair()"><i
+                            class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
             </ul>
 
         </div>
@@ -45,37 +48,43 @@
                     <div class="FcardDados">
                         <div class="emailEmpresa senhaEmpresa">
                             <h3>Nome</h3>
-                            <small id="nomeSmall"></small>
+                            <input id="nomeInput" value="">
                         </div>
                     </div>
                     <div class="FcardDados">
                         <div class="senhaEmpresa">
                             <h3>Email</h3>
-                            <small id="emailSmall"></small>
+                            <input id="emailInput" value="">
                         </div>
                     </div>
                     <div class="FcardDados">
                         <div class="senhaEmpresa">
                             <h3>Senha</h3>
-                            <small><a href="">modificar senha</a></small>
+                            <input id="senhaInput" value="">
+                        </div>
+                    </div>
+                    <div class="FcardDados">
+                        <div class="senhaEmpresa">
+                            <button>Atualizar</button>
                         </div>
                     </div>
                 </div>
-                    
-                </div>
             </div>
-    </div>
-    </div>
-    </div>
+        </div>
 </body>
 
 <script>
     var dadosSession = obterDadosSession();
-    var nome =  dadosSession.nomeUsuario;
+    var nome = dadosSession.nomeUsuario;
     var email = dadosSession.emailUsuario;
-    
-    nomeSmall.innerHTML = nome;
-    emailSmall.innerHTML = email;
+    spanNome.innerHTML = dadosSession.nomeUsuario;
+
+    nomeInput.value = nome;
+    emailInput.value = email;
+
+    function sair() {
+        signOut();
+    }
 </script>
 
 

@@ -9,11 +9,12 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
-    <title>ENTREGAS - TempControl</title>
-    <script src="../../assets/js/funcoes.js"></script>
+    <title>DashBoard</title>
 </head>
 
-<body onload="setUp('admin-f')">
+<body>
+
+
     <div class="wrapper">
         <div class="sidebar">
             <div class="dropdown">
@@ -30,7 +31,8 @@
                 <li><a href="sensores.html"><i class="fas fa-regular fa-hard-drive"></i>Solicitar Sensores</a></li>
                 <li><a href="graficos.html"><i class="fas fa-solid fa-chart-gantt"></i></i>Gráficos/Alertas</a></li>
                 <li><a href="dadosPessoais.html"><i class="fas fa-solid fa-user"></i></i>Dados Pessoais</a></li>
-                <li><a href="" onclick="signOut()"><i class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
+                <li><a href="../../index.html" onclick="sair()"><i
+                            class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
             </ul>
 
         </div>
@@ -107,6 +109,8 @@
                 </div>
             </div>
         </div>
+    </div>
+    </div>
     </div>
 </body>
 
@@ -250,5 +254,22 @@
         document.getElementById('myChart6'),
         config6
     );
+
+
 </script>
+
+<script>
+    var dadosSession = obterDadosSession();
+    var nome=  dadosSession.nomeUsuario;
+    var email= dadosSession.emailUsuario;
+    spanNome.innerHTML = dadosSession.nomeUsuario;
+
+    nomeSmall.innerHTML = nome;
+    emailSmall.innerHTML = email;
+
+    function sair() {
+      signOut();
+    }
+</script>
+
 </html>

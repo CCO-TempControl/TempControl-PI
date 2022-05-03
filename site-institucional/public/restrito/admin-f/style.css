@@ -491,7 +491,15 @@ select {
 .senhaEmpresa {
   padding: 10px;
 }
-
+.senhaEmpresa input{
+  margin-top: 10px;
+  font-size: 14px;
+  border-radius: 5px;
+  height: 24px;
+  border: 2px solid #3C9DCF;
+  padding-left: 10px;
+  width: 20%;
+}
 .FcardDados {
   background-color: white;
   box-shadow: 2px 2px 2px 1px #3C9DCF;
@@ -499,8 +507,20 @@ select {
   height: 80px;
 }
 
-.info .fundoDados h2 {
-  padding-top: 15px;
+.info button {
+  background-color: #3C9DCF;
+  padding: 10px 30px;
+  border: 2px solid #3C9DCF;
+  border-radius: 30px;
+  color: #f5f5f5;
+  font-weight: bold;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.info button:focus {
+  outline: #0253c4;
+  border: 2px solid #0253c4;
 }
 
 #idOperacao .titulo {
@@ -527,4 +547,10 @@ select {
 #cards.analytic .card h3 {
   padding-top: 20px;
   padding-bottom: 20px;
+}
+
+.viagens{
+  margin-top: 50px;
+  display: flex;
+  justify-content: center;
 }
