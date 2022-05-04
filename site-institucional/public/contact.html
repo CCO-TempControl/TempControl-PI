@@ -42,12 +42,6 @@
             em conhecer melhor nossa equipe ou solução.
           </p>
           <div class="field">
-            <label for="txtEmail">
-              Email:
-            </label>
-            <input id="txtEmail" type="email" placeholder="Ex: seuemail@email.com">
-          </div>
-          <div class="field">
             <label for="txtAssunto">
               Assunto:
             </label>
@@ -119,11 +113,8 @@
 </html>
 <script>
   function enviar() {
-    var emailVar = txtEmail.value;
     var assuntoVar = txtAssunto.value;
     var mensagemVar = txtMensagem.value;
-
-    var validacaoEmail = validarEmail(emailVar);
 
     if (
       assuntoVar == ''
@@ -139,19 +130,8 @@
       });
     }
 
-    if (validacaoEmail != 'OK') {
-      Swal.fire({
-        title: 'Erro',
-        text: validacaoEmail,
-        icon: 'error',
-        showConfirmButton: false,
-        showDenyButton: true,
-        denyButtonText: 'OK'
-      });
-    }
-
     var emailToLink = `
-      mailto:PI-ControlenoTransporteeArmazenamentodeMedicamentos@sptech.school?subject=${assuntoVar}&body=Email ${emailVar} envia ${mensagemVar}
+      mailto:PI-ControlenoTransporteeArmazenamentodeMedicamentos@sptech.school?subject=${assuntoVar}&body=${mensagemVar}
     `;
 
     window.location.assign(emailToLink);
