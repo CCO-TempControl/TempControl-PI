@@ -27,12 +27,13 @@
             <ul>
                 <li><a href="index.html"><i class="fas fa-home"></i>Home</a></li>
                 <li><a href="medicamentos.html"><i class="fas fa-solid fa-file-medical"></i>Ver Medicamentos</a></li>
-                <li><a href="usuarios.html"><i class="fas fa-solid fa-users"></i>Cadastrar Úsuarios</a></li>
+                <li><a href="usuarios.html"><i class="fas fa-solid fa-users"></i>Cadastrar Usuários</a></li>
                 <li><a href="deliveries.html"><i class="fas fa-regular fa-truck-ramp-box"></i>Ver Entregas</a></li>
                 <li><a href="formulario.html"><i class="fas fa-solid fa-file-contract"></i>Solicitar Sensores</a></li>
                 <li><a href="graficos.html"><i class="fas fa-solid fa-chart-gantt"></i></i>Gráficos/Alertas</a></li>
                 <li><a href="dadosPessoais.html"><i class="fas fa-solid fa-user"></i></i>Dados Pessoais</a></li>
-                <li><a href="../../index.html" onclick="sair()"><i class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
+                <li><a href="../../index.html" onclick="sair()"><i
+                            class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
             </ul>
 
         </div>
@@ -53,155 +54,217 @@
                             <option value="2">Viagem 2</option>
                         </select>
                     </div>
-                    <div id="viagem1">
+                    <div id="viagem1" class="viagem">
                         <div id="cards">
                             <div class="card">
-                                <h2 id="teste">Temperatura</h2>
-                                <h3>-2/12°C</h3>
-                                <small>Menor/Maior Temperatura Alcançada</small>
+                                <div class="card-background">
+                                    <h2>Temperatura</h2>
+                                </div>
+                                <div class="card-information">
+                                    <h3>-2/12°C</h3>
+                                    <small>Menor/Maior Temperatura Alcançada</small>
+                                </div>
                             </div>
                             <div class="card">
-                                <h2>Umidade Relativa</h2>
-                                <h3>20/80%</h3>
-                                <small>Menor/Maior Umidade Alcançada</small>
+                                <div class="card-background">
+                                    <h2>Umidade Relativa</h2>
+                                </div>
+                                <div class="card-information">
+                                    <h3>20/80%</h3>
+                                    <small>Menor/Maior Umidade Alcançada</small>
+                                </div>
                             </div>
                             <div class="card">
-                                <h2>Alertas Emitidos</h2>
-                                <h3>20</h3>
-                                <small>Na viagem atual 20 alertas emitidos</small>
+                                <div class="card-background">
+                                    <h2>Alertas Emitidos</h2>
+                                </div>
+                                <div class="card-information">
+                                    <h3>20</h3>
+                                    <small>Na viagem atual 20 alertas emitidos</small>
+                                </div>
                             </div>
                         </div>
 
                         <div id="graficos">
-                            <div class="chart-container chart" style="position: relative;width:40vw;">
+                            <div class="chart-container chart" style="position: relative;">
                                 <h1>Temperatura Da Viagem Atual</h1>
                                 <canvas id="myChart7"></canvas>
                             </div>
-                            <div class="chart-container chart" style="position: relative;width:40vw;">
+                            <div class="chart-container chart" style="position: relative;">
                                 <h1>Umidade Da Viagem Atual</h1>
                                 <canvas id="myChart8"></canvas>
                             </div>
                         </div>
                     </div>
-                    <div id="viagem2" style="display: none;">
+                    <div id="viagem2" class="viagem"style="display: none;">
                         <div id="cards">
                             <div class="card">
-                                <h2 id="teste">Temperatura</h2>
-                                <h3>-20/80°C</h3>
-                                <small>Menor/Maior Temperatura Alcançada</small>
+                                <div class="card-background">
+                                    <h2>Temperatura</h2>
+                                </div>
+                                <div class="card-information">
+                                    <h3>-20/80°C</h3>
+                                    <small>Menor/Maior Temperatura Alcançada</small>
+                                </div>
                             </div>
                             <div class="card">
-                                <h2>Umidade Relativa</h2>
-                                <h3>70/80%</h3>
-                                <small>Menor/Maior Umidade Alcançada</small>
+                                <div class="card-background">
+                                    <h2>Umidade Relativa</h2>
+                                </div>
+                                <div class="card-information">
+                                    <h3>70/80%</h3>
+                                    <small>Menor/Maior Umidade Alcançada</small>
+                                </div>
                             </div>
                             <div class="card">
-                                <h2>Alertas Emitidos</h2>
-                                <h3>350</h3>
-                                <small>Na viagem atual 350 alertas emitidos</small>
+                                <div class="card-background">
+                                    <h2>Alertas Emitidos</h2>
+                                </div>
+                                <div class="card-information">
+                                    <h3>350</h3>
+                                    <small>Na viagem atual 350 alertas emitidos</small>
+                                </div>
                             </div>
                         </div>
 
                         <div id="graficos">
-                            <div class="chart-container chart" style="position: relative;width:40vw;">
+                            <div class="chart-container chart" style="position: relative;">
                                 <h1>Temperatura Da Viagem Atual</h1>
                                 <canvas id="myChart9"></canvas>
                             </div>
-                            <div class="chart-container chart" style="position: relative;width:40vw;">
+                            <div class="chart-container chart" style="position: relative;">
                                 <h1>Umidade Da Viagem Atual</h1>
                                 <canvas id="myChart10"></canvas>
                             </div>
                         </div>
                     </div>
 
-                    <div id="cards" class="analytic">
+                    <div class="analytic" id="cards">
                         <div class="card">
-                            <h2 class="critico">Crítico</h2>
-                            <h3>2°C</h3>
+                            <div class="card-background" id="critico">
+                                <h2>Crítico</h2>
+                            </div>
+                            <div class="card-information">
+                                <h3>2°C</h3>
+                            </div>
                         </div>
                         <div class="card">
-                            <h2 class="alerta">Alerta</h2>
-                            <h3>4°C</h3>
+                            <div class="card-background" id="alerta">
+                                <h2>Alerta</h2>
+                            </div>
+                            <div class="card-information">
+                                <h3>4°C</h3>
+                            </div>
                         </div>
                         <div class="card">
-                            <h2 class="ideal">Ideal</h2>
-                            <h3>5°C</h3>
+                            <div class="card-background" id="ideal">
+                                <h2>Ideal</h2>
+                            </div>
+                            <div class="card-information">
+                                <h3>5°C</h3>
+                            </div>
                         </div>
                         <div class="card">
-                            <h2 class="alerta">Alerta</h2>
-                            <h3>6°C</h3>
+                            <div class="card-background" id="alerta">
+                                <h2>Alerta</h2>
+                            </div>
+                            <div class="card-information">
+                                <h3>6°C</h3>
+                            </div>
                         </div>
                         <div class="card">
-                            <h2 class="critico">Crítico</h2>
-                            <h3>8°C</h3>
+                            <div class="card-background" id="critico">
+                                <h2>Crítico</h2>
+                            </div>
+                            <div class="card-information">
+                                <h3>8°C</h3>
+                            </div>
                         </div>
                     </div>
 
                 </div>
-            <!-- Estrategico-->
+                <!-- Estrategico-->
 
-            <div id="idEstrategico" style="display: none;">
-                <div id="cards">
-                    <div class="card">
-                        <h2>Alertas Por Temperatura</h2>
-                        <h3>75%</h3>
-                        <small>750 dos alertas ocorreram por temperatura</small>
+                <div id="idEstrategico" style="display: none;">
+                    <div id="cards">
+                        <div class="card">
+                            <div class="card-background">
+                                <h2>Alertas Por Temperatura</h2>
+                            </div>
+                            <div class="card-information">
+                                <h3>75%</h3>
+                                <small>750 dos alertas ocorreram por temperatura</small>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-background">
+                                <h2>Alertas Por Umidade Relativa</h2>
+                            </div>
+                            <div class="card-information">
+                                <h3>25%</h3>
+                                <small>250 dos alertas ocorreram por umidade</small>
+                            </div>
+
+
+                        </div>
+                        <div class="card">
+                            <div class="card-background">
+                                <h2>Transportadora Mais Confiável</h2>
+                            </div>
+                            <div class="card-information">
+                                <h3>Polar</h3>
+                                <small>Emitiu Apenas 25 Alertas</small>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-background">
+                                <h2>Transportadora Mais Utilizada</h2>
+                            </div>
+                            <div class="card-information">
+                                <h3>Polar</h3>
+                                <small>Realizou 120 Viagens</small>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card">
-                        <h2>Alertas Por Umidade Relativa</h2>
-                        <h3>25%</h3>
-                        <small>250 dos alertas ocorreram por umidade</small>
+
+                    <div id="graficos">
+                        <div class="chart-container chart" style="position: relative;">
+                            <h1>Média De Alertas Mensal</h1>
+                            <canvas id="myChart1"></canvas>
+                        </div>
+                        <div class="chart-container chart" style="position: relative;">
+                            <h1>Média De Alertas Semanal</h1>
+                            <canvas id="myChart2"></canvas>
+                        </div>
                     </div>
-                    <div class="card">
-                        <h2>Transportadora Mais Confiável</h2>
-                        <h3>Polar</h3>
-                        <small>Emitiu Apenas 25 Alertas</small>
+
+                    <div id="graficos">
+                        <div class="chart-container chart" style="position: relative;">
+                            <h1>Média De Alertas Diário</h1>
+                            <canvas id="myChart3"></canvas>
+                        </div>
+                        <div class="chart-container chart" style="position: relative;">
+                            <h1>Média De Alertas Por Hora</h1>
+                            <canvas id="myChart4"></canvas>
+                        </div>
                     </div>
-                    <div class="card">
-                        <h2>Transportadora Mais Utilizada</h2>
-                        <h3>Polar</h3>
-                        <small>Realizou 120 Viagens</small>
+                    <div id="graficos">
+                        <div class="chart-container chart" style="position: relative;">
+                            <h1>Relação Alerta/Viagem</h1>
+
+                            <canvas id="myChart6"></canvas>
+
+                        </div>
+                        <div class="chart-container chart" style="position: relative;width: 23vw;">
+                            <h2>Observação Geral</h2>
+                            <canvas id="myChart5"></canvas>
+                        </div>
+
                     </div>
+
                 </div>
-
-                <div id="graficos">
-                    <div class="chart-container chart" style="position: relative;width:40vw;">
-                        <h1>Média De Alertas Mensal</h1>
-                        <canvas id="myChart1"></canvas>
-                    </div>
-                    <div class="chart-container chart" style="position: relative;width:40vw;">
-                        <h1>Média De Alertas Semanal</h1>
-                        <canvas id="myChart2"></canvas>
-                    </div>
-                </div>
-
-                <div id="graficos">
-                    <div class="chart-container chart" style="position: relative;width:40vw;">
-                        <h1>Média De Alertas Diário</h1>
-                        <canvas id="myChart3"></canvas>
-                    </div>
-                    <div class="chart-container chart" style="position: relative;width:40vw;">
-                        <h1>Média De Alertas Por Hora</h1>
-                        <canvas id="myChart4"></canvas>
-                    </div>
-                </div>
-                <div id="graficos">
-                    <div class="chart-container chart" style="position: relative;width:40vw;">
-                        <h1>Relação Alerta/Viagem</h1>
-
-                        <canvas id="myChart6"></canvas>
-
-                    </div>
-                    <div class="chart-container chart" style="position: relative;width:23vw;">
-                        <h2>Observação Geral</h2>
-                        <canvas id="myChart5"></canvas>
-                    </div>
-
-                </div>
-
             </div>
         </div>
-    </div>
 </body>
 
 <script>

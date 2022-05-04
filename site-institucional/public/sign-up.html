@@ -196,11 +196,7 @@
     var validacaoEmail = validarEmail(emailVar);
     var validacaoCNPJ = validarCNPJ(cnpjVar);
     if (validacaoCNPJ == 'OK') {
-      cnpjVar[2] == '';
-      cnpjVar[6] == '';
-      cnpjVar[10] == '';
-      cnpjVar[15] == '';
-      cnpjVar = parseInt(cnpjVar);
+      cnpjVar = parseInt(cnpjVar.replaceAll('.','').replace('/', '').replace('-', ''))
     }
     var validacaoTelefone = validarTelefone(telefoneVar);
     var validacaoSenha = validarSenha(senhaVar);
