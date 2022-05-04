@@ -47,7 +47,7 @@ function validarCNPJ(cnpj) {
     resultado = 'CNPJ está indefinido';
   } else if (cnpj == '') {
     resultado = 'CNPJ é obrigatório';
-  } else if (cnpj.length != 14) {
+  } else if (cnpj.length != 18) {
     resultado = 'CNPJ deve ter 14 caracteres';
   } else if ((cnpj[2] != '.') || (cnpj[6] != '.') || (cnpj[10] != '/') || (cnpj[15] != '-')) { // 87.608.614/0001-39 
     resultado = 'CNPJ inválido';
