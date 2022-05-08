@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body onload="obterUsuariosCliente()">
+    <table id="tabelaUsuarios">
+        <thead>
+            <tr>
+                <th>idUsuario</th>
+                <th>nomeUsuario</th>
+                <th>emailUsuario</th>
+                <th>tipoUsuario</th>
+            </tr>
+        </thead>
+        <tbody id="corpoTabelaUsuarios">
+        </tbody>
+    </table><br>
+</body>
+<script>
+    function obterUsuariosCliente() {
+        const idClienteVar = sessionStorage.ID_CLIENTE;
+        var table = document.getElementById("tabelaUsuarios").getElementsByTagName('tbody')[0];
+        table.innerHTML = '';
+
+        fetch(`/usuarios/listarPorCliente/`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                idClienteServer: idClienteVar
+            })
+        }).then(function (response) {
+            if (response.ok) {
+                response.json().then(function (usuariosEncontrados) {
+                    usuariosEncontrados.forEach(usuario => {
+                        var linha = table.insertRow(-1);
+                        var celula1 = linha.insertCell(0);
+                        var celula2 = linha.insertCell(1);
+                        var celula3 = linha.insertCell(2);
+                        var celula4 = linha.insertCell(3);
+                        celula1.innerHTML = usuario.idUsuario;
+                        celula2.innerHTML = usuario.nomeUsuario;
+                        celula3.innerHTML = usuario.emailUsuario;
+                        celula4.innerHTML = usuario.tipoUsuario;
+                    });
+                });
+            } else {
+                console.error('Nenhum dado encontrado ou erro na API');
+            }
+        })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos usuários cadastrados ${error.message}`);
+            });
+    }
+</script>
+
+</html>

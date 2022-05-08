@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/2eecc47c4e.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
+    <script src="../../assets/js/funcoes.js"></script>
+    <title>DashBoard</title>
+
+    <style>
+        table,
+        td,
+        th {
+            border: 1px solid;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+    </style>
+</head>
+
+<body onload="obterUsuariosCliente()">
+    <div class="wrapper">
+        <div class="sidebar">
+            <div class="dropdown">
+                <a href="#"><i class="fa-solid fa-circle-user" style="font-size:70px;  color: white;"></i></a>
+                <div class="dropdown-content">
+                    <h4>Olá <span id="spanNome"></span></h4>
+                </div>
+            </div>
+            <ul>
+                <li><a href="index.html"><i class="fas fa-home"></i>Home</a></li>
+                <li><a href="medicamentos.html"><i class="fas fa-solid fa-file-medical"></i>Ver Medicamentos</a></li>
+                <li><a href="usuarios.html"><i class="fas fa-solid fa-users"></i>Cadastrar Usuários</a></li>
+                <li><a href="deliveries.html"><i class="fas fa-regular fa-truck-ramp-box"></i>Ver Entregas</a></li>
+                <li><a href="formulario.html"><i class="fas fa-solid fa-file-contract"></i>Solicitar Sensores</a></li>
+                <li><a href="graficos.html"><i class="fas fa-solid fa-chart-gantt"></i></i>Gráficos/Alertas</a></li>
+                <li><a href="dadosPessoais.html"><i class="fas fa-solid fa-user"></i></i>Dados Pessoais</a></li>
+                <li><a href="../../index.html" onclick="sair()"><i
+                            class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
+            </ul>
+
+        </div>
+        <div class="main_content">
+            <div class="header">
+                <!-- <input type="text" placeholder="Pesquise.."> -->
+                <img src="img/logo_nome_sembg.png">
+            </div>
+            <div class="info">
+                <!-- Login -->
+                <div class="banner-form alt-banner sign">
+                    <div class="container">
+                        <div class="cartao">
+                            <h2>Cadastro De Usuários</h2>
+                            <div class="form">
+                                <div class="field">
+                                    <label for="txtEmail">
+                                        Nome:
+                                    </label>
+                                    <input id="txtNome" type="text" placeholder="Digite nome completo do usuário">
+                                </div>
+                                <div class="field">
+                                    <label for="txtEmail">
+                                        Email:
+                                    </label>
+                                    <input id="txtEmail" type="email" placeholder="Ex: emailusuario@email.com">
+                                </div>
+                                <div class="field">
+                                    <label for="txtEmail">
+                                        Tipo Úsuario:
+                                    </label>
+                                    <select name="" id="txtTipo">
+                                        <option value="admin-t">Administrador Transportadora</option>
+                                        <option value="transportador">Transportador</option>
+                                    </select>
+                                </div>
+                                <div class="field">
+                                    <label for="txtPassword">
+                                        Senha:
+                                    </label>
+                                    <input id="txtPassword" type="password" placeholder="Ex: **********">
+                                </div>
+                                <div id="divSignInResult" class="result">
+                                    <p id="pMensagem">
+                                        Olá meus senhores e minhas senhoras
+                                    </p>
+                                </div>
+                                <button onclick="validarCadastro()">Cadastrar</button>
+                            </div>
+                            <table id="tabelaUsuarios">
+                                <thead>
+                                    <tr>
+                                        <th>id</th>
+                                        <th>Nome</th>
+                                        <th>Email</th>
+                                        <th>Tipo</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="corpoTabelaUsuarios">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    var dadosSession = obterDadosSession();
+    var fkCliente = dadosSession.fkCliente;
+    var fkAdmin = dadosSession.idUsuario;
+    spanNome.innerHTML = dadosSession.nomeUsuario
+
+    function obterUsuariosCliente() {
+        const idClienteVar = fkCliente;
+        var table = document.getElementById("tabelaUsuarios").getElementsByTagName('tbody')[0];
+        table.innerHTML = '';
+
+        fetch(`/usuarios/listarPorCliente/`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                idClienteServer: idClienteVar
+            })
+        }).then(function (response) {
+            if (response.ok) {
+                response.json().then(function (usuariosEncontrados) {
+                    usuariosEncontrados.forEach(usuario => {
+                        var linha = table.insertRow(-1);
+                        var celula1 = linha.insertCell(0);
+                        var celula2 = linha.insertCell(1);
+                        var celula3 = linha.insertCell(2);
+                        var celula4 = linha.insertCell(3);
+                        celula1.innerHTML = usuario.idUsuario;
+                        celula2.innerHTML = usuario.nomeUsuario;
+                        celula3.innerHTML = usuario.emailUsuario;
+                        celula4.innerHTML = usuario.tipoUsuario;
+                    });
+                });
+            } else {
+                console.error('Nenhum dado encontrado ou erro na API');
+            }
+        })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos usuários cadastrados ${error.message}`);
+            });
+    }
+
+    function validarCadastro() {
+        var nomeVar = txtNome.value;
+        var emailVar = txtEmail.value;
+        var senhaVar = txtPassword.value;
+        var tipoUsuarioVar = txtTipo.value;
+        var fkClienteVar = fkCliente;
+        var fkAdminVar = fkAdmin;
+
+
+
+        if (emailVar == "" || senhaVar == "") {
+            divSignInResult.style.display = 'flex';
+            pMensagem.style.color = '#fc3636';
+            pMensagem.innerHTML = 'Todos os campos são obrigatórios';
+            return;
+        }
+
+        if (emailVar.indexOf('@') <= 0 || emailVar.indexOf('.com') <= 2) {
+            divSignInResult.style.display = 'flex';
+            pMensagem.style.color = '#fc3636';
+            pMensagem.innerHTML = 'Email e/ou Senha incorreto(s)';
+            return;
+        }
+
+        if (senhaVar.length < 8) {
+            divSignInResult.style.display = 'flex';
+            pMensagem.style.color = '#fc3636';
+            pMensagem.innerHTML = 'Email e/ou Senha incorreto(s)';
+            return;
+        }
+
+        fetch("/usuarios/cadastrar", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                nomeServer: nomeVar,
+                emailServer: emailVar,
+                senhaServer: senhaVar,
+                tipoUsuarioServer: tipoUsuarioVar,
+                clienteServer: fkClienteVar,
+                adminServer: fkAdminVar
+            })
+        }).then(function (resposta) {
+            console.log('Resposta: ', resposta);
+
+            if (resposta.ok) {
+                console.log(resposta);
+
+                divSignInResult.style.display = 'flex';
+                pMensagem.style.color = '#34e269';
+                pMensagem.innerHTML = 'Cadastrado realizado com sucesso';
+                obterUsuariosCliente();
+
+            } else {
+                if (resposta.status == 403) {
+                    resposta.text().then(text => {
+                        divSignInResult.style.display = 'flex';
+                        pMensagem.style.color = '#fc3636';
+                        pMensagem.innerHTML = text;
+                    })
+                } else {
+                    divSignInResult.style.display = 'flex';
+                    pMensagem.style.color = '#fc3636';
+                    pMensagem.innerHTML = 'Houve um erro ao realizar o cadastro!';
+                }
+
+            }
+        }).catch(function (erro) {
+            divSignInResult.style.display = 'flex';
+            pMensagem.style.color = '#fc3636';
+            pMensagem.innerHTML = 'Houve um erro ao se cadastar!';
+            console.log(`ERRO: ${erro}`);
+        })
+
+        return false;
+    }
+
+    function sair() {
+        signOut();
+    }
+
+</script>
+
+
+
+
+</html>

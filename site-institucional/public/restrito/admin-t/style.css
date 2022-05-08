@@ -5,72 +5,70 @@
     list-style: none;
     text-decoration: none;
     font-family: Arial, Helvetica, sans-serif;
-}
-
-body {
+  }
+  
+  body {
     background-color: #f3f5f9;
-}
-
-.wrapper {
+  }
+  
+  .wrapper {
     display: flex;
     position: relative;
-}
-
-.wrapper .sidebar {
+  }
+  
+  .wrapper .sidebar {
     display: flex;
     flex-direction: column;
-
+  
     width: 200px;
     height: 100%;
     background: var(--wedgewood);
     padding: 30px 0px;
     position: fixed;
     overflow: auto;
-}
-
-.wrapper .sidebar h2 {
+  }
+  
+  .wrapper .sidebar h2 {
     color: #fff;
     text-transform: uppercase;
     text-align: center;
     margin-bottom: 30px;
-}
-
-.wrapper .sidebar h4 {
+  }
+  
+  .wrapper .sidebar h4 {
     color: #fff;
     text-align: center;
     margin-bottom: 15px;
-}
-
-.wrapper .sidebar ul li {
+  }
+  
+  .wrapper .sidebar ul li {
     padding: 15px;
     border-bottom: 1px solid #0F0F0F;
-}
-
-.wrapper .sidebar img {}
-
-.wrapper .sidebar ul li a {
+  }
+  
+  .wrapper .sidebar ul li a {
     color: #bdb8d7;
-}
-
-.wrapper .sidebar ul li a .fas {
+  }
+  
+  .wrapper .sidebar ul li a .fas {
     width: 25px;
-}
-
-.wrapper .sidebar ul li:hover {
+  }
+  
+  .wrapper .sidebar ul li:hover {
     background-color: var(--sky-blue)
-}
-
-.wrapper .sidebar ul li:hover a {
+  }
+  
+  .wrapper .sidebar ul li:hover a {
     color: #fff;
-}
-
-
-.wrapper .main_content {
+  }
+  
+  
+  .wrapper .main_content {
     width: 100%;
     margin-left: 200px;
-}
-
-.wrapper .main_content .header {
+  }
+  
+  .wrapper .main_content .header {
     display: flex;
     justify-content: flex-end;
     background: #fff;
@@ -78,19 +76,51 @@ body {
     height: 100px;
     overflow: hidden;
     border-bottom: 1px solid #e0e4e8;
-}
-
-.header img {
+  }
+  
+  .header img {
     height: 120px;
     margin-right: 20px;
-}
-
-.wrapper .main_content .info {
+  }
+  
+  .wrapper .main_content .info {
     margin: 20px;
     color: #717171;
-}
-
-.dropdown {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .info .options {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    width: 100%;
+  }
+  
+  .info .options .options {
+    display: flex;
+    width: 100%;
+    justify-content: space-evenly;
+  }
+  
+  .info .options .option {
+    background-color: transparent;
+    border: 0;
+    padding: 2px 10px 6px;
+    border-bottom: 3px solid #4ab2e8;
+    color: #4ab2e8;
+    font-weight: bold;
+    font-size: 30px;
+    cursor: pointer;
+  }
+  
+  .info .options .selected {
+    border-bottom: 3px solid #0253c4;
+    color: #0253c4;
+  }
+  
+  .dropdown {
     margin-bottom: 10px;
     align-self: center;
     width: 100%;
@@ -112,19 +142,19 @@ body {
     align-self: center;
     cursor: pointer;
   }
-
-input[type=text] {
-
+  
+  input[type=text] {
+  
     box-sizing: border-box;
     border: 2px solid #ccc;
     border-radius: 4px;
     font-size: 16px;
     text-align: left;
     padding: 12px 20px 12px 40px;
-}
-
-
-:root {
+  }
+  
+  
+  :root {
     --cobalt: #074ba8;
     --polar: #eef9fb;
     --picton-blue: #51b0e3;
@@ -134,68 +164,66 @@ input[type=text] {
     --wedgewood: #487498;
     --logan: #acb4cc;
     --mariner: #347cd8;
-
-}
-
-
-
-#cards {
+  
+  }
+  
+  
+  
+  #cards {
     margin-top: 50px;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
     border-radius: 5%;
-}
-
-.card {
+    height: 250px;
+    width: 100%;
+  }
+  
+  .card {
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     background-color: white;
     margin: 10px;
-    justify-content: center;
     align-items: center;
     border-radius: 5%;
     overflow: hidden;
-}
-
-::-webkit-scrollbar {
+    width: 80%;
+    height: 90%;
+  }
+  
+  ::-webkit-scrollbar {
     width: 2px;
     background: var(--logan);
-}
-
-::-webkit-scrollbar-thumb {
+  }
+  
+  ::-webkit-scrollbar-thumb {
     background: #FFF;
-}
-
-.card h2 {
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-    padding: 25px;
-    background-color: #70c4ec;
-}
-
-.card h3 {
+  }
+  
+  /* .card h2 {
+  } */
+  
+  .card h3 {
     padding-top: 20px;
-}
-
-.card small {
+  }
+  
+  .card small {
     box-sizing: border-box;
     padding: 10px;
-}
-
-
-#graficos {
+  }
+  
+  
+  #graficos {
     box-sizing: border-box;
     margin-top: 50px;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-
-}
-
-.chart {
+    text-align: center;
+  }
+  
+  .chart {
     box-sizing: border-box;
     display: flex;
     align-items: center;
@@ -205,9 +233,14 @@ input[type=text] {
     background-color: white;
     border-radius: 5%;
     overflow: hidden;
-}
-
-#temperatura {
+    width: 48%;
+  }
+  
+  .chart h1 {
+    font-size: 25px;
+  }
+  
+  #temperatura {
     padding: 10px;
     width: 100%;
     height: fit-content;
@@ -220,21 +253,54 @@ input[type=text] {
     background-color: white;
     border-radius: 30px;
     overflow: hidden;
-}
-
-#temperatura h3 {
+  
+  }
+  
+  #temperatura h3 {
     font-size: 1.5em;
-}
-
-#pedidos {
+  }
+  
+  #pedidos {
     list-style-type: none;
     width: 90%;
     height: fit-content;
-    margin-top: 10px;
-}
-
-.caminhaoContainerTitulo,
-.caminhaoContainer {
+    margin-top: 35px;
+  
+  }
+  
+  .card h2 {
+    color: #717171;
+    text-align: center;
+    padding: 25px;
+  }
+  
+  .card-background {
+    height: 60%;
+    padding: 2px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    background-color: #70c4ec;
+  }
+  
+  .card-information {
+    height: 40%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .card-information h3,
+  .card-information small {
+    text-align: center;
+  }
+  
+  .caminhaoContainerTitulo,
+  .caminhaoContainer {
+  
     height: 55px;
     width: 100%;
     display: flex;
@@ -242,21 +308,22 @@ input[type=text] {
     justify-content: space-around;
     padding: 2px;
     border-radius: 30px;
-}
-
-.caminhaoContainer {
+  }
+  
+  .caminhaoContainer {
     box-shadow: 0 0 5px grey;
     margin-top: 15px;
-}
-
-.caminhaoContainer .fa-truck {
+  }
+  
+  .caminhaoContainer .fa-truck,
+  .fa-capsules {
     font-size: 30px;
     margin-right: 10px;
-}
-
-.pedidoNum,
-.pedidoTemp,
-.pedidoUmi {
+  }
+  
+  .pedidoNum,
+  .pedidoTemp,
+  .pedidoUmi {
     width: 34%;
     height: fit-content;
     font-size: 25px;
@@ -264,31 +331,520 @@ input[type=text] {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.pedidoNum {
+  }
+  
+  .pedidoNum {
     margin: 0;
-}
-
-.pedidoTemp {
+  }
+  
+  .pedidoTemp {
     width: fit-content;
     height: 100%;
-}
-
-.caminhaoContainerTitulo {
+  }
+  
+  .caminhaoContainerTitulo {
     font-size: 20px;
     font-weight: 700;
-}
-
-.tituloTabelaContainer {
+  }
+  
+  .tituloTabelaContainer {
     width: 34%;
     height: fit-content;
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.colorStatusTemp,
-.colorStatusUmi {
+  }
+  
+  .colorStatusTemp,
+  .colorStatusUmi {
     color: #85E04E;
-}
+  }
+  
+  
+  .alt-banner {
+  
+    display: flex;
+  }
+  
+  .banner-form {
+    height: fit-content;
+    margin-top: 50px;
+    width: 100%;
+  }
+  
+  .banner-form .container {
+    margin: auto;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .banner-form .container .cartao {
+    display: flex;
+    margin: 30px 0;
+    background-color: #fefefe;
+    border-radius: 20px;
+    width: 70%;
+    align-items: center;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+  
+  .banner-form .container .cartao h2 {
+    box-sizing: border-box;
+    font-size: 34px;
+    color: #3C9DCF;
+    text-transform: uppercase;
+    margin-top: 50px;
+    margin-bottom: 25px;
+  }
+  
+  .form {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    height: 100%;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  
+  #divRevenue {
+    display: none;
+  }
+  
+  .form p {
+    font-size: 16px;
+    width: 80%;
+  }
+  
+  .form .field {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    margin: 8px 0;
+  }
+  
+  .form .field label {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  
+  .form .field input,
+  select {
+    font-size: 14px;
+    border-radius: 5px;
+    height: 24px;
+    border: 2px solid #3C9DCF;
+    padding-left: 10px;
+  }
+  
+  .form .field :focus {
+    outline: #0253c4;
+    border: 2px solid #0253c4;
+  }
+  
+  .type_select {
+    color: red;
+  }
+  
+  .form button {
+    margin: 20px 0;
+    background-color: #3C9DCF;
+    padding: 10px 30px;
+    border: 2px solid #3C9DCF;
+    border-radius: 30px;
+    color: #f5f5f5;
+    font-weight: bold;
+    font-size: 18px;
+    cursor: pointer;
+  }
+  
+  .form button:focus {
+    outline: #0253c4;
+    border: 2px solid #0253c4;
+  }
+  
+  .form .result {
+    display: flex;
+    width: 80%;
+    align-items: center;
+    flex-direction: column;
+    margin-bottom: 50px;
+  }
+  
+  .form .result p {
+    width: 100%;
+    line-height: 26px;
+    font-size: 18px;
+  }
+  
+  .form .result p span {
+    font-weight: bold;
+    color: #3C9DCF;
+  }
+  
+  #divResultadoFrete {
+    display: none;
+  }
+  
+  #divResultadoReceita {
+    display: none;
+  }
+  
+  #divSignUpResult {
+    display: none;
+    margin-bottom: 0;
+  }
+  
+  #divSignInResult {
+    display: none;
+    margin-bottom: 0;
+  }
+  
+  .fundoDados {
+    background-color: white;
+    border-radius: 10px;
+    margin: 10px;
+    padding: 10px;
+    width: 100%;
+  }
+  
+  .emailEmpresa {
+    margin-top: 40px;
+  }
+  
+  .senhaEmpresa {
+    padding: 10px;
+  }
+  
+  .senhaEmpresa input {
+    margin-top: 10px;
+    font-size: 14px;
+    border-radius: 5px;
+    height: 24px;
+    border: 2px solid #3C9DCF;
+    padding-left: 10px;
+    width: 30%;
+  }
+  
+  .FcardDados {
+    background-color: white;
+    box-shadow: 2px 2px 2px 1px #3C9DCF;
+    margin-top: 10px;
+    height: 80px;
+  }
+  
+  .info button {
+    background-color: #3C9DCF;
+    padding: 10px 30px;
+    border: 2px solid #3C9DCF;
+    border-radius: 30px;
+    color: #f5f5f5;
+    font-weight: bold;
+    font-size: 18px;
+    cursor: pointer;
+  }
+  
+  .info button:focus {
+    outline: #0253c4;
+    border: 2px solid #0253c4;
+  }
+  
+  #idOperacao {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  #idOperacao .titulo {
+    margin-top: 35px;
+    text-align: center;
+  }
+  
+  #cards.analytic .card {
+    height: 50%;
+  }
+  
+  #cards.analytic .card .card-background#critico {
+    background-color: #F04A5B;
+  }
+  
+  .analytic .card .card-background h2 {
+    color: wheat;
+  
+  }
+  
+  #cards.analytic .card .card-background#alerta {
+    background-color: rgb(255, 205, 86);
+  }
+  
+  #cards.analytic .card .card-background#ideal {
+    background-color: rgb(54, 162, 235);
+  
+  }
+  
+  #cards.analytic .card h3 {
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+  
+  .analytic .card {
+    width: fit-content;
+  }
+  
+  .viagens {
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+  }
+  
+  
+  .table {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    border-radius: 10px;
+    border: 1px solid #717171;
+    margin-bottom: 30px;
+  }
+  
+  .table thead {
+    display: flex;
+    width: 100%;
+    background-color: #70c4ec;
+    color: #717171;
+    border-radius: 10px 10px 0 0;
+  }
+  
+  .table thead tr {
+    display: flex;
+    width: 100%;
+    justify-content: space-evenly;
+    align-items: center;
+    border-bottom: 1px solid #717171;
+  }
+  
+  .table thead tr th {
+    width: 19%;
+    height: 100%;
+    padding: 10px 0;
+  }
+  
+  .table tbody {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+  }
+  
+  .table tbody tr {
+    display: flex;
+    width: 100%;
+    justify-content: space-evenly;
+    align-items: center;
+    padding: 10px 0;
+    border-radius: 0 0 10px 10px;
+  }
+  
+  .table tbody tr.alternative {
+    background-color: #f5f5f5;
+    border-radius: 0 0 10px 10px;
+  }
+  
+  .table tbody tr td {
+    width: 19%;
+    text-align: center;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+  
+  .table input {
+    width: 100%;
+    text-align: center;
+    border: none;
+    background-color: transparent;
+  }
+  
+  
+  #divShipment {
+    display: none;
+  }
+  
+  #divCompany {
+    display: none;
+  }
+  
+  #divCompany p {
+    margin: 16px 0 10px;
+  }
+  
+  div.data-table {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+  }
+  
+  #divRequests {
+    display: none;
+  }
+  
+  #temperatura .options {
+    margin-bottom: 20px;
+    width: 100%;
+  }
+  
+  .field {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    margin: 8px 0;
+  }
+  
+  .inputMedicamento {
+    border-radius: 5px;
+    height: 24px;
+    border: 2px solid #3C9DCF;
+  }
+  
+  .field label {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  
+  .card button {
+    margin: 20px 0;
+    background-color: #3C9DCF;
+    padding: 10px 30px;
+    border: 2px solid #3C9DCF;
+    border-radius: 30px;
+    color: #f5f5f5;
+    font-weight: bold;
+    font-size: 18px;
+    cursor: pointer;
+  }
+  
+  #listaMedicamentos {
+    padding-bottom: 10px;
+    width: 100%;
+    height: fit-content;
+    box-sizing: border-box;
+    margin-top: 20px;
+    margin-left: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    border-radius: 30px;
+    overflow: hidden;
+  
+  }
+  
+  #listaMedicamentos h1 {
+    color: #0253c4;
+    font-size: 34px;
+    margin: 20px 0 15px;
+  }
+  
+  
+  #medicamentos {
+    list-style-type: none;
+    width: 90%;
+    height: fit-content;
+    margin-top: 25px;
+  }
+  
+  .medicamentoContainerTitulo,
+  .medicamentoContainer {
+    height: 55px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 2px;
+    border-radius: 30px;
+  }
+  
+  .medicamentoContainer {
+    box-shadow: 0 0 5px grey;
+    margin-top: 15px;
+  }
+  
+  .pedidoNum,
+  .pedidoTemp,
+  .pedidoUmi {
+    width: 34%;
+    height: fit-content;
+    font-size: 25px;
+    font-weight: 300;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .pedidoNum {
+    margin: 0;
+  }
+  
+  .pedidoTemp {
+    width: fit-content;
+    height: 100%;
+  }
+  
+  .medicamentoContainerTitulo {
+    font-size: 20px;
+    font-weight: 700;
+  }
+  
+  .tituloTabelaContainer {
+    width: 34%;
+    height: fit-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  #nomePedido,
+  #tempMinPedido,
+  #tempMaxPedido,
+  #UmiMinPedido,
+  #UmiMaxPedido {
+    text-align: center;
+  }
+  
+  
+  .tabela {
+    width: 400px;
+    height: 100px;
+  }
+  
+  .tituloTabela {
+    color: white;
+    background-color: #3C9DCF;
+  }
+  
+  #idOperacao .analytic #cards {
+    height: fit-content;
+  }
+  
+  .card #formulario,
+  .info #temperatura h1 {
+    color: #0253c4;
+    font-size: 34px;
+    margin-top: 10px;
+  }
+  
+  #idOperacao .viagem #cards .card {
+    height: 80%;
+  }
+  
+  #idOperacao .viagem #cards .card-background {
+    height: 40%;
+  }
+  
+  #idOperacao .viagem #cards .card-background {
+    height: 60%;
+  }

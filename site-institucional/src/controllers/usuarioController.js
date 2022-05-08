@@ -62,7 +62,31 @@ function entrar(request, response) {
   }
 }
 
+function listarPorCliente(request, response) {
+  let idCliente = request.body.idClienteServer;
+
+  if (idCliente == undefined) {
+    response.status(400).send("Seu email está undefined!");
+  } else {
+    usuarioModel.buscarPorIdCliente(idCliente).then(function (resultado) {
+      console.log(`\nResultados encontrados: ${resultado.length}`);
+      console.log(`Resultados: ${JSON.stringify(resultado)}`); // transforma JSON em String
+
+      if (resultado.length == 0) {
+        response.status(403).send("idCliente inválido");
+      } else {
+        response.send(resultado);
+      }
+    }).catch(function (erro) {
+      console.log(erro);
+      console.log("\nHouve um erro ao realizar a busca de usuários! Erro: ", erro.sqlMessage);
+      response.status(500).json(erro.sqlMessage);
+    })
+  }
+}
+
 module.exports = {
   cadastrar,
-  entrar
+  entrar,
+  listarPorCliente
 }
