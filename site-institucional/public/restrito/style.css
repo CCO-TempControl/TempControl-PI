@@ -733,6 +733,29 @@ div.data-table {
     border: 2px solid #3C9DCF;
 }
 
+#listaMedicamentos {
+    padding-bottom: 10px;
+    width: 100%;
+    height: fit-content;
+    box-sizing: border-box;
+    margin-top: 20px;
+    margin-left: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    border-radius: 30px;
+    overflow: hidden;
+  
+  }
+  #listaMedicamentos h1 {
+    color: #0253c4;
+    font-size: 34px;
+    margin: 20px 0 15px;
+  }
+
+  
+
 #lista-medicamentos-container {
     padding: 10px;
     width: 100%;
