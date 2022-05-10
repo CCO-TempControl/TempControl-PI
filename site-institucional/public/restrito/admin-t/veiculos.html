@@ -26,7 +26,7 @@
     </style>
 </head>
 
-<body onload="obterUsuariosCliente()">
+<body onload="obterVeiculosCliente()">
     <div class="wrapper">
         <div class="sidebar">
             <div class="dropdown">
@@ -58,52 +58,43 @@
                 <div class="banner-form alt-banner sign">
                     <div class="container">
                         <div class="cartao">
-                            <h2>Cadastro De Usuários</h2>
+                            <h2>Cadastro De Veículos</h2>
                             <div class="form">
                                 <div class="field">
-                                    <label for="txtNome">
-                                        Nome:
+                                    <label for="txtModelo">
+                                        Modelo:
                                     </label>
-                                    <input id="txtNome" type="text" placeholder="Digite nome completo do usuário">
+                                    <input id="txtModelo" type="text" placeholder="Digite o modelo do veículo aqui">
                                 </div>
                                 <div class="field">
-                                    <label for="txtEmail">
-                                        Email:
+                                    <label for="txtPlaca">
+                                        Placa:
                                     </label>
-                                    <input id="txtEmail" type="email" placeholder="Ex: emailusuario@email.com">
+                                    <input id="txtPlaca" type="text" placeholder="Ex.: ABC1234" maxlength="7">
                                 </div>
                                 <div class="field">
-                                    <label for="txtTipo">
-                                        Tipo Úsuario:
+                                    <label for="txtAno">
+                                        Ano:
                                     </label>
-                                    <select name="" id="txtTipo">
-                                        <option value="admin-t">Administrador Transportadora</option>
-                                        <option value="transportador">Transportador</option>
-                                    </select>
-                                </div>
-                                <div class="field">
-                                    <label for="txtPassword">
-                                        Senha:
-                                    </label>
-                                    <input id="txtPassword" type="password" placeholder="Ex: **********">
+                                    <input id="txtAno" type="number" placeholder="Ex.: 2019">
                                 </div>
                                 <div id="divSignInResult" class="result">
                                     <p id="pMensagem">
                                         Olá meus senhores e minhas senhoras
                                     </p>
                                 </div>
-                                <button onclick="validarCadastro()">Cadastrar</button>
+                                <button onclick="validarCadastroVeiculo()">Cadastrar</button>
                             </div>
-                            <table id="tabelaUsuarios">
+                            <table id="tabelaVeiculos">
                                 <thead>
                                     <tr>
                                         <th>id</th>
-                                        <th>Nome</th>
-                                        <th>Email</th>
-                                        <th>Tipo</th>
+                                        <th>Modelo</th>
+                                        <th>Placa</th>
+                                        <th>Ano</th>
                                     </tr>
                                 </thead>
-                                <tbody id="corpoTabelaUsuarios">
+                                <tbody id="corpoTabelaVeiculos">
                                 </tbody>
                             </table>
                         </div>
@@ -120,12 +111,12 @@
     var fkAdmin = dadosSession.idUsuario;
     spanNome.innerHTML = dadosSession.nomeUsuario
 
-    function obterUsuariosCliente() {
+    function obterVeiculosCliente() {
         const idClienteVar = fkCliente;
-        var table = document.getElementById("tabelaUsuarios").getElementsByTagName('tbody')[0];
+        var table = document.getElementById("tabelaVeiculos").getElementsByTagName('tbody')[0];
         table.innerHTML = '';
 
-        fetch(`/usuarios/listarPorCliente/`, {
+        fetch(`/veiculos/listarPorCliente/`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -135,17 +126,17 @@
             })
         }).then(function (response) {
             if (response.ok) {
-                response.json().then(function (usuariosEncontrados) {
-                    usuariosEncontrados.forEach(usuario => {
+                response.json().then(function (veiculosEncontrados) {
+                    veiculosEncontrados.forEach(veiculo => {
                         var linha = table.insertRow(-1);
                         var celula1 = linha.insertCell(0);
                         var celula2 = linha.insertCell(1);
                         var celula3 = linha.insertCell(2);
                         var celula4 = linha.insertCell(3);
-                        celula1.innerHTML = usuario.idUsuario;
-                        celula2.innerHTML = usuario.nomeUsuario;
-                        celula3.innerHTML = usuario.emailUsuario;
-                        celula4.innerHTML = usuario.tipoUsuario;
+                        celula1.innerHTML = veiculo.idVeiculo;
+                        celula2.innerHTML = veiculo.modelo;
+                        celula3.innerHTML = veiculo.placa;
+                        celula4.innerHTML = veiculo.ano;
                     });
                 });
             } else {
@@ -153,53 +144,40 @@
             }
         })
             .catch(function (error) {
-                console.error(`Erro na obtenção dos usuários cadastrados ${error.message}`);
+                console.error(`Erro na obtenção dos veículos cadastrados ${error.message}`);
             });
     }
 
-    function validarCadastro() {
-        var nomeVar = txtNome.value;
-        var emailVar = txtEmail.value;
-        var senhaVar = txtPassword.value;
-        var tipoUsuarioVar = txtTipo.value;
+    function validarCadastroVeiculo() {
+        var modeloVar = txtModelo.value;
+        var placaVar = txtPlaca.value;
+        var anoVar = txtAno.value;
         var fkClienteVar = fkCliente;
-        var fkAdminVar = fkAdmin;
 
-
-
-        if (emailVar == "" || senhaVar == "") {
+        if (modeloVar == "" || placaVar == "" || anoVar == "") {
             divSignInResult.style.display = 'flex';
             pMensagem.style.color = '#fc3636';
             pMensagem.innerHTML = 'Todos os campos são obrigatórios';
             return;
         }
 
-        if (emailVar.indexOf('@') <= 0 || emailVar.indexOf('.com') <= 2) {
+        if (placaVar.toString().length < 6) {
             divSignInResult.style.display = 'flex';
             pMensagem.style.color = '#fc3636';
-            pMensagem.innerHTML = 'Email e/ou Senha incorreto(s)';
+            pMensagem.innerHTML = `Placa incorreta. Length: ${placaVar.length}`;
             return;
         }
 
-        if (senhaVar.length < 8) {
-            divSignInResult.style.display = 'flex';
-            pMensagem.style.color = '#fc3636';
-            pMensagem.innerHTML = 'Email e/ou Senha incorreto(s)';
-            return;
-        }
-
-        fetch("/usuarios/cadastrar", {
+        fetch("/veiculos/cadastrar", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                nomeServer: nomeVar,
-                emailServer: emailVar,
-                senhaServer: senhaVar,
-                tipoUsuarioServer: tipoUsuarioVar,
-                clienteServer: fkClienteVar,
-                adminServer: fkAdminVar
+                modeloServer: modeloVar,
+                placaServer: placaVar,
+                anoServer: anoVar,
+                fkClienteServer: fkClienteVar
             })
         }).then(function (resposta) {
             console.log('Resposta: ', resposta);
@@ -209,8 +187,8 @@
 
                 divSignInResult.style.display = 'flex';
                 pMensagem.style.color = '#34e269';
-                pMensagem.innerHTML = 'Cadastrado realizado com sucesso';
-                obterUsuariosCliente();
+                pMensagem.innerHTML = 'Cadastro de veículo realizado com sucesso';
+                obterVeiculosCliente();
 
             } else {
                 if (resposta.status == 403) {
@@ -222,7 +200,7 @@
                 } else {
                     divSignInResult.style.display = 'flex';
                     pMensagem.style.color = '#fc3636';
-                    pMensagem.innerHTML = 'Houve um erro ao realizar o cadastro!';
+                    pMensagem.innerHTML = 'Houve um erro ao realizar o cadastro de veículo!';
                 }
 
             }
