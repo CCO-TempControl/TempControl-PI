@@ -69,10 +69,45 @@
     </div>
 </body>
 
-<script>
+<script> /* Arrumar */
+    var sessionData = obterDadosSession();
+    obterMedicamentos();
     function sair() {
         signOut();
         window.location.replace('../../sign-in.html')
+    }
+    function obterMedicamentos() {
+        fetch(`/medicamentos/fabricante/${sessionData.fkCliente}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            },
+        }).then(function (response) {
+            // if resposta.ok
+            response.json().then((json) => {
+                console.log('Resposta: ', json);
+                let elementsPage = document.getElementsByClassName('medicamento-container')
+                console.log(elementsPage[0].getelementById('nomePedido'))
+                for (let i = 0; i < json.length; i++) {
+                    for(let j = 0; j < elementsPage.length;j++) {
+                        /* if (json[i].nomeMedicamento == elementsPage[j].getelementById('nomePedido')) {
+
+                        } */
+                    }
+                }
+            }
+
+            )
+        });
+        /* 
+            medicamentos.innerHTML += `
+                            <li class="medicamentoContainer">
+                                <span class="pedidoNum tituloTabelaContainer" id="nomePedido">${nome}</span>
+                                <span class="pedidoTemp tituloTabelaContainer" id="tempMinPedido">${temperaturaMinima}ºC/${temperaturaMaxima}ºC</span>
+                                <span class="pedidoUmi tituloTabelaContainer" id="UmiMinPedido">${umidadeMinima}%/${umidadeMaxima}%</span>
+                            </li>`;
+        } */
+        
     }
 </script>
 </html>
