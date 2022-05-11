@@ -499,6 +499,10 @@ div.data-table {
 
 }
 
+.card-background h2 {
+    color: #f5f5f5;
+}
+
 #cards-admin-f.analytic .card-admin-f .card-background#alerta {
     background-color: rgb(255, 205, 86);
 }

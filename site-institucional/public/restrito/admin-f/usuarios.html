@@ -9,8 +9,10 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="../style.css">
     <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../../assets/js/validacoes.js"></script>
     <script src="../../assets/js/funcoes.js"></script>
-    <title>DashBoard</title>
+    <title>USUÁRIOS</title>
 </head>
 
 <body>
@@ -62,7 +64,7 @@
                                 </div>
                                 <div class="field">
                                     <label for="txtEmail">
-                                        Tipo Úsuario:
+                                        Tipo de usuário:
                                     </label>
                                     <select name="" id="txtTipo" >
                                         <option value="admin-f">Administrador Farmacêutica</option>
@@ -76,11 +78,6 @@
                                     </label>
                                     <input id="txtPassword" type="password" placeholder="Ex: **********">
                                 </div>
-                                <div id="divSignInResult" class="result">
-                                    <p id="pMensagem">
-                                      Olá meus senhores e minhas senhoras
-                                    </p>
-                                  </div>
                                 <button onclick="validarCadastro()">Cadastrar</button>
                             </div>
                         </div>
@@ -90,77 +87,9 @@
             </div>
         </div>
     </div>
-    </div>
-    </div>
 </body>
 
-<script>
-    const labels = [
-        'Abril',
-        'Maio',
-        'Junho',
-        'Julho',
-        'Agosto',
-    ];
-
-    const data1 = {
-        labels: labels,
-        datasets: [{
-            label: 'Alertas',
-            backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgb(255, 99, 132)',
-            data: [0, 10, 5, 2, 20, 30, 45],
-        }]
-    };
-
-    const data2 = {
-        labels: [
-            'Critico',
-            'Média',
-            'Atenção'
-        ],
-        datasets: [{
-            label: labels,
-            data: [10, 100, 30],
-            backgroundColor: [
-                'rgb(255, 99, 132)',
-                'rgb(54, 162, 235)',
-                'rgb(255, 205, 86)'
-            ],
-            hoverOffset: 4
-        }]
-    };
-
-    const config1 = {
-        type: 'bar',
-        data: data1,
-        options: {}
-    };
-    const config2 = {
-        type: 'doughnut',
-        data: data2,
-        options: {}
-    };
-
-    const myChart1 = new Chart(
-        document.getElementById('myChart1'),
-        config1
-    );
-    const myChart2 = new Chart(
-        document.getElementById('myChart2'),
-        config2
-    );
-    const myChart3 = new Chart(
-        document.getElementById('myChart3'),
-        config1
-    );
-    const myChart4 = new Chart(
-        document.getElementById('myChart4'),
-        config1
-    );
-</script>
-
-<script>
+<!-- <script>
     var dadosSession = obterDadosSession();
     var fkCliente = dadosSession.fkCliente;
     var fkAdmin = dadosSession.idUsuario;
@@ -169,7 +98,7 @@
     function sair() {
       signOut();
     }
-</script>
+</script> -->
 
 <script>
 
@@ -179,28 +108,42 @@
       var senhaVar = txtPassword.value;
       var tipoUsuarioVar = txtTipo.value;
       var fkClienteVar = fkCliente;
-      var fkAdminVar = fkAdmin;
-
-      
+      var fkAdminVar = fkAdmin;      
   
       if (emailVar == "" || senhaVar == "") {
-        divSignInResult.style.display = 'flex';
-        pMensagem.style.color = '#fc3636';
-        pMensagem.innerHTML = 'Todos os campos são obrigatórios';
+        Swal.fire({
+            title: 'Erro',
+            text: 'Todos os campos são obrigatórios',
+            icon: 'error',
+            confirmButtonColor: '#fc3636'
+        })
+        return;
+      }
+
+      var validacaoEmail = validarEmail(emailVar);
+      var validacaoSenha = validarSenha(senhaVar);
+
+      if (validacaoEmail != 'OK') {
+        Swal.fire({
+            title: 'Erro',
+            text: validacaoEmail,
+            icon: 'error',
+            showConfirmButton: false,
+            showDenyButton: true,
+            denyButtonText: 'OK'
+        });
         return;
       }
   
-      if (emailVar.indexOf('@') <= 0 || emailVar.indexOf('.com') <= 2) {
-        divSignInResult.style.display = 'flex';
-        pMensagem.style.color = '#fc3636';
-        pMensagem.innerHTML = 'Email e/ou Senha incorreto(s)';
-        return;
-      }
-  
-      if (senhaVar.length < 8) {
-        divSignInResult.style.display = 'flex';
-        pMensagem.style.color = '#fc3636';
-        pMensagem.innerHTML = 'Email e/ou Senha incorreto(s)';
+      if (validacaoSenha != 'OK') {
+        Swal.fire({
+          title: 'Erro',
+          text: validacaoSenha,
+          icon: 'error',
+          showConfirmButton: false,
+          showDenyButton: true,
+          denyButtonText: 'OK'
+        });
         return;
       }
   
@@ -223,28 +166,44 @@
         if (resposta.ok) {
           console.log(resposta);
 
-            divSignInResult.style.display = 'flex';
-            pMensagem.style.color = '#34e269';
-            pMensagem.innerHTML = 'Cadastrado realizado com sucesso';
+          Swal.fire({
+            title: 'Suceso',
+            text: 'Cadastro realizado com sucesso',
+            icon: 'success',
+            timer: 2000,
+            timerProgressBar: true,
+            confirmButtonColor: '#34e269',
+          });
 
         } else {
           if (resposta.status == 403) {
             resposta.text().then(text => {
-              divSignInResult.style.display = 'flex';
-              pMensagem.style.color = '#fc3636';
-              pMensagem.innerHTML = text;
+                Swal.fire({
+                    title: 'Erro',
+                    text: text,
+                    icon: 'error',
+                    confirmButtonColor: '#fc3636'
+                });
+                return;
             })
           } else {
-            divSignInResult.style.display = 'flex';
-            pMensagem.style.color = '#fc3636';
-            pMensagem.innerHTML = 'Houve um erro ao realizar o cadastro!';
+            Swal.fire({
+                title: 'Erro',
+                text: 'Houve um erro ao realizar o cadastro!',
+                icon: 'error',
+                confirmButtonColor: '#fc3636'
+            });
+            return;
           }
   
         }
       }).catch(function (erro) {
-        divSignInResult.style.display = 'flex';
-        pMensagem.style.color = '#fc3636';
-        pMensagem.innerHTML = 'Houve um erro ao se cadastar!';
+        Swal.fire({
+            title: 'Erro',
+            text: 'Houve um erro ao realizar o cadastro!',
+            icon: 'error',
+            confirmButtonColor: '#fc3636'
+        });
         console.log(`ERRO: ${erro}`);
       })
   
@@ -252,8 +211,4 @@
     }
   
   </script>
-
-
-
-
 </html>

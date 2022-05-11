@@ -195,16 +195,15 @@
 
     var validacaoEmail = validarEmail(emailVar);
     var validacaoCNPJ = validarCNPJ(cnpjVar);
-    if (validacaoCNPJ == 'OK') {
-      cnpjVar = parseInt(cnpjVar.replaceAll('.','').replace('/', '').replace('-', ''))
-    }
     var validacaoTelefone = validarTelefone(telefoneVar);
     var validacaoSenha = validarSenha(senhaVar);
 
-    if (validacaoEmail != 'OK') {
+    if (validacaoCNPJ == 'OK') {
+      cnpjVar = parseInt(cnpjVar.replaceAll('.','').replace('/', '').replace('-', ''))
+    } else {
       Swal.fire({
         title: 'Erro',
-        text: validacaoEmail,
+        text: validacaoCNPJ,
         icon: 'error',
         showConfirmButton: false,
         showDenyButton: true,
@@ -213,10 +212,10 @@
       return;
     }
 
-    if (validacaoCNPJ != 'OK') {
+    if (validacaoEmail != 'OK') {
       Swal.fire({
         title: 'Erro',
-        text: validacaoCNPJ,
+        text: validacaoEmail,
         icon: 'error',
         showConfirmButton: false,
         showDenyButton: true,

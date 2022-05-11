@@ -11,7 +11,7 @@
   <script src="../../assets/js/funcoes.js"></script>
   <link rel="stylesheet" href="../style.css">
   <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
-  <title>ENTREGAS - TempControl</title>
+  <title>ENTREGAS</title>
 </head>
 
 <body>
@@ -31,7 +31,7 @@
         <li><a href="formulario.html"><i class="fas fa-solid fa-file-contract"></i>Solicitar Sensores</a></li>
         <li><a href="graficos.html"><i class="fas fa-solid fa-chart-gantt"></i></i>Gráficos/Alertas</a></li>
         <li><a href="dadosPessoais.html"><i class="fas fa-solid fa-user"></i></i>Dados Pessoais</a></li>
-        <li><a href="../../index.html" onclick="sair()"><i class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
+        <li><a href="../../index.html" onclick="signOut()"><i class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
     </ul>
 
     </div>
@@ -41,9 +41,6 @@
       </div>
       <div class="info">
         <div id="temperatura">
-          <h2>
-            Entregas
-          </h2>
           <div class="options">
             <button onclick="entregas()" id="btnDeliveries" class="option selected">Entregas</button>
             <button onclick="solicitacoes()" id="btnRequests" class="option">Solicitações</button>
@@ -281,13 +278,6 @@
       confirmButtonColor: '#dd6b55',
       cancelButtonText: 'Cancelar',
     });
-  }
-</script>
-<script>
-  verificarAutorizacao('admin-f');
-
-  function sair() {
-    signOut();
   }
 </script>
 

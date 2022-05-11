@@ -10,7 +10,7 @@
     <script src="../../assets/js/funcoes.js"></script>
     <link rel="stylesheet" href="../style.css">
     <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
-    <title>DashBoard</title>
+    <title>DASHBOARD</title>
 </head>
 
 <body>
@@ -31,8 +31,7 @@
                 <li><a href="graficos.html"><i class="fas fa-solid fa-chart-gantt"></i></i>Gráficos/Alertas</a></li>
                 <li><a href="dadosPessoais.html"><i class="fas fa-solid fa-user"></i></i>Dados Pessoais</a></li>
                 <li><a href="../../index.html" onclick="sair()"><i class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
-            </ul>
-            
+            </ul>            
         </div>
         <div class="main_content">
             <div class="header">
@@ -105,75 +104,7 @@
             </div>
         </div>
     </div>
-    </div>
-    </div>
 </body>
-
-<script>
-    const labels = [
-        'Abril',
-        'Maio',
-        'Junho',
-        'Julho',
-        'Agosto',
-    ];
-
-    const data1 = {
-        labels: labels,
-        datasets: [{
-            label: 'Alertas',
-            backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgb(255, 99, 132)',
-            data: [0, 10, 5, 2, 20, 30, 45],
-        }]
-    };
-
-    const data2 = {
-        labels: [
-            'Critico',
-            'Média',
-            'Atenção'
-        ],
-        datasets: [{
-            label: labels,
-            data: [10, 100, 30],
-            backgroundColor: [
-                'rgb(255, 99, 132)',
-                'rgb(54, 162, 235)',
-                'rgb(255, 205, 86)'
-            ],
-            hoverOffset: 4
-        }]
-    };
-
-    const config1 = {
-        type: 'bar',
-        data: data1,
-        options: {}
-    };
-    const config2 = {
-        type: 'doughnut',
-        data: data2,
-        options: {}
-    };
-
-    const myChart1 = new Chart(
-        document.getElementById('myChart1'),
-        config1
-    );
-    const myChart2 = new Chart(
-        document.getElementById('myChart2'),
-        config2
-    );
-    const myChart3 = new Chart(
-        document.getElementById('myChart3'),
-        config1
-    );
-    const myChart4 = new Chart(
-        document.getElementById('myChart4'),
-        config1
-    );
-</script>
 
 <script>
     var dadosSession = obterDadosSession();
