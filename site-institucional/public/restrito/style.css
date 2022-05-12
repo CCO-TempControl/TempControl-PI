@@ -735,6 +735,8 @@ div.data-table {
     border-radius: 5px;
     height: 24px;
     border: 2px solid #3C9DCF;
+    font-size: 14px;
+    padding-left: 10px;
 }
 
 #listaMedicamentos {
