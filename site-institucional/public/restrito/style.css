@@ -784,7 +784,7 @@ div.data-table {
     margin: 20px 0 15px;
 }
 
-#lista-medicamentos {
+#ulListaMedicamentos {
     list-style-type: none;
     width: 90%;
     height: fit-content;
@@ -823,6 +823,10 @@ div.data-table {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.pedido-umi i {
+    margin: 0 12px;
 }
 
 .pedido-num {

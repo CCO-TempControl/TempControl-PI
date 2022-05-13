@@ -28,30 +28,59 @@ function listarPorFarmaceutica(request, response) {
 }
 /* Adiciona um Medicamento no Banco */
 function cadastrarMedicamento(request, response) {
-  var idFarmaceutica = request.body.idCliente;
-  var nomeMedicamento = request.body.nome;
-  var validadeMedicamento = request.body.validade;
-  var temperaturaMinima = request.body.tempMin;
-  var temperaturaMaxima = request.body.tempMax;
-  var umidadeMinima = request.body.umiMin;
-  var umidadeMaxima = request.body.umiMax;
+  var idFarmaceutica = request.body.idClienteServer;
+  var nomeMedicamento = request.body.nomeServer;
+  var validadeMedicamento = request.body.validadeServer;
+  var temperaturaMinima = request.body.tempMinServer;
+  var temperaturaMaxima = request.body.tempMaxServer;
+  var umidadeMinima = request.body.umiMinServer;
+  var umidadeMaxima = request.body.umiMaxServer;
   
   if (idFarmaceutica == undefined) {
-    response.status(400).send("idFabricante não definida");
+    response.status(400).send("Fabricante não definida");
   } else if (nomeMedicamento == undefined) {
-    response.status(400).send("Nome Do Medicamento não definido");
+    response.status(400).send("Nome do medicamento não definido");
   } else if (temperaturaMinima == undefined) {
-    response.status(400).send("temp.Min não definida");
+    response.status(400).send("Temperatura Miníma não definida");
   } else if (temperaturaMaxima == undefined) {
-    response.status(400).send("temp.Max não definida");
+    response.status(400).send("Temperatura Máxima não definida");
   } else if (umidadeMinima == undefined) {
-    response.status(400).send("Umi.Min não definida");
+    response.status(400).send("Umidade Miníma não definida");
   } else if (umidadeMaxima == undefined) {
-    response.status(400).send("Umi.Max não definida");
+    response.status(400).send("Umidade Máxima não definida");
   } else {
-    medicamentoModel.cadastrar(nomeMedicamento, validadeMedicamento ,temperaturaMinima, temperaturaMaxima, umidadeMinima, umidadeMaxima, idFarmaceutica)
-    .then(function(resultado) {
-      response.json(resultado);
+    medicamentoModel.cadastrar(
+      nomeMedicamento, 
+      validadeMedicamento, 
+      temperaturaMinima, 
+      temperaturaMaxima, 
+      umidadeMinima, 
+      umidadeMaxima, 
+      idFarmaceutica
+    ).then(
+      function(insert) {
+        var idMedicamento = insert.insertId;
+
+        medicamentoModel.buscarPorId(idMedicamento).then(function(resultado) { 
+          response.json(resultado[0]) 
+        }).catch(function (erro) {
+          console.log(erro);
+          console.log(
+              "\nHouve um erro ao realizar o cadastro! Erro: ",
+              erro.sqlMessage
+          );
+          
+          response.status(500).json(erro.sqlMessage);
+        })
+      }
+    ).catch(function (erro) {
+      console.log(erro);
+      console.log(
+          "\nHouve um erro ao realizar o cadastro! Erro: ",
+          erro.sqlMessage
+      );
+      
+      response.status(500).json(erro.sqlMessage);
     });
   }
 }
