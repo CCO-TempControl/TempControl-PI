@@ -24,11 +24,11 @@ function cadastrar(nomeMedicamento, validadeMedicamento, temperaturaMinima, temp
   return database.executar(instrucao);
 }
 
-function buscarPorId(id) {
-  console.log("ACESSEI O MEDICAMENTO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function buscarPorId():", id);
+function deletar(idMedicamento) {
+  console.log("ACESSEI O MEDICAMENTO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function buscarPorId():", idMedicamento);
 
   var instrucao = `
-    SELECT * FROM medicamento WHERE idMedicamento = ${id}
+    DELETE FROM medicamento WHERE idMedicamento = ${idMedicamento}
   `;
 
   console.log("Executando a instrução SQL: \n" + instrucao);
@@ -38,5 +38,5 @@ function buscarPorId(id) {
 module.exports = {
   listarPorFarmaceutica,
   cadastrar,
-  buscarPorId
+  deletar
 }

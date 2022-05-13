@@ -9,26 +9,26 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../../assets/js/funcoes.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
     <link rel="stylesheet" href="../style.css">
-    <title>DashBoard</title>
+    <title>MEDICAMENTOS</title>
 </head>
 
-<body>
+<body onload="setUp('laboratorio'), carregarMedicamentos()">
     <div class="wrapper">
         <div class="sidebar">
             <div class="dropdown">
                 <a href="#"><i class="fa-solid fa-circle-user" style="font-size:70px;  color: white;"></i></a>
                 <div class="dropdown-content">
-                    <h4>Olá {{nome.usuario}}</h4>
+                    <h4>Olá <span id="spanNome"></span></h4>
                 </div>
             </div>
             <ul>
-                <li><a href="index.html"><i class="fas fa-home"></i>Home</a></li>
-                <li><a href="formulario.html"><i class="fas fa-solid fa-chart-gantt"></i></i>Formulário</a></li>
-                <li><a href="dadosPessoais.html"><i class="fas fa-solid fa-bell"></i></i>Dados Pessoais</a></li>
-                <li><a onclick="sair()"><i class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
+                <li><a href="./index.html"><i class="fas fa-home"></i>Home</a></li>
+                <li><a href="./medicamentos.html"><i class="fas fa-solid fa-file-medical"></i>Medicamentos</a></li>
+                <li><a href="../../index.html" onclick="signOut()"><i
+                            class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
             </ul>
-
         </div>
         <div class="main_content">
             <div class="header">
@@ -37,71 +37,116 @@
             </div>
             <div class="info">
                 <div class="card-laboratorio-formulario">
-                    <h2>Cadastrar medicamento</h2>
+                    <h2 id="formulario">Cadastrar medicamento</h2>
                     <div class="field">
                         <label for="nomeMedicamento">Nome:</label>
                         <input id="nomeMedicamento" class="input-medicamento" placeholder="Ex: Medicamento X">
                     </div>
                     <div class="field">
                         <label for="validadeMedicamento">Validade:</label>
-                        <input id="validadeMedicamento" class="input-medicamento" placeholder="Ex: 2" type="date" min="2022-01-01">
+                        <input id="validadeMedicamento" class="input-medicamento" placeholder="Ex: 30 dias"
+                            type="number" min="1">
                     </div>
                     <div class="field">
                         <label for="tempMin">Temperatura Mínima:</label>
-                        <input id="tempMin" class="input-medicamento" placeholder="Ex: 2" type="number">
+                        <input id="tempMin" class="input-medicamento" placeholder="Ex: 2°C" type="number">
                     </div>
                     <div class="field">
                         <label for="tempMax">Temperatura Máxima:</label>
-                        <input id="tempMax" class="input-medicamento" placeholder="Ex: 5" type="number">
+                        <input id="tempMax" class="input-medicamento" placeholder="Ex: 5°C" type="number">
                     </div>
                     <div class="field">
                         <label for="umiMin">Umidade Mínima:</label>
-                        <input id="umiMin" class="input-medicamento" placeholder="Ex: 30" type="number">
+                        <input id="umiMin" class="input-medicamento" placeholder="Ex: 30%" type="number">
                     </div>
                     <div class="field">
                         <label for="umiMax">Umidade Máxima:</label>
-                        <input id="umiMax" class="input-medicamento" placeholder="Ex: 40" type="number">
+                        <input id="umiMax" class="input-medicamento" placeholder="Ex: 40%" type="number">
                     </div>
                     <button onclick="cadastrarMedicamento()">Cadastrar Medicamento</button>
                 </div>
-                <div id="lista-medicamentos-container">
+
+                <div id="listaMedicamentos">
                     <h1>Medicamentos</h1>
-                    <ul id="lista-medicamentos">
+                    <ul id="ulListaMedicamentos">
                         <li class="medicamento-container-titulo">
                             <span class="titulo-tabela-container">Nome</span>
+                            <span class="titulo-tabela-container">Validade</span>
                             <span class="titulo-tabela-container">Temp. Mín / Temp. Máx</span>
                             <span class="titulo-tabela-container">Umi. Mín/ Máx</span>
-                        </li>
-                        <li class="medicamento-container">
-                            <span class="pedido-num titulo-tabela-container" id="nomePedido">Nome Medicamento</span>
-                            <span class="pedido-temp titulo-tabela-container" id="tempMinPedido">6ºC/12ºC</span>
-                            <span class="pedido-umi titulo-tabela-container" id="UmiMinPedido">91%/94%</span>
-                        </li>
-                        <li class="medicamento-container">
-                            <span class="pedido-num titulo-tabela-container" id="nomePedido">Nome Medicamento</span>
-                            <span class="pedido-temp titulo-tabela-container" id="tempMinPedido">6ºC/10ºC</span>
-                            <span class="pedido-umi titulo-tabela-container" id="UmiMinPedido">90%/94%</span>
+                            <span class="titulo-tabela-container">Operações</span>
                         </li>
                     </ul>
                 </div>
             </div>
         </div>
     </div>
-    </div>
-    </div>
 </body>
-
 <script>
-    var dadosDaSessao = obterDadosSession();
-    obterMedicamentos();
+    function carregarMedicamentos() {
+        fetch(`/medicamentos/fabricante/${usuario.fkCliente}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(function (resposta) {
+            console.log('Resposta: ', resposta);
+
+            if (resposta.ok) {
+                resposta.json().then(json => {
+                    console.log(json);
+
+                    /* sessionStorage.MEDICAMENTOS = JSON.stringify(json); */
+                    var listaMedicamentos = json;
+
+                    if (listaMedicamentos.length > 0) {
+                        for (let i = 0; i < listaMedicamentos.length; i++) {
+                            var medicamento = listaMedicamentos[i];
+                            renderizarMedicamento(medicamento);
+                        }
+                    }
+                });
+
+            } else {
+                Swal.fire({
+                    title: 'Erro',
+                    text: 'Houve um erro ao carregar os medicamentos',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    showDenyButton: true,
+                    denyButtonText: 'OK'
+                });
+            }
+
+        }).catch(function (erro) {
+            Swal.fire({
+                title: 'Erro',
+                text: 'Houve um erro ao carregar os medicamentos',
+                icon: 'error',
+                showConfirmButton: false,
+                showDenyButton: true,
+                denyButtonText: 'OK'
+            });
+            console.log(`ERRO: ${erro}`);
+        });
+    }
+
     function cadastrarMedicamento() {
-        var nome = nomeMedicamento.value;
-        var validade = validadeMedicamento.value
-        var temperaturaMinima = tempMin.value;
-        var temperaturaMaxima = tempMax.value;
-        var umidadeMinima = umiMin.value;
-        var umidadeMaxima = umiMax.value;
-        if (nome == "" || validade =="" || temperaturaMinima == "" || temperaturaMaxima == "" || umidadeMinima == "" || umidadeMaxima == "") {
+        var nomeVar = nomeMedicamento.value;
+        var validadeVar = Number(validadeMedicamento.value);
+        var temperaturaMinimaVar = Number(tempMin.value);
+        var temperaturaMaximaVar = Number(tempMax.value);
+        var umidadeMinimaVar = Number(umiMin.value);
+        var umidadeMaximaVar = Number(umiMax.value);
+
+        if (
+            nomeVar == ""
+            || validadeVar == ""
+            || temperaturaMinimaVar == ""
+            || temperaturaMaximaVar == ""
+            || umidadeMinimaVar == ""
+            || umidadeMaximaVar == ""
+        ) {
             Swal.fire({
                 title: 'Erro',
                 text: 'Todos os campos são obrigatórios',
@@ -112,54 +157,139 @@
             });
             return;
         }
-        fetch("/medicamentos", {
+
+        if (validadeVar <= 0) {
+            Swal.fire({
+                title: 'Erro',
+                text: 'Validade deve ser maior que 0 dias',
+                icon: 'error',
+                showConfirmButton: false,
+                showDenyButton: true,
+                denyButtonText: 'OK'
+            });
+            return;
+        }
+
+        if (temperaturaMinimaVar >= temperaturaMaximaVar) {
+            Swal.fire({
+                title: 'Erro',
+                text: 'Temperatura Máxima deve ser maior que a Temperatura Miníma',
+                icon: 'error',
+                showConfirmButton: false,
+                showDenyButton: true,
+                denyButtonText: 'OK'
+            });
+            return;
+        }
+
+        if (umidadeMinimaVar >= umidadeMaximaVar) {
+            Swal.fire({
+                title: 'Erro',
+                text: 'Umidade Máxima deve ser maior que a Umidade Miníma',
+                icon: 'error',
+                showConfirmButton: false,
+                showDenyButton: true,
+                denyButtonText: 'OK'
+            });
+            return;
+        }
+
+        fetch("/medicamentos/cadastrar", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                "idCliente": String(dadosDaSessao.fkCliente),
-                "nome": nome,
-                "validade": validade,
-                "tempMin": temperaturaMinima,
-                "tempMax": temperaturaMaxima,
-                "umiMin": umidadeMinima,
-                "umiMax": umidadeMaxima
+                idClienteServer: usuario.fkCliente,
+                nomeServer: nomeVar,
+                validadeServer: validadeVar,
+                tempMinServer: temperaturaMinimaVar,
+                tempMaxServer: temperaturaMaximaVar,
+                umiMinServer: umidadeMinimaVar,
+                umiMaxServer: umidadeMaximaVar
             })
         }).then(function (response) {
-            console.log(response);
+            console.log('Resposta: ', response);
+
+            if (response.ok) {
+                response.json().then(json => {
+                    console.log(json);
+                    ulListaMedicamentos.innerHTML = `
+                    <li class="medicamento-container-titulo">
+                            <span class="titulo-tabela-container">Nome</span>
+                            <span class="titulo-tabela-container">Validade</span>
+                            <span class="titulo-tabela-container">Temp. Mín / Temp. Máx</span>
+                            <span class="titulo-tabela-container">Umi. Mín/ Máx</span>
+                            <span class="titulo-tabela-container">Operações</span>
+                        </li>
+                    `;
+
+                    for (let i = 0; i < json.length; i++) {
+                        let medicamento = json[i]
+                        renderizarMedicamento(medicamento);
+                    }
+                })
+            } else {
+                Swal.fire({
+                    title: 'Erro',
+                    text: 'Houve um erro ao realizar o cadastro!',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    showDenyButton: true,
+                    denyButtonText: 'OK'
+                });
+                throw ('Houve um erro ao realizar o cadastro!');
+            }
+        }).catch(function (response) {
+            Swal.fire({
+                title: 'Erro',
+                text: 'Houve um erro ao realizar o cadastro!',
+                icon: 'error',
+                showConfirmButton: false,
+                showDenyButton: true,
+                denyButtonText: 'OK'
+            });
+            console.log(`ERRO: ${response}`);
         });
-        // Devolver uma lista com todos os medicamentos
-        
-        /* medicamentos.innerHTML += `<li class="medicamentoContainer">
-                                <span class="pedidoNum tituloTabelaContainer" id="nomePedido">${nome}</span>
-                                <span class="pedidoTemp tituloTabelaContainer" id="tempMinPedido">${temperaturaMinima}ºC/${temperaturaMaxima}ºC</span>
-                                <span class="pedidoUmi tituloTabelaContainer" id="UmiMinPedido">${umidadeMinima}%/${umidadeMaxima}%</span>
-                            </li>`; */
+
     }
-    function sair() {
-        signOut();
-        window.location.replace('../../sign-in.html')
+
+    function renderizarMedicamento(medicamento) {
+        ulListaMedicamentos.innerHTML += `
+            <li id="liMedicamento#${medicamento.idMedicamento}" class="medicamento-container">
+                <span class="pedido-num titulo-tabela-container" id="nomePedido">${medicamento.nome}</span>
+                <span class="pedido-num titulo-tabela-container" id="validadePedido">${medicamento.validade} dia(s)</span>
+                <span class="pedido-temp titulo-tabela-container" id="tempMinPedido">${medicamento.tempMin}ºC/${medicamento.tempMax}ºC</span>
+                <span class="pedido-umi titulo-tabela-container" id="umiMinPedido">${medicamento.umidMin}%/${medicamento.umidMax}%</span>
+                <span class="pedido-umi titulo-tabela-container" id="botoes">
+                    <i class="fas fa-regular fa-pen-to-square" onclick="editarMedicamento(${medicamento.idMedicamento})" style="cursor: pointer;"></i>
+                    <i class="fas fa-solid fa-trash-can" onclick="deletar(${medicamento.idMedicamento})" style="color: #ec2020; cursor: pointer;"></i>
+                </span>
+            </li>
+        `;
     }
-    function obterMedicamentos() {
-        var idCliente = String(dadosDaSessao.fkCliente);
-        fetch(`/medicamentos/fabricante/${idCliente}`, {
-            method: "GET",
+    function editarMedicamento(idMedicamento) {
+        let element = document.getElementById(`liMedicamento#${idMedicamento}`);
+    }
+    function deletar(idMedicamento) {
+        fetch("/medicamentos/deletar", {
+            method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-        }).then(function (response) {
-            console.log(response);
-        });
-        /* for (var i = 0; i < medicamentos.length; i++) {
-            medicamentos.innerHTML += `
-                            <li class="medicamentoContainer">
-                                <span class="pedidoNum tituloTabelaContainer" id="nomePedido">${nome}</span>
-                                <span class="pedidoTemp tituloTabelaContainer" id="tempMinPedido">${temperaturaMinima}ºC/${temperaturaMaxima}ºC</span>
-                                <span class="pedidoUmi tituloTabelaContainer" id="UmiMinPedido">${umidadeMinima}%/${umidadeMaxima}%</span>
-                            </li>`;
-        } */
-        
+            body: JSON.stringify({
+                'idClienteServer': usuario.fkCliente,
+                'idMedicamento': idMedicamento
+            })
+        }).then((response) => {
+            console.log('Resposta: ', response);
+            if (response.ok) {
+                response.json().then((json) => {
+                    let element = document.getElementById(`liMedicamento#${idMedicamento}`);
+                    element.remove();
+                })
+            }
+        })
     }
 </script>
 

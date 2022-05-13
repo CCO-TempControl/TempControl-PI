@@ -1,5 +1,5 @@
 var medicamentoModel = require('../models/medicamentoModel');
-// Lista os Medicamentos da farmaceutica
+/* Lista os Medicamentos da farmaceutica */
 function listarPorFarmaceutica(request, response) {
   var idFarmaceutica = request.params.idFabricante;
 
@@ -18,10 +18,10 @@ function listarPorFarmaceutica(request, response) {
     }).catch(function (erro) {
       console.log(erro);
       console.log(
-          "\nHouve um erro ao realizar o cadastro! Erro: ",
-          erro.sqlMessage
+        "\nHouve um erro ao realizar o cadastro! Erro: ",
+        erro.sqlMessage
       );
-      
+
       response.status(500).json(erro.sqlMessage);
     });
   }
@@ -35,7 +35,7 @@ function cadastrarMedicamento(request, response) {
   var temperaturaMaxima = request.body.tempMaxServer;
   var umidadeMinima = request.body.umiMinServer;
   var umidadeMaxima = request.body.umiMaxServer;
-  
+
   if (idFarmaceutica == undefined) {
     response.status(400).send("Fabricante não definida");
   } else if (nomeMedicamento == undefined) {
@@ -50,42 +50,80 @@ function cadastrarMedicamento(request, response) {
     response.status(400).send("Umidade Máxima não definida");
   } else {
     medicamentoModel.cadastrar(
-      nomeMedicamento, 
-      validadeMedicamento, 
-      temperaturaMinima, 
-      temperaturaMaxima, 
-      umidadeMinima, 
-      umidadeMaxima, 
+      nomeMedicamento,
+      validadeMedicamento,
+      temperaturaMinima,
+      temperaturaMaxima,
+      umidadeMinima,
+      umidadeMaxima,
       idFarmaceutica
     ).then(
-      function(insert) {
-        var idMedicamento = insert.insertId;
-
-        medicamentoModel.buscarPorId(idMedicamento).then(function(resultado) { 
-          response.json(resultado[0]) 
+      function () {
+        medicamentoModel.listarPorFarmaceutica(idFarmaceutica).then((resultado) => {
+          response.json(resultado)
         }).catch(function (erro) {
           console.log(erro);
           console.log(
-              "\nHouve um erro ao realizar o cadastro! Erro: ",
-              erro.sqlMessage
+            "\nHouve um erro ao realizar o cadastro! Erro: ",
+            erro.sqlMessage
           );
-          
+
           response.status(500).json(erro.sqlMessage);
         })
       }
     ).catch(function (erro) {
       console.log(erro);
       console.log(
-          "\nHouve um erro ao realizar o cadastro! Erro: ",
-          erro.sqlMessage
+        "\nHouve um erro ao realizar o cadastro! Erro: ",
+        erro.sqlMessage
       );
-      
+
       response.status(500).json(erro.sqlMessage);
     });
   }
 }
 
+/* Deleta um medicamento no Banco */
+function deletarMedicamento(request, response) {
+  var idMedicamento = request.body.idMedicamento;
+  var idFarmaceutica = request.body.idClienteServer;
+  if (idFarmaceutica == undefined) {
+    response.status(400).send("Fabricante não definida");
+  } else if (idMedicamento == undefined) {
+    response.status(400).send("Medicamento não definido");
+  } else {
+    medicamentoModel.deletar(
+      idMedicamento
+    ).then(
+      function () {
+        medicamentoModel.listarPorFarmaceutica(idFarmaceutica).then((resultado) => {
+          response.json(resultado)
+          
+        }).catch(function (erro) {
+          console.log(erro);
+          console.log(
+            "\nHouve um erro ao realizar o cadastro! Erro: ",
+            erro.sqlMessage
+          );
+
+          response.status(500).json(erro.sqlMessage);
+        })
+      }
+    ).catch(function (erro) {
+      console.log(erro);
+      console.log(
+        "\nHouve um erro ao realizar o cadastro! Erro: ",
+        erro.sqlMessage
+      );
+
+      response.status(500).json(erro.sqlMessage);
+    });
+  }
+}
+
+
 module.exports = {
   listarPorFarmaceutica,
-  cadastrarMedicamento
+  cadastrarMedicamento,
+  deletarMedicamento
 }
