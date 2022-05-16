@@ -1,4 +1,5 @@
 var usuarioModel = require('../models/usuarioModel');
+var sha512 = require('js-sha512');
 
 function cadastrar(request, response) {
   var nome = request.body.nomeServer;
@@ -62,6 +63,45 @@ function entrar(request, response) {
   }
 }
 
+function confirmarSenha(request, response) {
+  let idUsuario = request.body.idUsuario;
+  var senhaUsuario = request.body.senhaUsuario;
+  var nomeUsuario = request.body.nomeUsuario;
+  var emailUsuario = request.body.emailUsuario;
+  var senhaNova = request.body.senhaNovaUsuario;
+
+  if (idUsuario == undefined) {
+    response.status(400).send("Seu email está undefined!");
+  } else {
+    usuarioModel.buscarPorId(idUsuario).then(function (resultado) {
+      console.log(`\nResultados encontrados: ${resultado.length}`);
+      console.log(`Resultados: ${JSON.stringify(resultado)}`); // transforma JSON em String
+
+      if (resultado.length == 0) {
+        response.status(403).send("idUsuario inválido");
+        response.json(resultado[0]);
+      } else {
+        response.send(resultado);
+        if (resultado[0].senhaUsuario == sha512(senhaUsuario)) {
+          console.log("Senha Correta");
+
+          if (emailUsuario == undefined) {
+            response.status(400).send("Seu email está undefined!");
+          } else if (senhaNova == undefined) {
+            response.status(400).send("Sua senha está indefinida!");
+          } else if (senhaNova == undefined) {
+            response.status(400).send("Seu nome está indefinido!");
+          } else {
+            usuarioModel.atualizar(idUsuario, nomeUsuario, emailUsuario, senhaNova);
+            
+          }
+        }
+      }
+    })
+  }
+}
+
+
 function listarPorCliente(request, response) {
   let idCliente = request.body.idClienteServer;
 
@@ -88,5 +128,6 @@ function listarPorCliente(request, response) {
 module.exports = {
   cadastrar,
   entrar,
-  listarPorCliente
+  listarPorCliente,
+  confirmarSenha,
 }

@@ -15,4 +15,8 @@ router.post('/listarPorCliente', function (request, response) {
   usuarioController.listarPorCliente(request, response)
 });
 
+router.post('/confirmarSenha', function (request, response) {
+  usuarioController.confirmarSenha(request, response)
+});
+
 module.exports = router;

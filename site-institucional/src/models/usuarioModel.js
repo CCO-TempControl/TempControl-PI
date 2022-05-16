@@ -34,6 +34,19 @@ function buscarPorId(id) {
 
 }
 
+function atualizar(id,nome,email,senha) {
+  console.log("ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function buscarPorId():", id);
+
+  var instrucao = `
+    UPDATE usuario SET nomeUsuario = '${nome}', senhaUsuario = SHA2('${senha}', 512), emailUsuario = '${email}' WHERE idUsuario = ${id}
+  `;
+
+  console.log("Executando a instrução SQL: \n" + instrucao);
+  return database.executar(instrucao);
+
+}
+
+
 function buscarPorIdCliente(idCliente) {
   console.log("ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function buscarPorIdCliente():", idCliente);
 
@@ -49,5 +62,6 @@ module.exports = {
   cadastrar,
   entrar,
   buscarPorId,
+  atualizar,
   buscarPorIdCliente
 };
