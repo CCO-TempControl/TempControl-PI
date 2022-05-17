@@ -82,7 +82,7 @@ body {
     margin-right: 20px;
 }
 
-.wrapper .main_content .info {
+.wrapper .main_content .info,.wrapper .main_content .info-medicamento {
     margin: 20px;
     color: #717171;
     /* Verificar */
@@ -273,8 +273,8 @@ select {
     outline: #0253c4;
     border: 2px solid #0253c4;
 }
-
-.form button {
+/* .form button Vai dar problema quando juntar com o style das páginas iniciais - João */
+.form .button-form {
     margin: 20px 0;
     background-color: #3C9DCF;
     padding: 10px 30px;
@@ -286,7 +286,7 @@ select {
     cursor: pointer;
 }
 
-.form button:focus {
+.form .button-form:focus {
     outline: #0253c4;
     border: 2px solid #0253c4;
 }
@@ -811,8 +811,31 @@ div.data-table {
 .medicamento-container {
     box-shadow: 0 0 5px grey;
     margin-top: 15px;
+    padding: 10px;
 }
-
+.medicamento-container-adicionar {
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.medicamento-container-adicionar .adicionar-medicamento-container {
+    padding: 5px;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(217, 217, 217);
+    border: 2px solid rgb(190, 190, 190);
+    font-size: 40px;
+    outline: none;
+}
+.medicamento-container-adicionar .adicionar-medicamento-container:hover {
+    box-shadow: 0 0 10px black;
+    cursor: pointer;
+}
 .pedido-num,
 .pedido-temp,
 .pedido-umi {

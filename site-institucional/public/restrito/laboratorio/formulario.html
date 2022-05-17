@@ -14,7 +14,8 @@
     <title>MEDICAMENTOS</title>
 </head>
 
-<body onload="setUp('laboratorio'), carregarMedicamentos()">
+<body>
+    <!-- onload="setUp('laboratorio'), carregarMedicamentos()" -->
     <div class="wrapper">
         <div class="sidebar">
             <div class="dropdown">
@@ -32,11 +33,10 @@
         </div>
         <div class="main_content">
             <div class="header">
-                <!-- <input type="text" placeholder="Pesquise.."> -->
                 <img src="img/logo_nome_sembg.png">
             </div>
-            <div class="info">
-                <div class="card-laboratorio-formulario">
+            <div class="info-medicamento ">
+                <!-- <div class="card-laboratorio-formulario">
                     <h2 id="formulario">Cadastrar medicamento</h2>
                     <div class="field">
                         <label for="nomeMedicamento">Nome:</label>
@@ -64,10 +64,11 @@
                         <input id="umiMax" class="input-medicamento" placeholder="Ex: 40%" type="number">
                     </div>
                     <button onclick="cadastrarMedicamento()">Cadastrar Medicamento</button>
-                </div>
+                </div> -->
 
                 <div id="listaMedicamentos">
                     <h1>Medicamentos</h1>
+
                     <ul id="ulListaMedicamentos">
                         <li class="medicamento-container-titulo">
                             <span class="titulo-tabela-container">Nome</span>
@@ -75,6 +76,11 @@
                             <span class="titulo-tabela-container">Temp. Mín / Temp. Máx</span>
                             <span class="titulo-tabela-container">Umi. Mín/ Máx</span>
                             <span class="titulo-tabela-container">Operações</span>
+                        </li>
+                        <li class="medicamento-container-adicionar">
+                            <button onclick="renderizarMedicamentoParaEditar()" class="adicionar-medicamento-container">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
                         </li>
                     </ul>
                 </div>
@@ -266,6 +272,28 @@
                     <i class="fas fa-solid fa-trash-can" onclick="deletar(${medicamento.idMedicamento})" style="color: #ec2020; cursor: pointer;"></i>
                 </span>
             </li>
+        `;
+    }
+    function renderizarMedicamentoParaEditar() {
+        let ultimoElemento = document.getElementsByClassName('medicamento-container-adicionar');
+        ulListaMedicamentos.removeChild(ultimoElemento[0]);
+        ulListaMedicamentos.innerHTML += `
+            <li class="medicamento-container">
+                <input class="pedido-num titulo-tabela-container" id="nomePedido"></input>
+                <input class="pedido-num titulo-tabela-container" id="validadePedido"></input>
+                <input class="pedido-temp titulo-tabela-container" id="tempMinPedido"></input>
+                <input class="pedido-umi titulo-tabela-container" id="umiMinPedido"></input>
+                <span class="pedido-umi titulo-tabela-container" id="botoes">
+                    <i class="fas fa-solid fa-trash-can" style="color: #ec2020; cursor: pointer;"></i>
+                </span>
+            </li>
+        `;
+        ulListaMedicamentos.innerHTML += `
+        <li class="medicamento-container-adicionar">
+                            <button onclick="renderizarMedicamentoParaEditar()" class="adicionar-medicamento-container">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </li>
         `;
     }
     function editarMedicamento(idMedicamento) {
