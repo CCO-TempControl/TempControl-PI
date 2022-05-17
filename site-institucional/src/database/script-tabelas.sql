@@ -7,6 +7,7 @@ CREATE DATABASE dbTempControl;
 
 -- Usando dbTempControl
 USE dbTempControl;
+
 -- Tabela cliente
 CREATE TABLE cliente (
   idCliente INT PRIMARY KEY AUTO_INCREMENT,
@@ -51,16 +52,32 @@ CREATE TABLE sensor (
   FOREIGN KEY (fkTransportadora) REFERENCES cliente (idCliente)
 );
 
+-- Tabela endereco
+CREATE TABLE endereco (
+	idEndereco INT PRIMARY KEY AUTO_INCREMENT,
+    endereco VARCHAR(45) NOT NULL,
+    bairro VARCHAR(45) NOT NULL,
+    cidade VARCHAR(45) NOT NULL,
+    uf CHAR(2) NOT NULL,
+    numero INT NOT NULL,
+    cep CHAR(9) NOT NULL
+);
+
 -- Tabela entrega
 CREATE TABLE entrega (
   idEntrega INT PRIMARY KEY AUTO_INCREMENT,
-  origem VARCHAR(45) NOT NULL,
-  destino VARCHAR(45) NOT NULL,
   horaSaida DATETIME,
   horaChegada DATETIME,
+  dataEntrega DATETIME,
   
   fkVeiculo INT,
   FOREIGN KEY (fkVeiculo) REFERENCES veiculo (idVeiculo),
+  
+  fkOrigem INT NOT NULL,
+  FOREIGN KEY (fkOrigem) REFERENCES endereco (idEndereco),
+  
+  fkDestino INT NOT NULL,
+  FOREIGN KEY (fkDestino) REFERENCES endereco (idEndereco),
   
   fkFarmaceutica INT NOT NULL,
   fkSensor INT NOT NULL,
@@ -109,7 +126,6 @@ CREATE TABLE registro (
   ldr DECIMAL(3,1),
   horario DATETIME NOT NULL
 );
-
 
 /* para sql server - remoto - produção */
 

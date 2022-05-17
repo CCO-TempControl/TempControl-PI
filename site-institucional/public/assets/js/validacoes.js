@@ -3,10 +3,30 @@ function validarEmail(email) {
 
   if (email == undefined) {
     resultado = 'Email está indefinido';
+    
   } else if (email == '') {
     resultado = 'Email é obrigatório';
-  } else if (email.indexOf('@') <= 0 || email.indexOf('.com') <= 2) {
-    resultado = 'Email está em formato inválido';
+
+  } else {
+    var posicaoAt = email.indexOf('@');
+
+    if (posicaoAt <= 0) {
+      resultado = 'Email em formato inválido';
+
+    } else {
+      var posicaoDot = email.indexOf('.', posicaoAt)
+ 
+      if (posicaoDot <= 2) {
+        resultado = 'Email em formato inválido';
+
+      } else {
+        var resto = email.slice(posicaoDot, -1);
+
+        if (resto.length < 1) {
+          resultado = 'Email em formato inválido'
+        }
+      }
+    }
   }
 
   return resultado;
