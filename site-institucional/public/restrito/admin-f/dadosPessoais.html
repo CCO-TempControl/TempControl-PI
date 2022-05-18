@@ -2,85 +2,219 @@
 <html lang="pt-br">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://kit.fontawesome.com/2eecc47c4e.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="../style.css">
-    <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
-    <script src="../../assets/js/funcoes.js"></script>
-    <title>DADOS PESSOAIS</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://kit.fontawesome.com/2eecc47c4e.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
+  <script src="../../assets/js/funcoes.js"></script>
+  <script src="../../assets/js/validacoes.js"></script>
+
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <title>DADOS PESSOAIS</title>
 </head>
 
 <body>
 
 
-    <div class="wrapper">
-        <div class="sidebar">
-            <div class="dropdown">
-                <a href="#"><i class="fa-solid fa-circle-user" style="font-size:70px;  color: white;"></i></a>
-                <div class="dropdown-content">
-                    <h4>Olá <span id="spanNome"></span></h4>
-                </div>
-            </div>
-            <ul>
-                <li><a href="./index.html"><i class="fas fa-home"></i>Home</a></li>
-                <li><a href="./solicitacoes.html"><i class="fas fa-solid fa-file-contract"></i>Solicitações</a></li>
-                <li><a href="./entregas.html"><i class="fas fa-regular fa-truck-ramp-box"></i>Entregas</a></li>
-                <li><a href="./sensores.html"><i class="fas fa-solid fa-pager"></i>Sensores</a></li>
-                <li><a href="./medicamentos.html"><i class="fas fa-solid fa-file-medical"></i>Medicamentos</a></li>
-                <li><a href="./graficos.html"><i class="fas fa-solid fa-chart-gantt"></i></i>Gráficos/Alertas</a></li>
-                <li><a href="./dadosPessoais.html"><i class="fas fa-solid fa-user"></i></i>Dados Pessoais</a></li>
-                <li><a href="./usuarios.html"><i class="fas fa-solid fa-users"></i>Usuários</a></li>
-                <li><a href="../../index.html" onclick="signOut()"><i class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
-            </ul>            
+  <div class="wrapper">
+    <div class="sidebar">
+      <div class="dropdown">
+        <a href="#"><i class="fa-solid fa-circle-user" style="font-size:70px;  color: white;"></i></a>
+        <div class="dropdown-content">
+          <h4>Olá <span id="spanNome"></span></h4>
         </div>
-        <div class="main_content">
-            <div class="header">
-                <!-- <input type="text" placeholder="Pesquise.."> -->
-                <img src="img/logo_nome_sembg.png">
+      </div>
+      <ul>
+        <li><a href="./index.html"><i class="fas fa-home"></i>Home</a></li>
+        <li><a href="./solicitacoes.html"><i class="fas fa-solid fa-file-contract"></i>Solicitações</a></li>
+        <li><a href="./entregas.html"><i class="fas fa-regular fa-truck-ramp-box"></i>Entregas</a></li>
+        <li><a href="./sensores.html"><i class="fas fa-solid fa-pager"></i>Sensores</a></li>
+        <li><a href="./medicamentos.html"><i class="fas fa-solid fa-file-medical"></i>Medicamentos</a></li>
+        <li><a href="./graficos.html"><i class="fas fa-solid fa-chart-gantt"></i></i>Gráficos/Alertas</a></li>
+        <li><a href="./dadosPessoais.html"><i class="fas fa-solid fa-user"></i></i>Dados Pessoais</a></li>
+        <li><a href="./usuarios.html"><i class="fas fa-solid fa-users"></i>Usuários</a></li>
+        <li><a href="../../index.html" onclick="signOut()"><i
+              class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
+      </ul>
+    </div>
+    <div class="main_content">
+      <div class="header">
+        <!-- <input type="text" placeholder="Pesquise.."> -->
+        <img src="img/logo_nome_sembg.png">
+      </div>
+      <div class="info">
+        <div class="fundoDados">
+          <h2 id="Nome Da Empresa">NOME DA EMPRESA</h2>
+          <div class="FcardDados">
+            <div class="emailEmpresa senhaEmpresa">
+              <h3>Nome</h3>
+              <input id="nomeInput" value="">
             </div>
-            <div class="info">
-                <div class="fundoDados">
-                    <h2 id="Nome Da Empresa">NOME DA EMPRESA</h2>
-                    <div class="FcardDados">
-                        <div class="emailEmpresa senhaEmpresa">
-                            <h3>Nome</h3>
-                            <input id="nomeInput" value="">
-                        </div>
-                    </div>
-                    <div class="FcardDados">
-                        <div class="senhaEmpresa">
-                            <h3>Email</h3>
-                            <input id="emailInput" value="">
-                        </div>
-                    </div>
-                    <div class="FcardDados">
-                        <div class="senhaEmpresa">
-                            <h3>Senha</h3>
-                            <input id="senhaInput" value="">
-                        </div>
-                    </div>
-                    <div class="FcardDados">
-                        <div class="senhaEmpresa">
-                            <button>Atualizar</button>
-                        </div>
-                    </div>
-                </div>
+          </div>
+          <div class="FcardDados">
+            <div class="senhaEmpresa">
+              <h3>Email</h3>
+              <input id="emailInput" value="">
             </div>
+          </div>
+          <div class="FcardDados">
+            <div class="senhaEmpresa">
+              <h3>Senha</h3>
+              <input id="senhaInput" type="password" value=""> 
+              <i class="fas fa-solid fa-eye" id="senhaVisivel" style="cursor: pointer;" onclick="visualizarSenha()"></i>
+            </div>
+          </div>
+          <div class="FcardDados">
+            <div class="senhaEmpresa">
+              <button onclick="validarAtualizacao()">Atualizar</button>
+            </div>
+          </div>
         </div>
+      </div>
+    </div>
 </body>
 
 <script>
-    var dadosSession = obterDadosSession();
-    var nome = dadosSession.nomeUsuario;
-    var email = dadosSession.emailUsuario;
-    spanNome.innerHTML = dadosSession.nomeUsuario;
+  var dadosSession = obterDadosSession();
+  var nome = dadosSession.nomeUsuario;
+  var email = dadosSession.emailUsuario;
+  spanNome.innerHTML = dadosSession.nomeUsuario;
 
-    nomeInput.value = nome;
-    emailInput.value = email;
+  nomeInput.value = nome;
+  emailInput.value = email;
+</script>
+
+
+<script>
+  function visualizarSenha() {
+        if (senhaInput.type == 'password') {
+            senhaInput.type = 'text';
+            senhaVisivel.classList.add('fa-eye-slash');
+            senhaVisivel.classList.remove('fa-eye');
+        } else {
+            senhaInput.type = 'password';
+            senhaVisivel.classList.add('fa-eye');
+            senhaVisivel.classList.remove('fa-eye-slash');
+        }
+    }
+
+  function validarAtualizacao() {
+
+    var idVar = dadosSession.idUsuario
+    var nomeVar = nomeInput.value;
+    var emailVar = emailInput.value;
+    var senhaVar = senhaInput.value;
+
+    var validacaoEmail = validarEmail(emailVar);
+
+    if (validacaoEmail != 'OK') {
+      Swal.fire({
+        title: 'Erro',
+        text: validacaoEmail,
+        icon: 'error',
+        showConfirmButton: false,
+        showDenyButton: true,
+        denyButtonText: 'OK'
+      });
+      return;
+    }
+    if (senhaVar != "") {
+      var validacaoSenha = validarSenha(senhaVar);
+
+      if (validacaoSenha != 'OK') {
+        Swal.fire({
+          title: 'Erro',
+          text: validacaoSenha,
+          icon: 'error',
+          showConfirmButton: false,
+          showDenyButton: true,
+          denyButtonText: 'OK'
+        });
+        return;
+      }
+    }
+    else {
+      var validacaoSenha = "OK";
+      senhaVar = dadosSession.senhaUsuario;
+    }
+// TODO: O resultado sempre está sendo positivo, tem que fazer ele trocar para negativo quadno a senha estiver errada
+    Swal.fire({
+      title: 'Entre com sua senha atual para confirmar',
+      input: 'password',
+      inputAttributes: {
+        autocapitalize: 'off'
+      },
+      confirmButtonText: 'Confirmar',
+      showLoaderOnConfirm: true,
+      preConfirm: (login) => {
+        return fetch(`/usuarios/confirmarSenha`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            idUsuario: idVar,
+            nomeUsuario: nomeVar,
+            emailUsuario: emailVar,
+            senhaNovaUsuario: senhaVar,
+            senhaUsuario: login
+          })
+        }).then(function (resposta) {
+          console.log('Resposta: ', resposta);
+
+          if (resposta.ok) {
+            console.log(resposta);
+            Swal.fire({
+                title: 'Sucesso',
+                text: 'Atualizado Com Sucesso',
+                icon: 'success',
+                showConfirmButton: false,
+                showDenyButton: true,
+                denyButtonText: 'OK'
+              });
+
+            resposta.json().then(json => {
+              console.log(json);
+            });
+          } else {
+              Swal.fire({
+                title: 'Erro',
+                text: 'Houve um erro ao realizar o login!',
+                icon: 'error',
+                showConfirmButton: false,
+                showDenyButton: true,
+                denyButtonText: 'OK'
+              });
+            }
+        }).catch(function (erro) {
+          Swal.fire({
+            title: 'Erro',
+            text: 'Houve um erro ao realizar o login!',
+            icon: 'error',
+            showConfirmButton: false,
+            showDenyButton: true,
+            denyButtonText: 'OK'
+          });
+          console.log(`ERRO: ${erro}`);
+        })
+        return false;
+      }
+    })
+  }
+
+  
+  function alterar(){
+
+}
 </script>
 
 
 </html>
+
+
+
+
+

@@ -24,19 +24,34 @@ function cadastrar(nomeMedicamento, validadeMedicamento, temperaturaMinima, temp
   return database.executar(instrucao);
 }
 
+/* Deleta um Medicamento no Banco */
 function deletar(idMedicamento) {
-  console.log("ACESSEI O MEDICAMENTO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function buscarPorId():", idMedicamento);
+  console.log("ACESSEI O MEDICAMENTO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function deletar():", idMedicamento);
 
   var instrucao = `
-    DELETE FROM medicamento WHERE idMedicamento = ${idMedicamento}
+    DELETE FROM medicamento WHERE idMedicamento = ${idMedicamento};
   `;
 
   console.log("Executando a instrução SQL: \n" + instrucao);
   return database.executar(instrucao);
 }
 
+/* Edita um Medicamento no Banco */
+function editar(idMedicamento, nomeMedicamento, validadeMedicamento, temperaturaMinima, temperaturaMaxima, umidadeMinima, umidadeMaxima) {
+  console.log("ACESSEI O MEDICAMENTO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function editar():", idMedicamento, nomeMedicamento, validadeMedicamento, temperaturaMinima, temperaturaMaxima, umidadeMinima, umidadeMaxima);
+
+  var instrucao = `
+    UPDATE medicamento SET nome = '${nomeMedicamento}', validade = ${validadeMedicamento}, tempMin = ${temperaturaMinima},
+    tempMax = ${temperaturaMaxima},umidMin = ${umidadeMinima}, umidMax= ${umidadeMaxima}
+                where idMedicamento = ${idMedicamento};
+    `;
+
+  console.log("Executando a instrução SQL: \n" + instrucao);
+  return database.executar(instrucao);
+}
 module.exports = {
   listarPorFarmaceutica,
   cadastrar,
-  deletar
+  deletar,
+  editar
 }

@@ -15,4 +15,8 @@ router.post('/deletar', function (request, response) {
   medicamentoController.deletarMedicamento(request, response);
 });
 
+router.post('/editar', function (request, response) {
+  medicamentoController.editarMedicamento(request, response);
+});
+
 module.exports = router;

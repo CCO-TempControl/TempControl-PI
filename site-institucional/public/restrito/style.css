@@ -818,6 +818,7 @@ div.data-table {
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-top: 10px;
 }
 .medicamento-container-adicionar .adicionar-medicamento-container {
     padding: 5px;
@@ -828,15 +829,17 @@ div.data-table {
     justify-content: center;
     align-items: center;
     background-color: rgb(217, 217, 217);
-    border: 2px solid rgb(190, 190, 190);
+    border: 2px solid #3C9DCF;
+    color: white;
     font-size: 40px;
     outline: none;
 }
 .medicamento-container-adicionar .adicionar-medicamento-container:hover {
-    box-shadow: 0 0 10px black;
+    box-shadow: 0 0 5px #3C9DCF;
     cursor: pointer;
 }
-.pedido-num,
+.pedido-nome,
+.pedido-validade,
 .pedido-temp,
 .pedido-umi {
     width: 34%;
@@ -847,12 +850,43 @@ div.data-table {
     justify-content: center;
     align-items: center;
 }
+.pedido-temp-min-max, .pedido-umi-min-max, .pedido-span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 25%;
+    height: 100%;
+}
+.pedido-span span{
+    width: 100%;
+    word-break: break-all;
+    display: flex;
+    align-items: flex-start;
+    overflow: hidden;
+}
+
+.pedido-input-temp-umi {
+    width: 50%;
+    height: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.pedido-input-edit {
+    border-radius: 20px;
+    text-align: center;
+    font-size: 18px;
+    border: 2px solid #3C9DCF;
+}
+.pedido-input-edit:focus {
+    outline: 0;
+}
 
 .pedido-umi i {
     margin: 0 12px;
 }
 
-.pedido-num {
+.pedido-validade, .pedido-nome {
     margin: 0;
 }
 
@@ -862,8 +896,8 @@ div.data-table {
 }
 
 .titulo-tabela-container {
-    width: 34%;
-    height: fit-content;
+    width: 25%;
+    height: 80%;
     display: flex;
     justify-content: center;
     align-items: center;
