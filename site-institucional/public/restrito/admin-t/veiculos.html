@@ -7,7 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/2eecc47c4e.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="style.css">
+    <!-- <link rel="stylesheet" href="../style.css"> -->
     <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
     <script src="../../assets/js/funcoes.js"></script>
     <title>DashBoard</title>
@@ -39,11 +41,12 @@
                 <li><a href="./index.html"><i class="fas fa-home"></i>Home</a></li>
                 <li><a href="./solicitacoes.html"><i class="fas fa-solid fa-file-contract"></i>Solicitações</a></li>
                 <li><a href=""><i class="fas fa-regular fa-truck-ramp-box"></i>Entregas</a></li>
-                <li><a href=""><i class="fas fa-regular fa-truck"></i>Veículos</a></li>
+                <li><a href="./veiculos.html"><i class="fas fa-regular fa-truck"></i>Veículos</a></li>
                 <li><a href=""><i class="fas fa-solid fa-pager"></i>Sensores</a></li>
                 <li><a href="./graficos.html"><i class="fas fa-solid fa-chart-gantt"></i></i>Gráficos/Alertas</a></li>
                 <li><a href="./usuarios.html"><i class="fas fa-solid fa-users"></i>Usuários</a></li>
-                <li><a href="../../index.html" onclick="sair()"><i class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
+                <li><a href="../../index.html" onclick="sair()"><i
+                            class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
             </ul>
 
         </div>
@@ -84,7 +87,43 @@
                                 </div>
                                 <button onclick="validarCadastroVeiculo()">Cadastrar</button>
                             </div>
-                            <table id="tabelaVeiculos">
+
+                            <div class="tabela">
+                                <h1>Caminhao</h1>
+                                <ul id="lista">
+                                    <li class="tabela-cabecalho">
+                                        <div>id</div>
+                                        <div>Modelo</div>
+                                        <div>Placa</div>
+                                        <div>Ano</div>
+                                        <div>Ações</div>
+                                    </li>
+                                    <!-- <li class="tabela-container">
+                                        <div>abbb</div>
+                                        <div>abbb</div>
+                                        <div>abbb</div>
+                                    </li> -->
+                                </ul>
+                                <!-- <ul id="pedidos">
+                                    <li class="caminhao-container-titulo">
+                                        <div class="titulo-tabela-container">modelo</div>
+                                        <div class="titulo-tabela-container">placa</div>
+                                        <div class="titulo-tabela-container">ano</div>
+                                    </li>
+                                    <li class="caminhao-container">
+                                        <div class="pedido-temp titulo-tabela-container">6ºC</div>
+                                        <div class="pedido-temp titulo-tabela-container">6ºC</div>
+                                        <div class="pedido-umi titulo-tabela-container">94%</div>
+                                    </li>
+                                    <li class="caminhao-container">
+                                        <div class="pedido-num titulo-tabela-container">#2</div>
+                                        <div class="pedido-temp titulo-tabela-container">5ºC</div>
+                                        <div class="pedido-umi titulo-tabela-container">85%</div>
+                                    </li>
+                                </ul> -->
+                            </div>
+
+                            <!-- <table id="tabelaVeiculos">
                                 <thead>
                                     <tr>
                                         <th>id</th>
@@ -95,7 +134,7 @@
                                 </thead>
                                 <tbody id="corpoTabelaVeiculos">
                                 </tbody>
-                            </table>
+                            </table> -->
                         </div>
                     </div>
                 </div>
@@ -112,8 +151,8 @@
 
     function obterVeiculosCliente() {
         const idClienteVar = fkCliente;
-        var table = document.getElementById("tabelaVeiculos").getElementsByTagName('tbody')[0];
-        table.innerHTML = '';
+        // var table = document.getElementById("tabelaVeiculos").getElementsByTagName('tbody')[0];
+        // table.innerHTML = '';
 
         fetch(`/veiculos/listarPorCliente/`, {
             method: "POST",
@@ -125,20 +164,36 @@
             })
         }).then(function (response) {
             if (response.ok) {
+                // document.getElementById("lista").innerHTML = "";
                 response.json().then(function (veiculosEncontrados) {
-                    veiculosEncontrados.forEach(veiculo => {
-                        var linha = table.insertRow(-1);
-                        var celula1 = linha.insertCell(0);
-                        var celula2 = linha.insertCell(1);
-                        var celula3 = linha.insertCell(2);
-                        var celula4 = linha.insertCell(3);
-                        celula1.innerHTML = veiculo.idVeiculo;
-                        celula2.innerHTML = veiculo.modelo;
-                        celula3.innerHTML = veiculo.placa;
-                        celula4.innerHTML = veiculo.ano;
+                    veiculosEncontrados.forEach(veiculo => {//colocando os dados dos veículos na página
+                        // var linha = table.insertRow(-1);
+                        // var celula1 = linha.insertCell(0);
+                        // var celula2 = linha.insertCell(1);
+                        // var celula3 = linha.insertCell(2);
+                        // var celula4 = linha.insertCell(3);
+                        // celula1.innerHTML = veiculo.idVeiculo;
+                        // celula2.innerHTML = veiculo.modelo;
+                        // celula3.innerHTML = veiculo.placa;
+                        // celula4.innerHTML = veiculo.ano;
+
+                        document.getElementById("lista").innerHTML += `
+                        <li class="tabela-linha">
+                            <div>${veiculo.idVeiculo}</div>
+                            <div>${veiculo.modelo}</div>
+                            <div>${veiculo.placa}</div>
+                            <div>${veiculo.ano}</div>
+                            <div><span onclick="excluirVeiculo(${veiculo.idVeiculo})">excluir</span>|<span onclick="editarVeiculo(${veiculo.idVeiculo})">editar</span></div>
+                        </li>
+                        `;
                     });
                 });
             } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erro',
+                    text: 'Houve um erro ao carregar os veículos'
+                })
                 console.error('Nenhum dado encontrado ou erro na API');
             }
         })
@@ -184,9 +239,18 @@
             if (resposta.ok) {
                 console.log(resposta);
 
-                divSignInResult.style.display = 'flex';
-                pMensagem.style.color = '#34e269';
-                pMensagem.innerHTML = 'Cadastro de veículo realizado com sucesso';
+                Swal.fire({
+                    title: 'Sucesso',
+                    text: 'Veículo cadastrado com sucesso',
+                    icon: 'success',
+                    timer: 2000,
+                    timerProgressBar: true,
+                    confirmButtonColor: '#34e269',
+                });
+
+                // divSignInResult.style.display = 'flex';
+                // pMensagem.style.color = '#34e269';
+                // pMensagem.innerHTML = 'Cadastro de veículo realizado com sucesso';
                 obterVeiculosCliente();
 
             } else {
