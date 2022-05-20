@@ -75,3 +75,39 @@ function validarCNPJ(cnpj) {
 
   return resultado;
 }
+
+function validarEndereco(endereco) {
+  var resultado = 'OK';
+
+  if (endereco == undefined) {
+    resultado = 'Endereço está indefinido';
+  } else if (endereco == '') {
+    resultado = 'Endereço é obrigatório';
+  } else {
+    var partesEndereco = endereco.split(' ');
+    
+    if (partesEndereco.length <= 1) {
+      resultado = 'Endereço deve fornecer identificação (rua, avenida, etc) e nome';
+    } else if (partesEndereco[0].length < 1) {
+      resultado = 'Endereço deve fornecer identificação (rua, avenida, etc) e nome';
+    } else if (partesEndereco[1].length < 1) {
+      resultado = 'Endereço deve fornecer identificação (rua, avenida, etc) e nome';
+    }
+  }
+
+  return resultado;
+}
+
+function validarCEP(cep) {
+  var resultado = 'OK';
+
+  if (cep == undefined) {
+    resultado = 'CEP está indefinido';
+  } else if (cep == '') {
+    resultado = 'CEP é obrigatório';
+  } else if (cep.length != 9 || cep[5] != '-') {
+    resultado = 'CEP está em formato inválido';
+  }
+
+  return resultado;
+}

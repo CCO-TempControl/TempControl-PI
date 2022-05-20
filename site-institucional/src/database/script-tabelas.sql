@@ -23,7 +23,7 @@ CREATE TABLE usuario (
   nomeUsuario VARCHAR(45) NOT NULL,
   emailUsuario VARCHAR(45) UNIQUE NOT NULL,
   senhaUsuario CHAR(128) NOT NULL,
-  tipoUsuario ENUM('admin-f', 'admin-t', 'laboratorio', 'logistico', 'transportador') ,
+  tipoUsuario ENUM('admin-f', 'admin-t', 'laboratorio', 'logistico', 'transportador'),
   fkCliente INT NOT NULL,
   FOREIGN KEY (fkCliente) REFERENCES cliente (idCliente),
   fkAdmin INT NULL,
@@ -52,32 +52,15 @@ CREATE TABLE sensor (
   FOREIGN KEY (fkTransportadora) REFERENCES cliente (idCliente)
 );
 
--- Tabela endereco
-CREATE TABLE endereco (
-	idEndereco INT PRIMARY KEY AUTO_INCREMENT,
-    endereco VARCHAR(45) NOT NULL,
-    bairro VARCHAR(45) NOT NULL,
-    cidade VARCHAR(45) NOT NULL,
-    uf CHAR(2) NOT NULL,
-    numero INT NOT NULL,
-    cep CHAR(9) NOT NULL
-);
-
 -- Tabela entrega
 CREATE TABLE entrega (
   idEntrega INT PRIMARY KEY AUTO_INCREMENT,
   horaSaida DATETIME,
   horaChegada DATETIME,
-  dataEntrega DATETIME,
+  dataEntrega DATETIME NOT NULL,
   
-  fkVeiculo INT,
+  fkVeiculo INT NULL,
   FOREIGN KEY (fkVeiculo) REFERENCES veiculo (idVeiculo),
-  
-  fkOrigem INT NOT NULL,
-  FOREIGN KEY (fkOrigem) REFERENCES endereco (idEndereco),
-  
-  fkDestino INT NOT NULL,
-  FOREIGN KEY (fkDestino) REFERENCES endereco (idEndereco),
   
   fkFarmaceutica INT NOT NULL,
   fkSensor INT NOT NULL,
@@ -87,15 +70,31 @@ CREATE TABLE entrega (
   FOREIGN KEY (fkTransportadora) REFERENCES cliente (idCliente)
 ) AUTO_INCREMENT = 1000;
 
+-- Tabela endereco
+CREATE TABLE endereco (
+	fkEntrega INT,
+    FOREIGN KEY (fkEntrega) REFERENCES entrega (idEntrega),
+    
+	idEndereco INT,
+	PRIMARY KEY(fkEntrega, idEndereco),
+    
+    endereco VARCHAR(45) NOT NULL,
+    bairro VARCHAR(45) NOT NULL,
+    cidade VARCHAR(45) NOT NULL,
+    uf CHAR(2) NOT NULL,
+    numero INT NOT NULL,
+    cep CHAR(9) NOT NULL
+);
+
 -- Tabela medicamento
 CREATE TABLE medicamento (
   idMedicamento INT PRIMARY KEY AUTO_INCREMENT,
   nome VARCHAR(45) NOT NULL,
-  validade VARCHAR(30),
+  validade INT,
   tempMin DECIMAL(3,1) NOT NULL,
   tempMax DECIMAL(3,1) NOT NULL,
-  umidMin INT,
-  umidMax INT,
+  umidMin DECIMAL(3,1),
+  umidMax DECIMAL(3,1),
   
   fkFarmaceutica INT NOT NULL,
   FOREIGN KEY (fkFarmaceutica) REFERENCES cliente (idCliente)
@@ -103,12 +102,12 @@ CREATE TABLE medicamento (
 
 -- Tabela lote
 CREATE TABLE lote (
-  idLote INT PRIMARY KEY AUTO_INCREMENT,
-  qtd INT NOT NULL,
   fkMedicamento INT NOT NULL,
   FOREIGN KEY (fkMedicamento) REFERENCES medicamento (idMedicamento),
   fkEntrega INT NOT NULL,
-  FOREIGN KEY (fkEntrega) REFERENCES entrega (idEntrega)
+  FOREIGN KEY (fkEntrega) REFERENCES entrega (idEntrega),
+  PRIMARY KEY (fkMedicamento, fkEntrega),
+  qtd INT NOT NULL
 );
 
 -- Tabela registro
@@ -124,6 +123,8 @@ CREATE TABLE registro (
   lm35 DECIMAL(3,1),
   trc5000 INT,
   ldr DECIMAL(3,1),
+  situacaoTemperatura CHAR(1) CHECK(situacaoTemperatura = 'I' OR situacaoTemperatura = 'A' OR situacaoTemperatura = 'C'),
+  situacaoUmidade CHAR(1) CHECK(situacaoUmidade = 'I' OR situacaoUmidade = 'A' OR situacaoUmidade = 'C'),
   horario DATETIME NOT NULL
 );
 
@@ -132,7 +133,7 @@ CREATE TABLE registro (
 
 -- Tabela cliente
 
---! TODO: Converter as chaves compostas  !-- 
+-- ! TODO: Converter as chaves compostas  ! -- 
 
 CREATE TABLE cliente (
   idCliente INT PRIMARY KEY IDENTITY(1,1),

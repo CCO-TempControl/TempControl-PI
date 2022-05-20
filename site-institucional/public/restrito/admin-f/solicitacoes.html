@@ -9,12 +9,17 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="../../assets/js/funcoes.js"></script>
+  <script src="../../assets/js/validacoes.js"></script>
   <link rel="stylesheet" href="../style.css">
   <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/date-fns/1.30.1/date_fns.min.js" integrity="sha512-F+u8eWHrfY8Xw9BLzZ8rG/0wIvs0y+JyRJrXjp3VjtFPylAEEGwKbua5Ip/oiVhaTDaDs4eU2Xtsxjs/9ag2bQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
   <title>SOLICITAÇÕES</title>
 </head>
 
-<body>
+<body onload="setUp('admin-f'), loadInicial()">
   <div class="wrapper">
     <div class="sidebar">
       <div class="dropdown">
@@ -41,122 +46,231 @@
         <img src="img/logo_nome_sembg.png">
       </div>
       <div class="info">
-        <div class="container">
-          <div class="form-card">
-            <h2>Solicitar Entrega</h2>
-            <div class="options">
-              <button id="btnRoute" class="option selected" disabled>1 - Trajeto</button>
-              <button id="btnShipment" class="option" disabled>2 - Carregamento</button>
-              <button id="btnCompany" class="option" disabled>3 - Transportadora</button>
+        <div class="info card-admin-f">
+          <h2>Solicitar Entrega</h2>
+          <div class="options">
+            <button id="btnRoute" class="option selected" disabled>1 - Trajeto</button>
+            <button id="btnShipment" class="option" disabled>2 - Carregamento</button>
+            <button id="btnCompany" class="option" disabled>3 - Transportadora</button>
+          </div>
+        
+          <div id="divRoute" class="form">
+            <p>Informações a respeito da Origem (local onde a transportadora irá pegar o carregamento)</p>
+            <div class="field">
+              <label for="txtEnderecoOrigem">
+                Informe o endereço:
+              </label>
+              <input id="txtEnderecoOrigem" type="text" placeholder="Ex: Rua Pedro André Schunck">
+            </div>
+            <div class="field">
+              <label for="txtBairroOrigem">
+                Informe o bairro:
+              </label>
+              <input id="txtBairroOrigem" type="text" placeholder="Ex: Vila Santana">
+            </div>
+            <div class="field">
+              <label for="txtCidadeOrigem">
+                Informe o cidade:
+              </label>
+              <input id="txtCidadeOrigem" type="text" placeholder="Ex: São Paulo">
+            </div>
+            <div class="field">
+              <label for="cmbUFOrigem">
+                Informe a Unidade Federativa (UF):
+              </label>
+              <select id="cmbUFOrigem" class="js-example-basic-single">
+                <option value="AC">AC - Acre</option>
+                <option value="AL">AL - Alagoas</option>
+                <option value="AP">AP - Amapá</option>
+                <option value="AM">AM - Amazonas</option>
+                <option value="BA">BA - Bahia</option>
+                <option value="CE">CE - Ceará</option>
+                <option value="DF">DF - Distrito Federal</option>
+                <option value="ES">ES - Espírito Santo</option>
+                <option value="GO">GO - Goiás</option>
+                <option value="MA">MA - Maranhão</option>
+                <option value="MT">MT - Mato Grosso</option>
+                <option value="MS">MS - Mato Grosso do Sul</option>
+                <option value="MG">MG - Minas Gerais</option>
+                <option value="PA">PA - Pará</option>
+                <option value="PB">PB - Paraíba</option>
+                <option value="PR">PR - Paraná</option>
+                <option value="PE">PE - Pernambuco</option>
+                <option value="PI">PI - Piauí</option>
+                <option value="RJ">RJ - Rio de Janeiro</option>
+                <option value="RN">RN - Rio Grande do Norte</option>
+                <option value="RS">RS - Rio Grande do Sul</option>
+                <option value="RO">RO - Rondônia</option>
+                <option value="RR">RR - Roraima</option>
+                <option value="SC">SC - Santa Catarina</option>
+                <option value="SP">SP - São Paulo</option>
+                <option value="SE">SE - Sergipe</option>
+                <option value="TO">TO - Tocantins</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="txtNumeroOrigem">
+                Informe o número:
+              </label>
+              <input id="txtNumeroOrigem" type="number" min="1" placeholder="Ex: 514">
+            </div>
+            <div class="field">
+              <label for="txtCEPOrigem">
+                Informe o CEP:
+              </label>
+              <input id="txtCEPOrigem" type="text" placeholder="Ex: 04679-260">
             </div>
 
-            <div id="divRoute" class="form">
-              <div class="field">
-                <label for="txtOrigem">
-                  Informe a Origem da entrega (local onde a transportadora irá pegar o carregamento):
-                </label>
-                <input id="txtOrigem" type="text" placeholder="Ex: Rua Saturno, 386 - São Paulo, SP">
-              </div>
-              <div class="field">
-                <label for="txtDestino">
-                  Informe o Destino da entrega (local aonde a transportadora irá entregar o carregamento):
-                </label>
-                <input id="txtDestino" type="text" placeholder="Ex: Rua Saturno, 386 - São Paulo, SP">
-              </div>
-              <button class="button-form" onclick="validarRota()">Prosseguir</button>
+            <p style="margin-top: 40px;">Informações a respeito do Destino (local onde a transportadora irá pegar o carregamento)</p>
+            <div class="field">
+              <label for="txtEnderecoDestino">
+                Informe o endereço:
+              </label>
+              <input id="txtEnderecoDestino" type="text" placeholder="Ex: Rua Pedro André Schunck">
             </div>
+            <div class="field">
+              <label for="txtBairroDestino">
+                Informe o bairro:
+              </label>
+              <input id="txtBairroDestino" type="text" placeholder="Ex: Vila Santana">
+            </div>
+            <div class="field">
+              <label for="txtCidadeDestino">
+                Informe o cidade:
+              </label>
+              <input id="txtCidadeDestino" type="text" placeholder="Ex: São Paulo">
+            </div>
+            <div class="field">
+              <label for="cmbUFDestino">
+                Informe o Unidade Federativa (UF):
+              </label>
+              <select id="cmbUFDestino" class="js-example-basic-single">
+                <option value="AC">AC - Acre</option>
+                <option value="AL">AL - Alagoas</option>
+                <option value="AP">AP - Amapá</option>
+                <option value="AM">AM - Amazonas</option>
+                <option value="BA">BA - Bahia</option>
+                <option value="CE">CE - Ceará</option>
+                <option value="DF">DF - Distrito Federal</option>
+                <option value="ES">ES - Espírito Santo</option>
+                <option value="GO">GO - Goiás</option>
+                <option value="MA">MA - Maranhão</option>
+                <option value="MT">MT - Mato Grosso</option>
+                <option value="MS">MS - Mato Grosso do Sul</option>
+                <option value="MG">MG - Minas Gerais</option>
+                <option value="PA">PA - Pará</option>
+                <option value="PB">PB - Paraíba</option>
+                <option value="PR">PR - Paraná</option>
+                <option value="PE">PE - Pernambuco</option>
+                <option value="PI">PI - Piauí</option>
+                <option value="RJ">RJ - Rio de Janeiro</option>
+                <option value="RN">RN - Rio Grande do Norte</option>
+                <option value="RS">RS - Rio Grande do Sul</option>
+                <option value="RO">RO - Rondônia</option>
+                <option value="RR">RR - Roraima</option>
+                <option value="SC">SC - Santa Catarina</option>
+                <option value="SP">SP - São Paulo</option>
+                <option value="SE">SE - Sergipe</option>
+                <option value="TO">TO - Tocantins</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="txtNumeroDestino">
+                Informe o número:
+              </label>
+              <input id="txtNumeroDestino" type="number" min="1" placeholder="Ex: 514">
+            </div>
+            <div class="field">
+              <label for="txtCEPDestino">
+                Informe o CEP:
+              </label>
+              <input id="txtCEPDestino" type="text" placeholder="Ex: 04679-260">
+            </div>
+            <button class="button-form" onclick="validarRota()">Prosseguir</button>
+          </div>
+        
+          <div id="divShipment" class="info-medicamento">
+            <div class="boxes">
+              <div class="box">
+                <div class="upper-box">
+                  Temperatura Miníma
+                </div>
+                <p id="pTempMin">--</p>
+              </div>
+              <div class="box">
+                <div class="upper-box">
+                  Temperatura Máxima
+                </div>
+                <p id="pTempMax">--</p>
+              </div>
+              <div class="box">
+                <div class="upper-box">
+                  Umidade Miníma
+                </div>
+                <p id="pUmidMin">--</p>
+              </div>
+              <div class="box">
+                <div class="upper-box">
+                  Umidade Máxima
+                </div>
+                <p id="pUmidMax">--</p>
+              </div>
+            </div>
+            <div class="field" style="margin-top: 30px;">
+              <label for="cmbAddMedicamento">
+                Escolha um medicamento para adicionar ao carregamento:
+              </label>
+              <select id="cmbAddMedicamento" class="js-example-basic-single"></select>
+              <button class="button-form" onclick="adicionarMedicamento()">Adicionar Medicamento</button>
+            </div>
+            <div class="lista-dados">
+              <h1>Medicamentos</h1>
+              <ul id="ulListaMedicamentos" class="ul-lista-dados">
+                <li class="medicamento-container-titulo">
+                  <span class="titulo-tabela-container">Quantidade</span>
+                  <span class="titulo-tabela-container">Nome</span>
+                  <span class="titulo-tabela-container">Validade</span>
+                  <span class="titulo-tabela-container">Temp. Mín / Temp. Máx</span>
+                  <span class="titulo-tabela-container">Umi. Mín/ Máx</span>
+                  <span class="titulo-tabela-container">Remover</span>
+                </li>
+              </ul>
+            </div>
+            <div class="buttons">
+              <button onclick="mudarRota()">Mudar Rota</button>
+              <button onclick="validarCarregamento()">Prosseguir</button>
+            </div>
+          </div>
 
-            <div id="divShipment" class="form">
-              <div class="boxes">
-                <div class="box">
-                  <div class="upper-box">
-                    Temperatura Miníma
-                  </div>
-                  <p>8</p>
-                </div>
-                <div class="box">
-                  <div class="upper-box">
-                    Temperatura Máxima
-                  </div>
-                  <p>18</p>
-                </div>
-                <div class="box">
-                  <div class="upper-box">
-                    Umidade Miníma
-                  </div>
-                  <p>40</p>
-                </div>
-                <div class="box">
-                  <div class="upper-box">
-                    Umidade Máxima
-                  </div>
-                  <p>60</p>
-                </div>
-              </div>
-              <div>
-                <button class="button-form" onclick="adicionarMedicamento()">Adicionar Medicamento</button>
-              </div>
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>Quantidade</th>
-                    <th>Medicamento</th>
-                    <th>Temperatura</th>
-                    <th>Umidade</th>
-                    <th>Ação</th>
-                  </tr>
-                </thead>
-                <tbody id="tbShipment">
-                  <tr>
-                    <td><input type="number" min="1" value="1"></td>
-                    <td>Atenolol</td>
-                    <td>8 - 24</td>
-                    <td>10 - 60</td>
-                    <td><i class="fa-solid fa-trash-can" style="color: #ec2020;"></i></td>
-                  </tr>
-                  <tr class="alternative">
-                    <td><input type="number" min="1" value="1"></td>
-                    <td>Atenolol</td>
-                    <td>8 - 24</td>
-                    <td>10 - 60</td>
-                    <td><i class="fa-solid fa-trash-can" style="color: #ec2020;"></i></td>
-                  </tr>
-                  <tr>
-                    <td><input type="number" min="1" value="1"></td>
-                    <td>Atenolol</td>
-                    <td>8 - 24</td>
-                    <td>10 - 60</td>
-                    <td><i class="fa-solid fa-trash-can" style="color: #ec2020;"></i></td>
-                  </tr>
-                </tbody>
-              </table>
-              <div class="buttons">
-                <button onclick="mudarRota()">Mudar Rota</button>
-                <button onclick="validarCarregamento()">Prosseguir</button>
-              </div>
+          <div id="divCompany" class="form info-medicamento">
+            <div class="field">
+              <label>
+                Informe a data da entrega:
+              </label>
+              <input id="txtDataEntrega" type="datetime-local">
             </div>
-            <div id="divCompany" class="form">
-              <div class="field">
-                <label for="txtTransportadora">Selecione a Transportadora responsável por essa entrega</label>
-                <input id="txtTransportadora" list="cmbTransportadoras" placeholder="Transportadora">
-                <datalist id="cmbTransportadoras"></datalist>
-              </div>
+            <div class="field">
+              <label for="cmbTransportadoras">
+                Selecione a Transportadora responsável por essa entrega
+              </label>
+              <select id="cmbTransportadoras" class="js-example-basic-single">
+                <option value="0">Escolher transportadora</option>
+              </select>
+            </div>
+            <div class="lista-dados">
               <p>Selecione um sensor para se utilizado durante o transporte</p>
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Equipamento</th>
-                    <th>Disponibilidade</th>
-                    <th>Selecionar</th>
-                  </tr>
-                </thead>
-                <tbody id="tbSensors"></tbody>
-              </table>
-              <div class="buttons">
-                <button class="button-form" onclick="mudarCarregamento()">Mudar Carregamento</button>
-                <button class="button-form" onclick="finalizar()">Finalizar</button>
-              </div>
+              <ul id="ulListaSensores" class="ul-lista-dados">
+                  <li class="medicamento-container-titulo">
+                    <span class="titulo-tabela-container">ID</span>
+                    <span class="titulo-tabela-container">Equipamento</span>
+                    <span class="titulo-tabela-container">Disponibilidade</span>
+                    <span class="titulo-tabela-container">Selecionar</span>
+                  </li>
+              </ul>
+            </div>
+            <div class="buttons">
+              <button class="button-form" onclick="mudarCarregamento()">Mudar Carregamento</button>
+              <button class="button-form" onclick="finalizar()">Finalizar</button>
             </div>
           </div>
         </div>
@@ -169,8 +283,23 @@
   var transportadoras = [];
   var sensores = [];
 
+  $(document).ready(function () {
+    $('.js-example-basic-single').select2();
+  });
+
+  function loadInicial() {
+    carregarMedicamentos();
+    carregarTransportadoras();
+    carregarSensores();
+
+    var agora = new Date()
+
+    txtDataEntrega.min = dateFns.format(dateFns.addWeeks(agora, 2), 'YYYY-MM-DDThh:mm');
+    txtDataEntrega.max = dateFns.format(dateFns.addYears(agora, 1), 'YYYY-MM-DDThh:mm');
+  }
+
   function carregarMedicamentos() {
-    return fetch(`/medicamentos/fabricante/${usuario.fkCliente}`, {
+    fetch(`/medicamentos/fabricante/${usuario.fkCliente}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json"
@@ -182,10 +311,25 @@
         resposta.json().then(json => {
           console.log(json);
 
-          medicamentos = json;
-        });
+          medicamentos = json.map(med => {
+            return {
+              fkFarmaceutica: med.fkFarmaceutica,
+              idMedicamento: med.idMedicamento,
+              nome: med.nome,
+              tempMax: parseFloat(med.tempMax),
+              tempMin: parseFloat(med.tempMin),
+              umidMax: parseFloat(med.umidMax),
+              umidMin: parseFloat(med.umidMin),
+              validade: med.validade
+            }
+          });
 
-        return true;
+          for (var index = 0; index < medicamentos.length; index++) {
+            var medicamento = medicamentos[index];
+            
+            renderizarOptMed(medicamento);
+          }
+        });
       } else {
         Swal.fire({
           title: 'Erro',
@@ -195,8 +339,7 @@
           showDenyButton: true,
           denyButtonText: 'OK'
         });
-
-        return false;
+        return;
       }
 
     }).catch(function (erro) {
@@ -209,13 +352,12 @@
         denyButtonText: 'OK'
       });
       console.log(`ERRO: ${erro}`);
-
-      return false;
+      return;
     })
   }
 
   function carregarTransportadoras() {
-    return fetch(`/transportadoras/${usuario.fkCliente}`, {
+    fetch(`/transportadoras/${usuario.fkCliente}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json"
@@ -228,20 +370,14 @@
           console.log(json);
 
           transportadoras = json;
-          var index = 0;
 
-          while (index < transportadoras.length) {
+          for (var index = 0; index < transportadoras.length; index++) {
             var transportadora = transportadoras[index];
-
-            cmbTransportadoras.innerHTML += `
-              <option value="${transportadora.idCliente}">${transportadora.nomeCliente}</option>
-            `;
-
-            index++;
+            
+            renderizarOptTransportadora(transportadora);
           }
         });
-
-        return true;
+        
       } else {
         Swal.fire({
           title: 'Erro',
@@ -252,7 +388,7 @@
           denyButtonText: 'OK'
         });
 
-        return false;
+        return;
       }
 
     }).catch(function (erro) {
@@ -266,12 +402,12 @@
       });
       console.log(`ERRO: ${erro}`);
 
-      return false;
+      return;
     })
   }
 
   function carregarSensores() {
-    return fetch(`/sensores/fabricante/${usuario.fkCliente}`, {
+    fetch(`/sensores/fabricante/${usuario.fkCliente}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json"
@@ -284,39 +420,22 @@
           console.log(json);
 
           sensores = json;
-          var index = 0;
-
-          while (index < sensores.length) {
+          
+          for (var index = 0; index < sensores.length; index++) {
             var sensor = sensores[index];
 
             var livre = 'Em Uso'
-            var radioInput = '<input name="radSensor" type="radio" disabled>'
+            var radioInput = `<input value="${sensor.idSensor}" name="radSensor" type="radio" disabled>`
 
             if (sensor.fkCliente == null) {
               livre = 'Livre';
-              radioInput = '<input name="radSensor" type="radio">'
+              radioInput = `<input value="${sensor.idSensor}" name="radSensor" type="radio">`
             }
-
-            var estiloLinha = '<tr>'
-
-            if (index % 2 != 0) {
-              estiloLinha = '<tr class="alternative">'
-            }
-
-            tbSensors.innerHTML += `
-              ${estiloLinha}
-                <td>${sensor.fkFarmaceutica}${sensor.idSensor}</td>
-                <td>Sensor ${sensor.idSensor}</td>
-                <td>${livre}</td>
-                <td>${radioInput}</td>
-              </tr>
-            `;
-
-            index++;
+            
+            renderizarLinhaSensor(sensor, livre, radioInput)
           }
         });
 
-        return true;
       } else {
         Swal.fire({
           title: 'Erro',
@@ -326,8 +445,7 @@
           showDenyButton: true,
           denyButtonText: 'OK'
         });
-
-        return false;
+        return;
       }
 
     }).catch(function (erro) {
@@ -341,13 +459,73 @@
       });
       console.log(`ERRO: ${erro}`);
 
-      return false;
+      return;
     })
+  }
+
+  function renderizarOptMed(medicamento) {
+    $('#cmbAddMedicamento').append(`
+      <option id="optMedicamento#${medicamento.idMedicamento}" value="${medicamento.idMedicamento}">
+        ${medicamento.nome} | ${medicamento.tempMin}°C/${medicamento.tempMax}°C | ${medicamento.umidMin}%/${medicamento.umidMax}%
+      </option>
+    `)
+    $('#cmbAddMedicamento').select2();
+  }
+
+  function renderizarLinhaMed(medicamento) {
+    ulListaMedicamentos.innerHTML += `
+      <li id="liMedicamento#${medicamento.idMedicamento}" class="medicamento-container">
+        <input class="pedido-validade titulo-tabela-container pedido-input-edit" id="txtQtdMedLote#${medicamento.idMedicamento}" type="number" min="1" onchange="atualizarLote(${medicamento.idMedicamento})" value="1">
+        <div class="pedido-span"><span class="pedido-nome titulo-tabela-container" id="nomePedido" style="width: fit-content;">${medicamento.nome}</span></div>
+        <div class="pedido-span"><span class="pedido-validade titulo-tabela-container" id="validadePedido" style="width: fit-content;">${medicamento.validade} dia(s)</span></div>
+        <div class="pedido-span"><span class="pedido-temp titulo-tabela-container" id="tempMinPedido" style="width: fit-content;">${medicamento.tempMin}°C/${medicamento.tempMax}°C</span></div>
+        <div class="pedido-span"><span class="pedido-umi titulo-tabela-container" id="umiMinPedido" style="width: fit-content;">${medicamento.umidMin}%/${medicamento.umidMax}%</span></div>
+        <span class="pedido-umi titulo-tabela-container" id="botoes">
+          <i class="fas fa-solid fa-xmark" onclick="removerLote(${medicamento.idMedicamento})" style="color: #ec2020; cursor: pointer;"></i>
+        </span>
+      </li>
+    `;
+  }
+
+  function renderizarOptTransportadora(transportadora) {
+    $('#cmbTransportadoras').append(`
+      <option id="optTransportadora#${transportadora.idCliente}" value="${transportadora.idCliente}">
+        ${transportadora.nomeCliente}
+      </option>
+    `)
+    $('#cmbTransportadoras').select2();    
+  }
+
+  function renderizarLinhaSensor(sensor, status, radioInput) {
+    ulListaSensores.innerHTML += `
+      <li id="liSensor#${sensor.fkFarmaceutica}${sensor.idSensor}" class="medicamento-container">
+        <div class="pedido-span"><span class="pedido-nome titulo-tabela-container" id="nomePedido" style="width: fit-content;">${sensor.fkFarmaceutica}${sensor.idSensor}</span></div>
+        <div class="pedido-span"><span class="pedido-nome titulo-tabela-container" id="nomePedido" style="width: fit-content;">Sensor ${sensor.idSensor}</span></div>
+        <div class="pedido-span"><span class="pedido-umi titulo-tabela-container" id="umiMinPedido" style="width: fit-content;">${status}</span></div>
+        <span class="pedido-umi titulo-tabela-container" id="botoes">
+          ${radioInput}
+        </span>
+      </li>
+    `;
   }
 </script>
 <script>
-  var origem = '';
-  var destino = '';
+  var origem = {
+    endereco: '',
+    bairro: '',
+    cidade: '',
+    uf: '',
+    numero: 0,
+    cep: ''
+  };
+  var destino = {
+    endereco: '',
+    bairro: '',
+    cidade: '',
+    uf: '',
+    numero: 0,
+    cep: ''
+  };
 
   var minTemperatura = 0;
   var maxTemperatura = 0;
@@ -357,12 +535,25 @@
   var carregamento = [];
 
   function validarRota() {
-    origem = txtOrigem.value;
-    destino = txtDestino.value;
+    var enderecoOrigemVar = txtEnderecoOrigem.value;
+    var bairroOrigemVar = txtBairroOrigem.value;
+    var cidadeOrigemVar = txtCidadeOrigem.value;
+    var ufOrigemVar = cmbUFOrigem.value;
+    var numeroOrigemVar = Number(txtNumeroOrigem.value);
+    var cepOrigemVar = txtCEPOrigem.value;
+
+    var enderecoDestinoVar = txtEnderecoDestino.value;
+    var bairroDestinoVar = txtBairroDestino.value;
+    var cidadeDestinoVar = txtCidadeDestino.value;
+    var ufDestinoVar = cmbUFDestino.value;
+    var numeroDestinoVar = Number(txtNumeroDestino.value);
+    var cepDestinoVar = txtCEPDestino.value;
 
     if (
-      origem == ''
-      || destino == ''
+      bairroOrigemVar == ''
+      || cidadeOrigemVar == ''
+      || ufOrigemVar == ''
+      || numeroOrigemVar == ''
     ) {
       Swal.fire({
         title: 'Erro',
@@ -371,6 +562,106 @@
         confirmButtonColor: '#fc3636'
       })
       return;
+
+    }
+    
+    if (numeroOrigemVar <= 0) {
+      Swal.fire({
+        title: 'Erro',
+        text: 'Número de origem deve ser maior que 0',
+        icon: 'error',
+        confirmButtonColor: '#fc3636'
+      })
+      return;
+    }
+
+    var validacaoEnderecoOrigem = validarEndereco(enderecoOrigemVar);
+    var validacaoCEPOrigem = validarCEP(cepOrigemVar);
+
+    if (validacaoEnderecoOrigem != 'OK') {
+      Swal.fire({
+        title: 'Erro',
+        text: validacaoEnderecoOrigem,
+        icon: 'error',
+        confirmButtonColor: '#fc3636'
+      })
+      return;
+    }
+
+    if (validacaoCEPOrigem != 'OK') {
+      Swal.fire({
+        title: 'Erro',
+        text: validacaoCEPOrigem,
+        icon: 'error',
+        confirmButtonColor: '#fc3636'
+      })
+      return;
+    }
+
+    if (
+      bairroDestinoVar == ''
+      || cidadeDestinoVar == ''
+      || ufDestinoVar == ''
+      || numeroDestinoVar == ''
+    ) {
+      Swal.fire({
+        title: 'Erro',
+        text: 'Todos os campos são obrigatórios',
+        icon: 'error',
+        confirmButtonColor: '#fc3636'
+      })
+      return;
+    }
+    
+    if (numeroDestinoVar <= 0) {
+      Swal.fire({
+        title: 'Erro',
+        text: 'Número de destino deve ser maior que 0',
+        icon: 'error',
+        confirmButtonColor: '#fc3636'
+      })
+      return;
+    }
+
+    var validacaoEnderecoDestino = validarEndereco(enderecoDestinoVar);
+    var validacaoCEPDestino = validarCEP(cepDestinoVar);
+
+    if (validacaoEnderecoDestino != 'OK') {
+      Swal.fire({
+        title: 'Erro',
+        text: validacaoEnderecoDestino,
+        icon: 'error',
+        confirmButtonColor: '#fc3636'
+      })
+      return;
+    }
+
+    if (validacaoCEPDestino != 'OK') {
+      Swal.fire({
+        title: 'Erro',
+        text: validacaoCEPDestino,
+        icon: 'error',
+        confirmButtonColor: '#fc3636'
+      })
+      return;
+    }
+
+    origem = {
+      endereco: enderecoOrigemVar,
+      bairro: bairroOrigemVar,
+      cidade: cidadeOrigemVar,
+      uf: ufOrigemVar,
+      numero: numeroOrigemVar,
+      cep: cepOrigemVar
+    }
+
+    destino = {
+      endereco: enderecoDestinoVar,
+      bairro: bairroDestinoVar,
+      cidade: cidadeDestinoVar,
+      uf: ufDestinoVar,
+      numero: numeroDestinoVar,
+      cep: cepDestinoVar
     }
 
     btnRoute.classList.remove('selected');
@@ -388,7 +679,175 @@
     btnRoute.classList.add('selected');
   }
 
+  function atualizarLote(idMedicamento) {
+    var input = document.getElementById(`txtQtdMedLote#${idMedicamento}`);
+    var valor = Number(input.value);
+
+    var index = carregamento.findIndex(lote => {
+      if (lote.medicamento.idMedicamento == idMedicamento) {
+        return true;
+      }
+    });
+
+    if (index == -1) {
+      Swal.fire({
+        title: 'Erro',
+        text: 'Medicamento inválido',
+        icon: 'error',
+        confirmButtonColor: '#fc3636'
+      })
+      return;
+    }
+
+    if (isNaN(valor) == false && valor > 0) {
+      carregamento[index].qtd = Math.floor(valor);
+    } else {
+      input.value = carregamento[index].qtd;
+    }
+  }
+
+  function removerLote(idMedicamento) {
+    var lote = carregamento.find(lote => {
+      if (lote.medicamento.idMedicamento == idMedicamento) {
+        return lote;
+      }
+    })
+
+    carregamento = carregamento.filter(lote => {
+      if (lote.medicamento.idMedicamento != idMedicamento) {
+        return lote;
+      }
+    });
+
+    for (var index = 0; index < carregamento.length; index++) {
+      var lote = carregamento[index];
+      
+      if (index == 0 || lote.medicamento.tempMax < maxTemperatura) {
+        maxTemperatura = lote.medicamento.tempMax;
+      }
+
+      if (index == 0 || lote.medicamento.tempMin > minTemperatura) {
+        minTemperatura = lote.medicamento.tempMin;
+      }
+
+      if (index == 0 || lote.medicamento.umidMax < maxUmidade) {
+        maxUmidade = lote.medicamento.umidMax;
+      }
+
+      if (index == 0 || lote.medicamento.umidMin > minUmidade) {
+        minUmidade = lote.medicamento.umidMin;
+      }
+    }
+
+    var linha = document.getElementById(`liMedicamento#${idMedicamento}`);
+    linha.parentNode.removeChild(linha);
+
+    pTempMax.innerHTML = `${maxTemperatura}°C`;
+    pTempMin.innerHTML = `${minTemperatura}°C`;
+    pUmidMax.innerHTML = `${maxUmidade}%`;
+    pUmidMin.innerHTML = `${minUmidade}%`;
+
+    console.log(lote);
+    renderizarOptMed(lote.medicamento);
+  }
+
+  function adicionarMedicamento() {
+    var optEscolhida = Number(cmbAddMedicamento.value);
+    var medicamento = medicamentos.find(med => {
+      if (med.idMedicamento == optEscolhida) {
+        return med;
+      }
+    });
+
+    if (!medicamento) {
+      Swal.fire({
+        title: 'Erro',
+        text: 'Medicamento inválido',
+        icon: 'error',
+        confirmButtonColor: '#fc3636'
+      })
+      return;
+    }
+
+    if (carregamento.length >= 1) {
+      if (
+        (medicamento.tempMax < minTemperatura)
+        || (medicamento.tempMin > maxTemperatura)
+      ) {
+        Swal.fire({
+          title: 'Intervalo de temperatura inválido',
+          text: 'Medicamento possui limites de temperatura inválidos para esse lote',
+          icon: 'error',
+          confirmButtonColor: '#fc3636'
+        })
+        return;
+      }
+
+      if (
+        (medicamento.umidMax < minUmidade)
+        || (medicamento.umidMin > maxUmidade)
+      ) {
+        Swal.fire({
+          title: 'Intervalo de umidade inválido',
+          text: 'Medicamento possui limites de umidade inválidos para esse lote',
+          icon: 'error',
+          confirmButtonColor: '#fc3636'
+        })
+        return;
+      }
+
+      if (medicamento.tempMin > minTemperatura) {
+        minTemperatura = medicamento.tempMin;
+      }
+
+      if (medicamento.tempMax < maxTemperatura) {
+        maxTemperatura = medicamento.tempMax;
+      }
+
+      if (medicamento.umidMin > minUmidade) {
+        minUmidade = medicamento.umidMin
+      }
+
+      if (medicamento.umidMax < maxUmidade) {
+        maxUmidade = medicamento.umidMax
+      }
+
+    } else {
+      minTemperatura = medicamento.tempMin;
+      maxTemperatura = medicamento.tempMax;
+      minUmidade = medicamento.umidMin;
+      maxUmidade = medicamento.umidMax;
+    }
+
+    var optMed = document.getElementById(`optMedicamento#${optEscolhida}`);
+    optMed.parentNode.removeChild(optMed);
+
+    var lote = {
+      medicamento: medicamento,
+      qtd: 1
+    }
+
+    carregamento.push(lote);
+    
+    renderizarLinhaMed(medicamento);
+
+    pTempMax.innerHTML = `${maxTemperatura}°C`;
+    pTempMin.innerHTML = `${minTemperatura}°C`;
+    pUmidMax.innerHTML = `${maxUmidade}%`;
+    pUmidMin.innerHTML = `${minUmidade}%`;
+  }
+
   function validarCarregamento() {
+    if (carregamento.length <= 0) {
+      Swal.fire({
+        title: 'Erro',
+        text: 'No minímo um medicamento deve ser levado pelo lote',
+        icon: 'error',
+        confirmButtonColor: '#fc3636'
+      })
+      return;
+    }
+
     btnShipment.classList.remove('selected');
     divShipment.style.display = 'none';
 
@@ -405,39 +864,111 @@
   }
 
   function finalizar() {
-    Swal.fire({
-      title: 'Suceso',
-      text: 'Solicitação de entrega enviada para transportadora',
-      icon: 'success',
-      timer: 2000,
-      timerProgressBar: true,
-      confirmButtonColor: '#34e269',
-      willClose: () => {
-        window.location.replace('./deliveries.html');
+    var idTransportadora = Number(cmbTransportadoras.value);
+    var dataEntrega = txtDataEntrega.value;
+    
+    if (idTransportadora <= 0) {
+      Swal.fire({
+        title: 'Erro',
+        text: 'Escolha uma transportadora',
+        icon: 'error',
+        confirmButtonColor: '#fc3636'
+      })
+      return;
+    }
+    
+    if (dataEntrega == null || dataEntrega == undefined || dataEntrega == '') {
+      Swal.fire({
+        title: 'Erro',
+        text: 'Escolha uma data para entrega',
+        icon: 'error',
+        confirmButtonColor: '#fc3636'
+      })
+      return;
+    }
+
+    var dataEntregaForamtada = dateFns.format(dataEntrega, 'YYYY-MM-DD hh:mm');    
+
+    var inputsSensor = document.getElementsByName('radSensor');
+    var idSensor = 0;
+
+    for (var index = 0; index < inputsSensor.length; index++) {
+      if (inputsSensor[index].checked) {
+        idSensor = inputsSensor[index].value;
+        break;
       }
-    });
+    }
+
+    if (idSensor <= 0) {
+      Swal.fire({
+        title: 'Erro',
+        text: 'Escolha o sensor que será usado na entrega',
+        icon: 'error',
+        confirmButtonColor: '#fc3636'
+      })
+      return;
+    }
+
+    fetch(`/entregas/solicitar`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        origemServer: origem,
+        destinoServer: destino,
+        carregamentoServer: carregamento,
+        dataEntregaServer: dataEntregaForamtada,
+        idTransportadoraServer: idTransportadora,
+        idSensorServer: idSensor,
+        idClienteServer: usuario.fkCliente
+      })
+    }).then(function (resposta) {
+      console.log('Resposta: ', resposta);
+
+      if (resposta.ok) {
+        console.log(resposta);
+
+        resposta.json().then(json => {
+          console.log(json);
+
+          Swal.fire({
+            title: 'Suceso',
+            text: 'Solicitação de entrega enviada para transportadora',
+            icon: 'success',
+            timer: 2000,
+            timerProgressBar: true,
+            confirmButtonColor: '#34e269',
+            willClose: () => {
+              window.location.replace('./entregas.html');
+            }
+          });
+        });
+      } else {
+        if (resposta.status == 403) {
+          resposta.text().then(text => {
+            Swal.fire({
+              title: 'Erro',
+              text: text,
+              icon: 'error',
+              showConfirmButton: false,
+              showDenyButton: true,
+              denyButtonText: 'OK'
+            });
+          })
+        } else {
+          Swal.fire({
+            title: 'Erro',
+            text: 'Houve um erro ao solicitar entrega',
+            icon: 'error',
+            showConfirmButton: false,
+            showDenyButton: true,
+            denyButtonText: 'OK'
+          });
+        }
+
+      }
+    })
   }
 </script>
-<script>
-  function carregarDados() {
-    var carregouMedicamentos = carregarMedicamentos();
-
-    if (!carregouMedicamentos) {
-      return;
-    }
-
-    var carregouTransportadoras = carregarTransportadoras();
-
-    if (!carregouTransportadoras) {
-      return;
-    }
-
-    var carregouSensores = carregarSensores();
-
-    if (!carregouSensores) {
-      return;
-    }
-  }
-</script>
-
 </html>
