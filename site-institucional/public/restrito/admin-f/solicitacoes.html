@@ -468,7 +468,7 @@
       <option id="optMedicamento#${medicamento.idMedicamento}" value="${medicamento.idMedicamento}">
         ${medicamento.nome} | ${medicamento.tempMin}°C/${medicamento.tempMax}°C | ${medicamento.umidMin}%/${medicamento.umidMax}%
       </option>
-    `)
+    `);
     $('#cmbAddMedicamento').select2();
   }
 
@@ -707,8 +707,10 @@
   }
 
   function removerLote(idMedicamento) {
+    console.log('Find remover Lote: ', idMedicamento);
     var lote = carregamento.find(lote => {
       if (lote.medicamento.idMedicamento == idMedicamento) {
+        console.log('loteid: ', lote);
         return lote;
       }
     })
@@ -720,22 +722,22 @@
     });
 
     for (var index = 0; index < carregamento.length; index++) {
-      var lote = carregamento[index];
+      var loteAtual = carregamento[index];
       
-      if (index == 0 || lote.medicamento.tempMax < maxTemperatura) {
-        maxTemperatura = lote.medicamento.tempMax;
+      if (index == 0 || loteAtual.medicamento.tempMax < maxTemperatura) {
+        maxTemperatura = loteAtual.medicamento.tempMax;
       }
 
-      if (index == 0 || lote.medicamento.tempMin > minTemperatura) {
-        minTemperatura = lote.medicamento.tempMin;
+      if (index == 0 || loteAtual.medicamento.tempMin > minTemperatura) {
+        minTemperatura = loteAtual.medicamento.tempMin;
       }
 
-      if (index == 0 || lote.medicamento.umidMax < maxUmidade) {
-        maxUmidade = lote.medicamento.umidMax;
+      if (index == 0 || loteAtual.medicamento.umidMax < maxUmidade) {
+        maxUmidade = loteAtual.medicamento.umidMax;
       }
 
-      if (index == 0 || lote.medicamento.umidMin > minUmidade) {
-        minUmidade = lote.medicamento.umidMin;
+      if (index == 0 || loteAtual.medicamento.umidMin > minUmidade) {
+        minUmidade = loteAtual.medicamento.umidMin;
       }
     }
 
@@ -747,7 +749,6 @@
     pUmidMax.innerHTML = `${maxUmidade}%`;
     pUmidMin.innerHTML = `${minUmidade}%`;
 
-    console.log(lote);
     renderizarOptMed(lote.medicamento);
   }
 
