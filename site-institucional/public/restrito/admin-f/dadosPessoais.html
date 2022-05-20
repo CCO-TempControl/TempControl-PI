@@ -166,18 +166,27 @@
           console.log('Resposta: ', resposta);
 
           if (resposta.ok) {
-            console.log(resposta);
-            Swal.fire({
-                title: 'Sucesso',
-                text: 'Atualizado Com Sucesso',
-                icon: 'success',
-                showConfirmButton: false,
-                showDenyButton: true,
-                denyButtonText: 'OK'
-              });
+            console.log(resposta);            
 
             resposta.json().then(json => {
               console.log(json);
+
+              sessionStorage.USUARIO = JSON.stringify(json);
+              sessionStorage.ID_CLIENTE = json.fkCliente;
+              sessionStorage.TIPO_USUARIO = json.tipoUsuario;
+              sessionStorage.NOME_USUARIO = json.nomeUsuario;
+              sessionStorage.ID_USUARIO = json.idUsuario;
+
+              spanNome.innerHTML = json.nomeUsuario;
+            });
+
+            Swal.fire({
+              title: 'Sucesso',
+              text: 'Atualizado Com Sucesso',
+              icon: 'success',
+              showConfirmButton: false,
+              showDenyButton: true,
+              denyButtonText: 'OK'
             });
           } else {
               Swal.fire({

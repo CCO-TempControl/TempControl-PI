@@ -46,102 +46,20 @@
             <button onclick="solicitacoes()" id="btnRequests" class="option">Solicitações</button>
           </div>
           <div id="divDeliveries" class="data-table">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>Transportadora</th>
-                  <th>Trajeto</th>
-                  <th>Carregamento</th>
-                  <th>Métricas</th>
-                  <th>Data Entrega</th>
-                  <th>Situação</th>
-                  <th>Ação</th>
-                </tr>
-              </thead>
-              <tbody id="tbShipment">
-                <tr>
-                  <td>Polar</td>
-                  <td>
-                    <ul>
-                      <li>Rua Vermelha</li>
-                      <li>Rua Amarela</li>
-                    </ul>
-                  </td>
-                  <td>
-                    <ul>
-                      <li>250 - Atenol</li>
-                      <li>250 - Atenol</li>
-                      <li>250 - Atenol</li>
-                      <li>250 - Atenol</li>
-                    </ul>
-                  </td>
-                  <td>
-                    <ul>
-                      <li>Temperatura: 8 - 18</li>
-                      <li>Umidade: 20 - 80</li>
-                    </ul>
-                  </td>
-                  <td>01/05/2022</td>
-                  <td>Entregue</td>
-                  <td></td>
-                </tr>
-                <tr class="alternative">
-                  <td>Polar</td>
-                  <td>
-                    <ul>
-                      <li>Rua Vermelha</li>
-                      <li>Rua Amarela</li>
-                    </ul>
-                  </td>
-                  <td>
-                    <ul>
-                      <li>250 - Atenol</li>
-                      <li>250 - Atenol</li>
-                      <li>250 - Atenol</li>
-                      <li>250 - Atenol</li>
-                    </ul>
-                  </td>
-                  <td>
-                    <ul>
-                      <li>Temperatura: 8 - 18</li>
-                      <li>Umidade: 20 - 80</li>
-                    </ul>
-                  </td>
-                  <td>04/05/2022</td>
-                  <td>Em andamento</td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td>Polar</td>
-                  <td>
-                    <ul>
-                      <li>Rua Vermelha</li>
-                      <li>Rua Amarela</li>
-                    </ul>
-                  </td>
-                  <td>
-                    <ul>
-                      <li>250 - Atenol</li>
-                      <li>250 - Atenol</li>
-                      <li>250 - Atenol</li>
-                      <li>250 - Atenol</li>
-                    </ul>
-                  </td>
-                  <td>
-                    <ul>
-                      <li>Temperatura: 8 - 18</li>
-                      <li>Umidade: 20 - 80</li>
-                    </ul>
-                  </td>
-                  <td>07/10/2022</td>
-                  <td>Agendado</td>
-                  <td>
-                    <i class="fas fa-regular fa-pen-to-square"></i>
-                    <i class="fas fa-solid fa-trash-can" onclick="deletar()" style="color: #ec2020;"></i>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <div class="lista-dados">
+              <p>Selecione um sensor para se utilizado durante o transporte</p>
+              <ul id="ulListaEntregas" class="ul-lista-dados">
+                  <li class="medicamento-container-titulo">
+                    <span class="titulo-tabela-container">Transportadora</span>
+                    <span class="titulo-tabela-container">Trajeto</span>
+                    <span class="titulo-tabela-container">Carregamento</span>
+                    <span class="titulo-tabela-container">Métricas</span>
+                    <span class="titulo-tabela-container">Data Limite</span>                    
+                    <span class="titulo-tabela-container">Data Entrega</span>                    
+                    <span class="titulo-tabela-container">Situação</span>                    
+                  </li>
+              </ul>
+            </div>
           </div>
 
           <div id="divRequests" class="data-table">

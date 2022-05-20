@@ -6,7 +6,6 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://kit.fontawesome.com/2eecc47c4e.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="../../assets/js/funcoes.js"></script>
   <script src="../../assets/js/validacoes.js"></script>
@@ -427,7 +426,7 @@
             var livre = 'Em Uso'
             var radioInput = `<input value="${sensor.idSensor}" name="radSensor" type="radio" disabled>`
 
-            if (sensor.fkCliente == null) {
+            if (sensor.fkTransportadora == null) {
               livre = 'Livre';
               radioInput = `<input value="${sensor.idSensor}" name="radSensor" type="radio">`
             }
@@ -707,10 +706,8 @@
   }
 
   function removerLote(idMedicamento) {
-    console.log('Find remover Lote: ', idMedicamento);
     var lote = carregamento.find(lote => {
       if (lote.medicamento.idMedicamento == idMedicamento) {
-        console.log('loteid: ', lote);
         return lote;
       }
     })

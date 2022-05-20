@@ -149,7 +149,7 @@ CREATE TABLE usuario (
   nomeUsuario VARCHAR(45) NOT NULL,
   emailUsuario VARCHAR(45) UNIQUE NOT NULL,
   senhaUsuario CHAR(128) NOT NULL,
-  tipoUsuario CHAR NOT NULL CHECK(tipoUsuario IN('admin-f', 'admin-t', 'laboratorio', 'logistico', 'transportador')) ,
+  tipoUsuario VARCHAR(13) NOT NULL CHECK(tipoUsuario IN('admin-f', 'admin-t', 'laboratorio', 'logistico', 'transportador')) ,
   fkCliente INT FOREIGN KEY REFERENCES cliente (idCliente), 
   fkAdmin INT FOREIGN KEY REFERENCES usuario (idUsuario)
 ); 
@@ -165,8 +165,7 @@ CREATE TABLE veiculo (
 
 -- Tabela sensor
 CREATE TABLE sensor (
- 
-   fkFarmaceutica INT FOREIGN KEY REFERENCES cliente (idCliente), 
+  fkFarmaceutica INT FOREIGN KEY REFERENCES cliente (idCliente), 
   
   idSensor INT NOT NULL,
   PRIMARY KEY (fkFarmaceutica, idSensor),
