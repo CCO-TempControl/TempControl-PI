@@ -23,7 +23,7 @@ CREATE TABLE usuario (
   nomeUsuario VARCHAR(45) NOT NULL,
   emailUsuario VARCHAR(45) UNIQUE NOT NULL,
   senhaUsuario CHAR(128) NOT NULL,
-  tipoUsuario ENUM('admin-f', 'admin-t', 'laboratorio', 'logistico', 'transportador'),
+  tipoUsuario VARCHAR(13) CHECK(tipoUsuario = 'admin-f' OR tipoUsuario = 'admin-t' OR tipoUsuario = 'laboratorio' OR tipoUsuario = 'logistico' OR tipoUsuario = 'transportador'),
   fkCliente INT NOT NULL,
   FOREIGN KEY (fkCliente) REFERENCES cliente (idCliente),
   fkAdmin INT NULL,
@@ -58,6 +58,7 @@ CREATE TABLE entrega (
   horaSaida DATETIME,
   horaChegada DATETIME,
   dataEntrega DATETIME NOT NULL,
+  aprovada CHAR(1) CHECK(aprovada = 'S' or aprovada = 'N' or aprovada = 'P'),
   
   fkVeiculo INT NULL,
   FOREIGN KEY (fkVeiculo) REFERENCES veiculo (idVeiculo),
@@ -78,12 +79,12 @@ CREATE TABLE endereco (
 	idEndereco INT,
 	PRIMARY KEY(fkEntrega, idEndereco),
     
-    endereco VARCHAR(45) NOT NULL,
-    bairro VARCHAR(45) NOT NULL,
-    cidade VARCHAR(45) NOT NULL,
-    uf CHAR(2) NOT NULL,
-    numero INT NOT NULL,
-    cep CHAR(9) NOT NULL
+  endereco VARCHAR(45) NOT NULL,
+  bairro VARCHAR(45) NOT NULL,
+  cidade VARCHAR(45) NOT NULL,
+  uf CHAR(2) NOT NULL,
+  numero INT NOT NULL,
+  cep CHAR(9) NOT NULL
 );
 
 -- Tabela medicamento
@@ -128,15 +129,23 @@ CREATE TABLE registro (
   horario DATETIME NOT NULL
 );
 
+
+
 /* para sql server - remoto - produção */
+
+-- Criando banco de dados dbTempControl
+CREATE DATABASE dbTempControl;
+
+-- Usando dbTempControl
+USE dbTempControl;
 
 -- Tabela cliente
 CREATE TABLE cliente (
-  idCliente INT PRIMARY KEY IDENTITY(1,1),
+  idCliente INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
   nomeCliente VARCHAR(45) NOT NULL,
   cnpjCliente CHAR(14) UNIQUE NOT NULL,
   telefoneCliente CHAR(10) NOT NULL,
-  tipoCliente CHAR(1) CHECK(tipoCliente = 'F' OR tipoCliente = 'T')
+  tipoCliente CHAR(1) CHECK(tipoCliente = 'F' OR tipoCliente = 'T') NOT NULL
 );
 
 -- Tabela usuario
@@ -145,10 +154,12 @@ CREATE TABLE usuario (
   nomeUsuario VARCHAR(45) NOT NULL,
   emailUsuario VARCHAR(45) UNIQUE NOT NULL,
   senhaUsuario CHAR(128) NOT NULL,
-  tipoUsuario VARCHAR(13) NOT NULL CHECK(tipoUsuario IN('admin-f', 'admin-t', 'laboratorio', 'logistico', 'transportador')) ,
-  fkCliente INT FOREIGN KEY REFERENCES cliente (idCliente), 
-  fkAdmin INT FOREIGN KEY REFERENCES usuario (idUsuario)
-); 
+  tipoUsuario VARCHAR(13) CHECK(tipoUsuario = 'admin-f' OR tipoUsuario = 'admin-t' OR tipoUsuario = 'laboratorio' OR tipoUsuario = 'logistico' OR tipoUsuario = 'transportador'),
+  fkCliente INT NOT NULL,
+  FOREIGN KEY (fkCliente) REFERENCES cliente (idCliente),
+  fkAdmin INT NULL,
+  FOREIGN KEY (fkAdmin) REFERENCES usuario (idUsuario)
+);
 
 -- Tabela veiculo
 CREATE TABLE veiculo (
@@ -156,42 +167,55 @@ CREATE TABLE veiculo (
   modelo VARCHAR(45) NOT NULL,
   placa CHAR(8) UNIQUE NOT NULL,
   ano CHAR(4),
-  fkTransportadora INT FOREIGN KEY REFERENCES cliente (idCliente)
+  fkTransportadora INT NOT NULL,
+  FOREIGN KEY (fkTransportadora) REFERENCES cliente (idCliente)
 );
 
 -- Tabela sensor
 CREATE TABLE sensor (
-  fkFarmaceutica INT FOREIGN KEY REFERENCES cliente (idCliente), 
-  fkTransportadora INT FOREIGN KEY REFERENCES cliente (idCliente),
+  fkFarmaceutica INT NOT NULL,
+  FOREIGN KEY (fkFarmaceutica) REFERENCES cliente (idCliente), 
+  
   idSensor INT NOT NULL,
   PRIMARY KEY (fkFarmaceutica, idSensor),
+  
+  fkTransportadora INT NULL,
+  FOREIGN KEY (fkTransportadora) REFERENCES cliente (idCliente)
 );
 
 -- Tabela entrega
 CREATE TABLE entrega (
   idEntrega INT PRIMARY KEY IDENTITY(1000,1),
-  origem VARCHAR(45) NOT NULL,
-  destino VARCHAR(45) NOT NULL,
-  horaSaida DATETIME,
-  horaChegada DATETIME,
-  fkVeiculo INT FOREIGN KEY REFERENCES veiculo (idVeiculo),
-  fkTransportadora INT FOREIGN KEY REFERENCES cliente (idCliente),
+  horaSaida SMALLDATETIME,
+  horaChegada SMALLDATETIME,
+  dataEntrega SMALLDATETIME NOT NULL,
+  aprovada CHAR(1) CHECK(aprovada = 'S' or aprovada = 'N' or aprovada = 'P'),
+  
+  fkVeiculo INT NULL,
+  FOREIGN KEY (fkVeiculo) REFERENCES veiculo (idVeiculo),
+  
   fkFarmaceutica INT NOT NULL,
   fkSensor INT NOT NULL,
   FOREIGN KEY (fkFarmaceutica, fkSensor) REFERENCES sensor (fkFarmaceutica, idSensor),
+  
+  fkTransportadora INT NOT NULL,
+  FOREIGN KEY (fkTransportadora) REFERENCES cliente (idCliente)
 );
 
 -- Tabela endereco
 CREATE TABLE endereco (
-    fkEntrega INT FOREIGN KEY REFERENCES entrega (idEntrega),
+	fkEntrega INT,
+    FOREIGN KEY (fkEntrega) REFERENCES entrega (idEntrega),
+    
 	idEndereco INT,
 	PRIMARY KEY(fkEntrega, idEndereco),
-    endereco VARCHAR(45) NOT NULL,
-    bairro VARCHAR(45) NOT NULL,
-    cidade VARCHAR(45) NOT NULL,
-    uf CHAR(2) NOT NULL,
-    numero INT NOT NULL,
-    cep CHAR(9) NOT NULL
+    
+  endereco VARCHAR(45) NOT NULL,
+  bairro VARCHAR(45) NOT NULL,
+  cidade VARCHAR(45) NOT NULL,
+  uf CHAR(2) NOT NULL,
+  numero INT NOT NULL,
+  cep CHAR(9) NOT NULL
 );
 
 -- Tabela medicamento
@@ -203,22 +227,29 @@ CREATE TABLE medicamento (
   tempMax DECIMAL(3,1) NOT NULL,
   umidMin DECIMAL(3,1),
   umidMax DECIMAL(3,1),
-  fkFarmaceutica INT FOREIGN KEY REFERENCES cliente (idCliente)
+  
+  fkFarmaceutica INT NOT NULL,
+  FOREIGN KEY (fkFarmaceutica) REFERENCES cliente (idCliente)
 );
 
 -- Tabela lote
 CREATE TABLE lote (
-    fkMedicamento INT FOREIGN KEY REFERENCES medicamento (idMedicamento),
-    fkEntrega INT FOREIGN KEY REFERENCES entrega (idEntrega),
-    PRIMARY KEY (fkMedicamento, fkEntrega),
-    qtd INT NOT NULL
+  fkMedicamento INT NOT NULL,
+  FOREIGN KEY (fkMedicamento) REFERENCES medicamento (idMedicamento),
+  fkEntrega INT NOT NULL,
+  FOREIGN KEY (fkEntrega) REFERENCES entrega (idEntrega),
+  PRIMARY KEY (fkMedicamento, fkEntrega),
+  qtd INT NOT NULL
 );
 
 -- Tabela registro
 CREATE TABLE registro (
-  fkEntrega INT FOREIGN KEY REFERENCES entrega (idEntrega),
+  fkEntrega INT NOT NULL,
+  FOREIGN KEY (fkEntrega) REFERENCES entrega (idEntrega),
+  
   idRegistro INT NOT NULL,
   PRIMARY KEY (fkEntrega, idRegistro),
+  
   dht11temperatura DECIMAL(3,1),
   dht11umidade DECIMAL(3,1),
   lm35 DECIMAL(3,1),
@@ -228,4 +259,3 @@ CREATE TABLE registro (
   situacaoUmidade CHAR(1) CHECK(situacaoUmidade = 'I' OR situacaoUmidade = 'A' OR situacaoUmidade = 'C'),
   horario DATETIME NOT NULL
 );
-

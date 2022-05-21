@@ -6,16 +6,16 @@ USE dbTempControl;
 
 -- Tabela cliente
 CREATE TABLE cliente (
-  idCliente INT PRIMARY KEY AUTO_INCREMENT,
+  idCliente INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
   nomeCliente VARCHAR(45) NOT NULL,
   cnpjCliente CHAR(14) UNIQUE NOT NULL,
   telefoneCliente CHAR(10) NOT NULL,
-  tipoCliente CHAR(1) CHECK(tipoCliente = 'F' OR tipoCliente = 'T')
+  tipoCliente CHAR(1) CHECK(tipoCliente = 'F' OR tipoCliente = 'T') NOT NULL
 );
 
 -- Tabela usuario
 CREATE TABLE usuario (
-  idUsuario INT PRIMARY KEY AUTO_INCREMENT,
+  idUsuario INT PRIMARY KEY IDENTITY(10,1),
   nomeUsuario VARCHAR(45) NOT NULL,
   emailUsuario VARCHAR(45) UNIQUE NOT NULL,
   senhaUsuario CHAR(128) NOT NULL,
@@ -24,17 +24,17 @@ CREATE TABLE usuario (
   FOREIGN KEY (fkCliente) REFERENCES cliente (idCliente),
   fkAdmin INT NULL,
   FOREIGN KEY (fkAdmin) REFERENCES usuario (idUsuario)
-) AUTO_INCREMENT = 10;
+);
 
 -- Tabela veiculo
 CREATE TABLE veiculo (
-  idVeiculo INT PRIMARY KEY AUTO_INCREMENT,
+  idVeiculo INT PRIMARY KEY IDENTITY(100,1),
   modelo VARCHAR(45) NOT NULL,
   placa CHAR(8) UNIQUE NOT NULL,
   ano CHAR(4),
   fkTransportadora INT NOT NULL,
   FOREIGN KEY (fkTransportadora) REFERENCES cliente (idCliente)
-) AUTO_INCREMENT = 100;
+);
 
 -- Tabela sensor
 CREATE TABLE sensor (
@@ -50,10 +50,10 @@ CREATE TABLE sensor (
 
 -- Tabela entrega
 CREATE TABLE entrega (
-  idEntrega INT PRIMARY KEY AUTO_INCREMENT,
-  horaSaida DATETIME,
-  horaChegada DATETIME,
-  dataEntrega DATETIME NOT NULL,
+  idEntrega INT PRIMARY KEY IDENTITY(1000,1),
+  horaSaida SMALLDATETIME,
+  horaChegada SMALLDATETIME,
+  dataEntrega SMALLDATETIME NOT NULL,
   aprovada CHAR(1) CHECK(aprovada = 'S' or aprovada = 'N' or aprovada = 'P'),
   
   fkVeiculo INT NULL,
@@ -65,7 +65,7 @@ CREATE TABLE entrega (
   
   fkTransportadora INT NOT NULL,
   FOREIGN KEY (fkTransportadora) REFERENCES cliente (idCliente)
-) AUTO_INCREMENT = 1000;
+);
 
 -- Tabela endereco
 CREATE TABLE endereco (
@@ -85,7 +85,7 @@ CREATE TABLE endereco (
 
 -- Tabela medicamento
 CREATE TABLE medicamento (
-  idMedicamento INT PRIMARY KEY AUTO_INCREMENT,
+  idMedicamento INT PRIMARY KEY IDENTITY(100,1),
   nome VARCHAR(45) NOT NULL,
   validade INT,
   tempMin DECIMAL(3,1) NOT NULL,
@@ -95,7 +95,7 @@ CREATE TABLE medicamento (
   
   fkFarmaceutica INT NOT NULL,
   FOREIGN KEY (fkFarmaceutica) REFERENCES cliente (idCliente)
-) AUTO_INCREMENT = 100;
+);
 
 -- Tabela lote
 CREATE TABLE lote (
