@@ -89,52 +89,10 @@
                             </div>
 
                             <div class="tabela">
-                                <h1>Caminhao</h1>
+                                <h1>Veículos Cadastrados</h1>
                                 <ul id="lista">
-                                    <li class="tabela-cabecalho">
-                                        <div>id</div>
-                                        <div>Modelo</div>
-                                        <div>Placa</div>
-                                        <div>Ano</div>
-                                        <div>Ações</div>
-                                    </li>
-                                    <!-- <li class="tabela-container">
-                                        <div>abbb</div>
-                                        <div>abbb</div>
-                                        <div>abbb</div>
-                                    </li> -->
                                 </ul>
-                                <!-- <ul id="pedidos">
-                                    <li class="caminhao-container-titulo">
-                                        <div class="titulo-tabela-container">modelo</div>
-                                        <div class="titulo-tabela-container">placa</div>
-                                        <div class="titulo-tabela-container">ano</div>
-                                    </li>
-                                    <li class="caminhao-container">
-                                        <div class="pedido-temp titulo-tabela-container">6ºC</div>
-                                        <div class="pedido-temp titulo-tabela-container">6ºC</div>
-                                        <div class="pedido-umi titulo-tabela-container">94%</div>
-                                    </li>
-                                    <li class="caminhao-container">
-                                        <div class="pedido-num titulo-tabela-container">#2</div>
-                                        <div class="pedido-temp titulo-tabela-container">5ºC</div>
-                                        <div class="pedido-umi titulo-tabela-container">85%</div>
-                                    </li>
-                                </ul> -->
                             </div>
-
-                            <!-- <table id="tabelaVeiculos">
-                                <thead>
-                                    <tr>
-                                        <th>id</th>
-                                        <th>Modelo</th>
-                                        <th>Placa</th>
-                                        <th>Ano</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="corpoTabelaVeiculos">
-                                </tbody>
-                            </table> -->
                         </div>
                     </div>
                 </div>
@@ -151,8 +109,6 @@
 
     function obterVeiculosCliente() {
         const idClienteVar = fkCliente;
-        // var table = document.getElementById("tabelaVeiculos").getElementsByTagName('tbody')[0];
-        // table.innerHTML = '';
 
         fetch(`/veiculos/listarPorCliente/`, {
             method: "POST",
@@ -164,18 +120,22 @@
             })
         }).then(function (response) {
             if (response.ok) {
-                // document.getElementById("lista").innerHTML = "";
+                let elementosNaLista = document.getElementsByClassName('tabela-linha');
+                for (let index = 0; index < elementosNaLista.length; index++) {
+                    elementosNaLista[index].remove();
+                }
+
                 response.json().then(function (veiculosEncontrados) {
-                    veiculosEncontrados.forEach(veiculo => {//colocando os dados dos veículos na página
-                        // var linha = table.insertRow(-1);
-                        // var celula1 = linha.insertCell(0);
-                        // var celula2 = linha.insertCell(1);
-                        // var celula3 = linha.insertCell(2);
-                        // var celula4 = linha.insertCell(3);
-                        // celula1.innerHTML = veiculo.idVeiculo;
-                        // celula2.innerHTML = veiculo.modelo;
-                        // celula3.innerHTML = veiculo.placa;
-                        // celula4.innerHTML = veiculo.ano;
+                    document.getElementById("lista").innerHTML = `
+                                    <li class="tabela-cabecalho">
+                                        <div>id</div>
+                                        <div>Modelo</div>
+                                        <div>Placa</div>
+                                        <div>Ano</div>
+                                        <div>Ações</div>
+                                    </li>
+                                    `;
+                    veiculosEncontrados.forEach(veiculo => {
 
                         document.getElementById("lista").innerHTML += `
                         <li class="tabela-linha">
@@ -183,7 +143,7 @@
                             <div>${veiculo.modelo}</div>
                             <div>${veiculo.placa}</div>
                             <div>${veiculo.ano}</div>
-                            <div><span onclick="excluirVeiculo(${veiculo.idVeiculo})">excluir</span>|<span onclick="editarVeiculo(${veiculo.idVeiculo})">editar</span></div>
+                            <div><button onclick="excluirVeiculo(${veiculo.idVeiculo})" class="btnExcluir"></button>|<button onclick="editarVeiculo(${veiculo.idVeiculo})" class="btnEditar"></button></div>
                         </li>
                         `;
                     });
@@ -248,9 +208,6 @@
                     confirmButtonColor: '#34e269',
                 });
 
-                // divSignInResult.style.display = 'flex';
-                // pMensagem.style.color = '#34e269';
-                // pMensagem.innerHTML = 'Cadastro de veículo realizado com sucesso';
                 obterVeiculosCliente();
 
             } else {
@@ -275,6 +232,44 @@
         })
 
         return false;
+    }
+
+    function excluirVeiculo(idVeiculoVar) {
+        Swal.fire({
+            title: 'Você tem certeza?',
+            text: `Excluir veículo ${idVeiculoVar}? Essa ação não poderá ser revertida!`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sim',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch('/veiculos/excluir', {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        idVeiculoServer: idVeiculoVar
+                    })
+                }).then(function (response) {
+                    if (response.ok) {
+                        Swal.fire(
+                            'Excluído!',
+                            'Seu veículo foi excluído com sucesso',
+                            'success'
+                        )
+                        obterVeiculosCliente();
+                    }
+                })
+            }
+        })
+    }
+
+    function editarVeiculo(idVeiculo) {
+
     }
 
     function sair() {

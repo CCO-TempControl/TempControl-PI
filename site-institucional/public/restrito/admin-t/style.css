@@ -884,12 +884,6 @@ div.data-table {
 }
 
 .tabela .lista li {
-  /* display: flex; */
-  /* justify-content: space-evenly; */
-  /* column-gap: 10vw; */
-  /* padding: 15px; */
-  /* border-radius: 100px; */
-
   height: 55px;
   width: 100%;
   display: flex;
@@ -926,4 +920,25 @@ div.data-table {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.tabela .btnExcluir,
+.tabela .btnEditar {
+  /* width: 20%; */
+  height: 40px;
+  /* background-color: #F04A5B; */
+}
+.tabela .btnExcluir{
+  background-image: url("./img/icons8-excluir-blue-ui/icons8-excluir-40.png");
+  background-repeat: no-repeat;
+  /* background-attachment: fixed; */
+  background-position: center center;
+  /* background-size: cover; */
+}
+.tabela .btnEditar{
+  background-image: url("./img/icons8-lápis-blue-ui/icons8-lápis-40.png");
+  background-repeat: no-repeat;
+  /* background-attachment: fixed; */
+  background-position: center center;
+  /* background-size: cover; */
 }
