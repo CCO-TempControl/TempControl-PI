@@ -130,11 +130,7 @@ CREATE TABLE registro (
 
 /* para sql server - remoto - produção */
 
-
 -- Tabela cliente
-
--- ! TODO: Converter as chaves compostas  ! -- 
-
 CREATE TABLE cliente (
   idCliente INT PRIMARY KEY IDENTITY(1,1),
   nomeCliente VARCHAR(45) NOT NULL,
@@ -166,11 +162,9 @@ CREATE TABLE veiculo (
 -- Tabela sensor
 CREATE TABLE sensor (
   fkFarmaceutica INT FOREIGN KEY REFERENCES cliente (idCliente), 
-  
+  fkTransportadora INT FOREIGN KEY REFERENCES cliente (idCliente),
   idSensor INT NOT NULL,
   PRIMARY KEY (fkFarmaceutica, idSensor),
-  
-  fkTransportadora INT FOREIGN KEY REFERENCES cliente (idCliente)
 );
 
 -- Tabela entrega
@@ -181,46 +175,57 @@ CREATE TABLE entrega (
   horaSaida DATETIME,
   horaChegada DATETIME,
   fkVeiculo INT FOREIGN KEY REFERENCES veiculo (idVeiculo),
-  
+  fkTransportadora INT FOREIGN KEY REFERENCES cliente (idCliente),
   fkFarmaceutica INT NOT NULL,
   fkSensor INT NOT NULL,
   FOREIGN KEY (fkFarmaceutica, fkSensor) REFERENCES sensor (fkFarmaceutica, idSensor),
-  
-  fkTransportadora INT FOREIGN KEY REFERENCES cliente (idCliente)
+);
+
+-- Tabela endereco
+CREATE TABLE endereco (
+    fkEntrega INT FOREIGN KEY REFERENCES entrega (idEntrega),
+	idEndereco INT,
+	PRIMARY KEY(fkEntrega, idEndereco),
+    endereco VARCHAR(45) NOT NULL,
+    bairro VARCHAR(45) NOT NULL,
+    cidade VARCHAR(45) NOT NULL,
+    uf CHAR(2) NOT NULL,
+    numero INT NOT NULL,
+    cep CHAR(9) NOT NULL
 );
 
 -- Tabela medicamento
 CREATE TABLE medicamento (
   idMedicamento INT PRIMARY KEY IDENTITY(100,1),
   nome VARCHAR(45) NOT NULL,
-  validade VARCHAR(30),
+  validade INT,
   tempMin DECIMAL(3,1) NOT NULL,
   tempMax DECIMAL(3,1) NOT NULL,
-  umidMin INT,
-  umidMax INT,
+  umidMin DECIMAL(3,1),
+  umidMax DECIMAL(3,1),
   fkFarmaceutica INT FOREIGN KEY REFERENCES cliente (idCliente)
 );
 
 -- Tabela lote
 CREATE TABLE lote (
-  idLote INT PRIMARY KEY AUTO_INCREMENT,
-  qtd INT NOT NULL,
-  fkMedicamento INT FOREIGN KEY REFERENCES medicamento (idMedicamento),
-  fkEntrega INT FOREIGN KEY REFERENCES entrega (idEntrega)
+    fkMedicamento INT FOREIGN KEY REFERENCES medicamento (idMedicamento),
+    fkEntrega INT FOREIGN KEY REFERENCES entrega (idEntrega),
+    PRIMARY KEY (fkMedicamento, fkEntrega),
+    qtd INT NOT NULL
 );
 
 -- Tabela registro
 CREATE TABLE registro (
   fkEntrega INT FOREIGN KEY REFERENCES entrega (idEntrega),
-  
   idRegistro INT NOT NULL,
   PRIMARY KEY (fkEntrega, idRegistro),
-  
   dht11temperatura DECIMAL(3,1),
   dht11umidade DECIMAL(3,1),
   lm35 DECIMAL(3,1),
   trc5000 INT,
   ldr DECIMAL(3,1),
+  situacaoTemperatura CHAR(1) CHECK(situacaoTemperatura = 'I' OR situacaoTemperatura = 'A' OR situacaoTemperatura = 'C'),
+  situacaoUmidade CHAR(1) CHECK(situacaoUmidade = 'I' OR situacaoUmidade = 'A' OR situacaoUmidade = 'C'),
   horario DATETIME NOT NULL
 );
 
