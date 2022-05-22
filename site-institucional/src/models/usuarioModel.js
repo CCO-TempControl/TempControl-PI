@@ -15,7 +15,7 @@ function entrar(email, senha) {
   console.log("ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function entrar():", email, senha);
 
   var instrucao = `
-    SELECT * FROM usuario WHERE emailUsuario = '${email}' AND senhaUsuario = SHA2('${senha}', 512);
+    SELECT * FROM usuario WHERE emailUsuario = '${email}' AND senhaUsuario = '${senha}';
   `;
 
   console.log("Executando a instrução SQL: \n" + instrucao);
@@ -34,17 +34,35 @@ function buscarPorId(id) {
 
 }
 
-function atualizar(id,nome,email,senha) {
+function atualizar(id,nome,email) {
+  console.log("ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function buscarPorId():", id);
+  var instrucao = `UPDATE usuario SET nomeUsuario = '${nome}', emailUsuario = '${email}' WHERE idUsuario = ${id}`;
+  console.log("Executando a instrução SQL: \n" + instrucao);
+  return database.executar(instrucao);
+
+}
+
+function atualizarSenha(id,senha) {
   console.log("ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function buscarPorId():", id);
 
-  var instrucao = `
-    UPDATE usuario SET nomeUsuario = '${nome}', senhaUsuario = SHA2('${senha}', 512), emailUsuario = '${email}' WHERE idUsuario = ${id}
-  `;
+  var instrucao = `UPDATE usuario SET senhaUsuario = '${senha}' WHERE idUsuario = ${id}`;
 
   console.log("Executando a instrução SQL: \n" + instrucao);
   return database.executar(instrucao);
 
 }
+
+function buscarPorIdUsuario(idUsuario) {
+  console.log("ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function buscarPorIdUsuario()", idUsuario);
+
+  var instrucao = `
+    SELECT * FROM usuario WHERE idUsuario = ${idUsuario}
+  `;
+
+  console.log("Executando a instrução SQL: \n" + instrucao);
+  return database.executar(instrucao);
+}
+
 
 
 function buscarPorIdCliente(idCliente) {
@@ -63,5 +81,7 @@ module.exports = {
   entrar,
   buscarPorId,
   atualizar,
-  buscarPorIdCliente
+  atualizarSenha,
+  buscarPorIdCliente,
+  buscarPorIdUsuario
 };

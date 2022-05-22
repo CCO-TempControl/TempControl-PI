@@ -47,7 +47,7 @@
       </div>
       <div class="info">
         <div class="fundoDados">
-          <h2 id="Nome Da Empresa">NOME DA EMPRESA</h2>
+          <h2 id="Nome Da Empresa">Dados Pessoais</h2>
           <div class="FcardDados">
             <div class="emailEmpresa senhaEmpresa">
               <h3>Nome</h3>
@@ -60,25 +60,53 @@
               <input id="emailInput" value="">
             </div>
           </div>
-          <div class="FcardDados">
-            <div class="senhaEmpresa">
-              <h3>Senha</h3>
-              <input id="senhaInput" type="password" value=""> 
-              <i class="fas fa-solid fa-eye" id="senhaVisivel" style="cursor: pointer;" onclick="visualizarSenha()"></i>
-            </div>
-          </div>
+
           <div class="FcardDados">
             <div class="senhaEmpresa">
               <button onclick="validarAtualizacao()">Atualizar</button>
             </div>
           </div>
         </div>
+
+        <div class="fundoDados">
+          <h2 id="Nome Da Empresa">Senha</h2>
+          <div class="FcardDados">
+            <div class="senhaEmpresa">
+              <h3>Senha Atual</h3>
+              <input id="senhaInput" type="password" value="">
+              <i class="fas fa-solid fa-eye" id="senhaVisivel1" style="cursor: pointer;"
+                onclick="visualizarSenha()"></i>
+            </div>
+          </div>
+          <div class="FcardDados">
+            <div class="senhaEmpresa">
+              <h3>Nova Senha</h3>
+              <input id="senhaInputNova" type="password" value="">
+              <i class="fas fa-solid fa-eye" id="senhaVisivel2" style="cursor: pointer;"
+                onclick="visualizarSenha()"></i>
+            </div>
+          </div>
+          <div class="FcardDados">
+            <div class="senhaEmpresa">
+              <h3>Confirmar Senha</h3>
+              <input id="senhaInputNovaConfirma" type="password" value="">
+              <i class="fas fa-solid fa-eye" id="senhaVisivel3" style="cursor: pointer;"
+                onclick="visualizarSenha()"></i>
+            </div>
+          </div>
+
+          <div class="FcardDados">
+            <div class="senhaEmpresa">
+              <button onclick="validarAtualizacao2()">Atualizar</button>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
 </body>
 
 <script>
   var dadosSession = obterDadosSession();
+
   var nome = dadosSession.nomeUsuario;
   var email = dadosSession.emailUsuario;
   spanNome.innerHTML = dadosSession.nomeUsuario;
@@ -90,24 +118,21 @@
 
 <script>
   function visualizarSenha() {
-        if (senhaInput.type == 'password') {
-            senhaInput.type = 'text';
-            senhaVisivel.classList.add('fa-eye-slash');
-            senhaVisivel.classList.remove('fa-eye');
-        } else {
-            senhaInput.type = 'password';
-            senhaVisivel.classList.add('fa-eye');
-            senhaVisivel.classList.remove('fa-eye-slash');
-        }
+    if (senhaInput.type == 'password') {
+      senhaInput.type = 'text';
+      senhaVisivel1.classList.add('fa-eye-slash');
+      senhaVisivel1.classList.remove('fa-eye');
+    } else {
+      senhaInput.type = 'password';
+      senhaVisivel1.classList.add('fa-eye');
+      senhaVisivel1.classList.remove('fa-eye-slash');
     }
+  }
 
   function validarAtualizacao() {
-
     var idVar = dadosSession.idUsuario
     var nomeVar = nomeInput.value;
     var emailVar = emailInput.value;
-    var senhaVar = senhaInput.value;
-
     var validacaoEmail = validarEmail(emailVar);
 
     if (validacaoEmail != 'OK') {
@@ -121,109 +146,160 @@
       });
       return;
     }
-    if (senhaVar != "") {
-      var validacaoSenha = validarSenha(senhaVar);
 
-      if (validacaoSenha != 'OK') {
+    fetch(`/usuarios/alterarDados`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        idUsuario: idVar,
+        nomeUsuario: nomeVar,
+        emailUsuario: emailVar,
+      })
+    }).then(function (resposta) {
+      console.log('Resposta: ', resposta);
+
+      if (resposta.ok) {
+        resposta.json().then(json => {
+          console.log(json);
+          sessionStorage.USUARIO = JSON.stringify(json[0]);
+          sessionStorage.NOME_USUARIO = json[0].nomeUsuario;
+          spanNome.innerHTML = json[0].nomeUsuario;
+        });
+
+        Swal.fire({
+          title: 'Sucesso',
+          text: 'Atualizado Com Sucesso',
+          icon: 'success',
+          showConfirmButton: false,
+          showDenyButton: true,
+          denyButtonText: 'OK'
+        });
+      } else {
         Swal.fire({
           title: 'Erro',
-          text: validacaoSenha,
+          text: 'Houve um erro ao atualizar os dados',
           icon: 'error',
           showConfirmButton: false,
           showDenyButton: true,
           denyButtonText: 'OK'
         });
-        return;
       }
-    }
-    else {
-      var validacaoSenha = "OK";
-      senhaVar = dadosSession.senhaUsuario;
-    }
-// TODO: O resultado sempre está sendo positivo, tem que fazer ele trocar para negativo quadno a senha estiver errada
-    Swal.fire({
-      title: 'Entre com sua senha atual para confirmar',
-      input: 'password',
-      inputAttributes: {
-        autocapitalize: 'off'
-      },
-      confirmButtonText: 'Confirmar',
-      showLoaderOnConfirm: true,
-      preConfirm: (login) => {
-        return fetch(`/usuarios/confirmarSenha`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            idUsuario: idVar,
-            nomeUsuario: nomeVar,
-            emailUsuario: emailVar,
-            senhaNovaUsuario: senhaVar,
-            senhaUsuario: login
-          })
-        }).then(function (resposta) {
-          console.log('Resposta: ', resposta);
-
-          if (resposta.ok) {
-            console.log(resposta);            
-
-            resposta.json().then(json => {
-              console.log(json);
-
-              sessionStorage.USUARIO = JSON.stringify(json);
-              sessionStorage.ID_CLIENTE = json.fkCliente;
-              sessionStorage.TIPO_USUARIO = json.tipoUsuario;
-              sessionStorage.NOME_USUARIO = json.nomeUsuario;
-              sessionStorage.ID_USUARIO = json.idUsuario;
-
-              spanNome.innerHTML = json.nomeUsuario;
-            });
-
-            Swal.fire({
-              title: 'Sucesso',
-              text: 'Atualizado Com Sucesso',
-              icon: 'success',
-              showConfirmButton: false,
-              showDenyButton: true,
-              denyButtonText: 'OK'
-            });
-          } else {
-              Swal.fire({
-                title: 'Erro',
-                text: 'Houve um erro ao realizar o login!',
-                icon: 'error',
-                showConfirmButton: false,
-                showDenyButton: true,
-                denyButtonText: 'OK'
-              });
-            }
-        }).catch(function (erro) {
-          Swal.fire({
-            title: 'Erro',
-            text: 'Houve um erro ao realizar o login!',
-            icon: 'error',
-            showConfirmButton: false,
-            showDenyButton: true,
-            denyButtonText: 'OK'
-          });
-          console.log(`ERRO: ${erro}`);
-        })
-        return false;
-      }
+    }).catch(function (erro) {
+      Swal.fire({
+        title: 'Erro',
+        text: 'Houve um erro ao atualizar os dados',
+        icon: 'error',
+        showConfirmButton: false,
+        showDenyButton: true,
+        denyButtonText: 'OK'
+      });
+      console.log(`ERRO: ${erro}`);
     })
   }
 
-  
-  function alterar(){
 
-}
+
+  function validarAtualizacao2() {
+    var idVar = dadosSession.idUsuario
+    var senhaNovaVar = senhaInputNova.value;
+    var senhaNovaConfirmaVar = senhaInputNovaConfirma.value;
+    var senhaAntigaVar = senhaInput.value;
+
+    if (senhaNovaConfirmaVar == '' || senhaAntigaVar == '' || senhaNovaVar == '') {
+      Swal.fire({
+        title: 'Erro',
+        text: 'Todos os campos são obrigatórios',
+        icon: 'error',
+        showConfirmButton: false,
+        showDenyButton: true,
+        denyButtonText: 'OK'
+      });
+      return;
+    }
+
+    if (senhaNovaVar != senhaNovaConfirmaVar) {
+      Swal.fire({
+        title: 'Erro',
+        text: 'As senhas informadas devem ser iguais',
+        icon: 'error',
+        showConfirmButton: false,
+        showDenyButton: true,
+        denyButtonText: 'OK'
+      });
+      return;
+    }
+
+
+    var validacaoSenha = validarSenha(senhaNovaVar);
+    if (validacaoSenha != 'OK') {
+      Swal.fire({
+        title: 'Erro',
+        text: validacaoSenha,
+        icon: 'error',
+        showConfirmButton: false,
+        showDenyButton: true,
+        denyButtonText: 'OK'
+      });
+      return;
+    }
+
+
+    fetch(`/usuarios/alterarSenha`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        idUsuario: idVar,
+        senhaAntiga: senhaAntigaVar,
+        senhaNova: senhaNovaVar
+      })
+    }).then(function (resposta) {
+      console.log('Resposta: ', resposta);
+
+      if (resposta.ok) {
+        resposta.json().then(json => {
+          console.log(json);
+          Swal.fire({
+            title: 'Sucesso',
+            text: 'Atualizado Com Sucesso',
+            icon: 'success',
+            showConfirmButton: false,
+            showDenyButton: true,
+            denyButtonText: 'OK',
+            timer: 2000,
+            timerProgressBar: true,
+            willClose: () => {
+              signOut();
+            }
+          });
+        });
+      }
+      else {
+        Swal.fire({
+          title: 'Erro',
+          text: 'Houve um erro ao atualizar a senha',
+          icon: 'error',
+          showConfirmButton: false,
+          showDenyButton: true,
+          denyButtonText: 'OK'
+        });
+      }
+    }).catch(function (erro) {
+      Swal.fire({
+        title: 'Erro',
+        text: 'Houve um erro ao atualizar a senha',
+        icon: 'error',
+        showConfirmButton: false,
+        showDenyButton: true,
+        denyButtonText: 'OK'
+      });
+      console.log(`ERRO: ${erro}`);
+    })
+  }
+
 </script>
 
-
 </html>
-
-
-
-
-

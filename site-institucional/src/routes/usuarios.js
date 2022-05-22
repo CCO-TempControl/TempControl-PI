@@ -15,8 +15,12 @@ router.post('/listarPorCliente', function (request, response) {
   usuarioController.listarPorCliente(request, response)
 });
 
-router.post('/confirmarSenha', function (request, response) {
-  usuarioController.confirmarSenha(request, response)
+router.post('/alterarDados', function (request, response) {
+  usuarioController.alterarDados(request, response)
+});
+
+router.post('/alterarSenha', function (request, response) {
+  usuarioController.alterarSenha(request, response)
 });
 
 module.exports = router;

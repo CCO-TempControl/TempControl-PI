@@ -22,6 +22,7 @@ function cadastrar(request, response) {
   } else if (admin == undefined) {
     response.status(400).send("Admin está undefined!");
   } else {
+    senha = sha512(senha);
     usuarioModel.cadastrar(cliente, nome, email, senha, tipoUsuario, admin).then(
       function (resultado) {
         response.json(resultado);
@@ -43,6 +44,7 @@ function entrar(request, response) {
   } else if (senha == undefined) {
     response.status(400).send("Sua senha está indefinida!");
   } else {
+    senha = sha512(senha);
     usuarioModel.entrar(email, senha).then(function (resultado) {
       console.log(`\nResultados encontrados: ${resultado.length}`);
       console.log(`Resultados: ${JSON.stringify(resultado)}`); // transforma JSON em String
@@ -63,42 +65,68 @@ function entrar(request, response) {
   }
 }
 
-function confirmarSenha(request, response) {
-  let idUsuario = request.body.idUsuario;
-  var senhaUsuario = request.body.senhaUsuario;
-  var nomeUsuario = request.body.nomeUsuario;
-  var emailUsuario = request.body.emailUsuario;
-  var senhaNova = request.body.senhaNovaUsuario;
 
-  if (idUsuario == undefined) {
-    response.status(400).send("Seu email está undefined!");
-  } else {
-    usuarioModel.buscarPorId(idUsuario).then(function (resultado) {
+function alterarSenha(request, response) {
+  let senhaAntiga = request.body.senhaAntiga;
+  let idUsuario = request.body.idUsuario;
+  let senhaUsuario = request.body.senhaNova;
+  usuarioModel.buscarPorIdUsuario(idUsuario).then(function (resultado) {
+    console.log(`\nResultados encontrados: ${resultado.length}`);
+    console.log(`Resultados: ${JSON.stringify(resultado)}`); // transforma JSON em String
+
+    if (resultado.length == 0) {
+      response.status(403).send("idUsuario inválido");
+    } 
+    if(resultado[0].senhaUsuario == sha512(senhaAntiga)) {
+      senhaUsuario = sha512(senhaUsuario);
+      usuarioModel.atualizarSenha(idUsuario, senhaUsuario).then(setTimeout(() =>{
+        usuarioModel.buscarPorIdUsuario(idUsuario).then(function (resultado) {
+          console.log(`\nResultados encontrados: ${resultado.length}`);
+          console.log(`Resultados: ${JSON.stringify(resultado)}`); // transforma JSON em String
+    
+          if (resultado.length == 0) {
+            response.status(403).send("idUsuario inválido");
+          } else {
+            response.send(resultado);
+          }
+        }).catch(function (erro) {
+          console.log(erro);
+          console.log("\nHouve um erro ao realizar a busca de usuários! Erro: ", erro.sqlMessage);
+          response.status(500).json(erro.sqlMessage);
+        })
+      },1000));
+
+    }
+  }).catch(function (erro) {
+    console.log(erro);
+    console.log("\nHouve um erro ao realizar a busca de usuários! Erro: ", erro.sqlMessage);
+    response.status(500).json(erro.sqlMessage);
+  });
+  
+
+}
+
+function alterarDados(request, response) {
+  let idUsuario = request.body.idUsuario;
+  let nomeUsuario = request.body.nomeUsuario;
+  let emailUsuario = request.body.emailUsuario;
+  
+  usuarioModel.atualizar(idUsuario, nomeUsuario, emailUsuario).then(setTimeout(() =>{
+    usuarioModel.buscarPorIdUsuario(idUsuario).then(function (resultado) {
       console.log(`\nResultados encontrados: ${resultado.length}`);
       console.log(`Resultados: ${JSON.stringify(resultado)}`); // transforma JSON em String
 
       if (resultado.length == 0) {
         response.status(403).send("idUsuario inválido");
-        response.json(resultado[0]);
       } else {
         response.send(resultado);
-        if (resultado[0].senhaUsuario == sha512(senhaUsuario)) {
-          console.log("Senha Correta");
-
-          if (emailUsuario == undefined) {
-            response.status(400).send("Seu email está undefined!");
-          } else if (senhaNova == undefined) {
-            response.status(400).send("Sua senha está indefinida!");
-          } else if (senhaNova == undefined) {
-            response.status(400).send("Seu nome está indefinido!");
-          } else {
-            usuarioModel.atualizar(idUsuario, nomeUsuario, emailUsuario, senhaNova);
-            
-          }
-        }
       }
+    }).catch(function (erro) {
+      console.log(erro);
+      console.log("\nHouve um erro ao realizar a busca de usuários! Erro: ", erro.sqlMessage);
+      response.status(500).json(erro.sqlMessage);
     })
-  }
+  },1000));
 }
 
 
@@ -129,5 +157,6 @@ module.exports = {
   cadastrar,
   entrar,
   listarPorCliente,
-  confirmarSenha,
+  alterarSenha,
+  alterarDados
 }
