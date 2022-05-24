@@ -942,3 +942,13 @@ div.data-table {
   background-position: center center;
   /* background-size: cover; */
 }
+
+.hiddenInput {
+  display: none;
+}
+
+#btnCancelar {
+  background-color: #717171;
+  color: #000000;
+  border: 1px solid black;
+}

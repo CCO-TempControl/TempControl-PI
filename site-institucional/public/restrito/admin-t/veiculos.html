@@ -28,7 +28,7 @@
     </style>
 </head>
 
-<body onload="obterVeiculosCliente()">
+<body onload="obterVeiculosCliente(); modoEdicao(false);">
     <div class="wrapper">
         <div class="sidebar">
             <div class="dropdown">
@@ -85,7 +85,12 @@
                                         Olá meus senhores e minhas senhoras
                                     </p>
                                 </div>
-                                <button onclick="validarCadastroVeiculo()">Cadastrar</button>
+                                <input type="text" id="txtIdVeiculo" class="hiddenInput">
+                                <input type="text" id="txtFkTransportadora" class="hiddenInput">
+                                <button onclick="validarCadastroVeiculo()" id="btnCadastrar">Cadastrar</button>
+                                <button onclick="salvarEdicao()" id="btnSalvar" style="display: none;">Salvar</button>
+                                <button onclick="cancelarEdicao()" id="btnCancelar"
+                                    style="display: none;">Cancelar</button>
                             </div>
 
                             <div class="tabela">
@@ -269,7 +274,125 @@
     }
 
     function editarVeiculo(idVeiculo) {
+        let idVeiculoVar = idVeiculo;
+        //listando os dados do veiculo
+        fetch('/veiculos/listarPorIdVeiculo', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                idVeiculoServer: idVeiculoVar
+            })
+        }).then(function (response) {
+            if (response.ok) {
+                response.json().then(function (respostaBanco) {
+                    let veiculoEncontrado = respostaBanco[0];
+                    document.getElementById('txtIdVeiculo').value = veiculoEncontrado.idVeiculo;
+                    document.getElementById('txtFkTransportadora').value = veiculoEncontrado.fkTransportadora;
+                    document.getElementById('txtPlaca').value = veiculoEncontrado.placa;
+                    document.getElementById('txtModelo').value = veiculoEncontrado.modelo;
+                    document.getElementById('txtAno').value = veiculoEncontrado.ano;
 
+                    modoEdicao(true);
+                })
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erro',
+                    text: 'Houve um erro ao carregar os dados do veículo'
+                })
+                console.error('Nenhum dado encontrado ou erro na API');
+            }
+        })
+    }
+
+    function salvarEdicao() {
+        let idVeiculoVar = document.getElementById('txtIdVeiculo').value;
+        let fkTransportadoraVar = document.getElementById('txtFkTransportadora').value;
+        let modeloVar = document.getElementById('txtModelo').value;
+        let placaVar = document.getElementById('txtPlaca').value;
+        let anoVar = document.getElementById('txtAno').value;
+        fetch('/veiculos/salvarEdicao', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                idVeiculoServer: idVeiculoVar,
+                fkTransportadoraServer: fkTransportadoraVar,
+                modeloServer: modeloVar,
+                placaServer: placaVar,
+                anoServer: anoVar
+            })
+        }).then(function (resposta) {
+            console.log('Resposta: ', resposta);
+
+            if (resposta.ok) {
+                console.log(resposta);
+
+                Swal.fire({
+                    title: 'Sucesso',
+                    text: 'Veículo editado com sucesso',
+                    icon: 'success',
+                    timer: 2000,
+                    timerProgressBar: true,
+                    confirmButtonColor: '#34e269',
+                });
+                modoEdicao(false);
+                obterVeiculosCliente();
+
+            } else {
+                if (resposta.status == 403) {
+                    resposta.text().then(text => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Houve um problema',
+                            text: `Erro: ${text}`
+                        })
+                    })
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Houve um problema',
+                        text: `Houve um erro no processo de salvar os dados do veículo`
+                    })
+                }
+
+            }
+        }).catch(function (erro) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Houve um problema',
+                text: `Erro ao salvar o veículo: ${erro}`
+            })
+        })
+    }
+
+    function cancelarEdicao() {
+        modoEdicao(false);
+    }
+
+    function modoEdicao(estado) {
+        
+        if (estado == true) {
+            window.scrollTo(0, 0);
+            document.getElementById('btnCadastrar').style.display = "none";
+            document.getElementById('btnSalvar').style.display = "block";
+            document.getElementById('btnCancelar').style.display = "block";
+            return;
+        }
+        if (estado == false) {
+            document.getElementById('btnCadastrar').style.display = "block";
+            document.getElementById('btnSalvar').style.display = "none";
+            document.getElementById('btnCancelar').style.display = "none";
+
+            document.getElementById('txtModelo').value = "";
+            document.getElementById('txtPlaca').value = "";
+            document.getElementById('txtAno').value = "";
+            document.getElementById('txtIdVeiculo').value = "";
+            document.getElementById('txtFkTransportadora').value = "";
+        }
     }
 
     function sair() {
