@@ -90,6 +90,25 @@ function solicitar(request, response) {
     }
 }
 
+function obter(request, response) {
+    var idCliente = request.body.idClienteServer;
+
+    if (idCliente == undefined) {
+        response.status(400).send("idCliente está undefined!");
+    } else {
+        entregaModel.obter(idCliente).then(
+            function (resultado) {
+
+                response.json(resultado);
+            }
+        ).catch(function (erro) {
+            console.log(erro);
+            console.log("\nHouve um erro ao realizar o cadastro! Erro: ", erro.sqlMessage);
+            response.status(500).json(erro.sqlMessage);
+        })
+    }
+}
 module.exports = {
-    solicitar
+    solicitar,
+    obter
 }

@@ -638,6 +638,56 @@
             viagem2.style.display = "block";
             viagem1.style.display = "none";
         }
+    }x
+</script>
+
+<script>
+    function obterViagens() {
+        fetch(`/entregas/obter/${usuario.fkCliente}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(function (resposta) {
+            console.log('Resposta: ', resposta);
+
+            if (resposta.ok) {
+                resposta.json().then(json => {
+                    console.log(json);
+
+                    var listaMedicamentos = json;
+
+                    if (listaMedicamentos.length > 0) {
+                        for (let i = 0; i < listaMedicamentos.length; i++) {
+                            var medicamento = listaMedicamentos[i];
+                            renderizarMedicamento(medicamento);
+                        }
+                    }
+                    adicionarBotaoParaAdicionar();
+                });
+
+            } else {
+                Swal.fire({
+                    title: 'Erro',
+                    text: 'Houve um erro ao carregar os medicamentos',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    showDenyButton: true,
+                    denyButtonText: 'OK'
+                });
+            }
+
+        }).catch(function (erro) {
+            Swal.fire({
+                title: 'Erro',
+                text: 'Houve um erro ao carregar os medicamentos',
+                icon: 'error',
+                showConfirmButton: false,
+                showDenyButton: true,
+                denyButtonText: 'OK'
+            });
+            console.log(`ERRO: ${erro}`);
+        });
     }
 </script>
 

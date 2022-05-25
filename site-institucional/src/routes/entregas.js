@@ -7,4 +7,8 @@ router.post('/solicitar', function (request, response) {
   entregaController.solicitar(request, response);
 });
 
+router.get('/obter', function (request, response) {
+  entregaController.obter(request, response);
+});
+
 module.exports = router;
