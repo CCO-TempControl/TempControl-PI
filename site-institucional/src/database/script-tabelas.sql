@@ -176,8 +176,7 @@ CREATE TABLE sensor (
   fkFarmaceutica INT NOT NULL,
   FOREIGN KEY (fkFarmaceutica) REFERENCES cliente (idCliente), 
   
-  idSensor INT NOT NULL,
-  PRIMARY KEY (fkFarmaceutica, idSensor),
+  idSensor INT PRIMARY KEY AUTO_INCREMENT,
   
   fkTransportadora INT NULL,
   FOREIGN KEY (fkTransportadora) REFERENCES cliente (idCliente)
@@ -250,11 +249,11 @@ CREATE TABLE registro (
   idRegistro INT NOT NULL,
   PRIMARY KEY (fkEntrega, idRegistro),
   
-  dht11temperatura DECIMAL(3,1),
-  dht11umidade DECIMAL(3,1),
-  lm35 DECIMAL(3,1),
+  dht11temperatura DECIMAL(4,2),
+  dht11umidade DECIMAL(4,2),
+  lm35 DECIMAL(4,2),
   trc5000 INT,
-  ldr DECIMAL(3,1),
+  ldr DECIMAL(5,2),
   situacaoTemperatura CHAR(1) CHECK(situacaoTemperatura = 'I' OR situacaoTemperatura = 'A' OR situacaoTemperatura = 'C'),
   situacaoUmidade CHAR(1) CHECK(situacaoUmidade = 'I' OR situacaoUmidade = 'A' OR situacaoUmidade = 'C'),
   horario DATETIME NOT NULL
