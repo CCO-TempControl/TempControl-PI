@@ -31,8 +31,9 @@
                 <li><a href="./graficos.html"><i class="fas fa-solid fa-chart-gantt"></i></i>Gráficos/Alertas</a></li>
                 <li><a href="./dadosPessoais.html"><i class="fas fa-solid fa-user"></i></i>Dados Pessoais</a></li>
                 <li><a href="./usuarios.html"><i class="fas fa-solid fa-users"></i>Usuários</a></li>
-                <li><a href="../../index.html" onclick="signOut()"><i class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
-            </ul>            
+                <li><a href="../../index.html" onclick="signOut()"><i
+                            class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
+            </ul>
         </div>
         <div class="main_content">
             <div class="header">
@@ -47,8 +48,6 @@
                 <div id="idOperacao">
                     <div class="viagens">
                         <select id="selectViagem" onchange="troca();">
-                            <option value="1">Viagem 1</option>
-                            <option value="2">Viagem 2</option>
                         </select>
                     </div>
                     <div id="viagem1" class="viagem">
@@ -58,7 +57,7 @@
                                     <h2>Temperatura</h2>
                                 </div>
                                 <div class="card-information">
-                                    <h3>-2/12°C</h3>
+                                    <h3 id="temperatura-viagem">-2/12°C</h3>
                                     <small>Menor/Maior Temperatura Alcançada</small>
                                 </div>
                             </div>
@@ -67,7 +66,7 @@
                                     <h2>Umidade Relativa</h2>
                                 </div>
                                 <div class="card-information">
-                                    <h3>20/80%</h3>
+                                    <h3 id="umidade-viagem">20/80%</h3>
                                     <small>Menor/Maior Umidade Alcançada</small>
                                 </div>
                             </div>
@@ -76,7 +75,7 @@
                                     <h2>Alertas Emitidos</h2>
                                 </div>
                                 <div class="card-information">
-                                    <h3>20</h3>
+                                    <h3 id="alertas-viagem">20</h3>
                                     <small>Na viagem atual 20 alertas emitidos</small>
                                 </div>
                             </div>
@@ -85,53 +84,11 @@
                         <div id="graficos">
                             <div class="chart-container chart" style="position: relative;">
                                 <h1>Temperatura Da Viagem Atual</h1>
-                                <canvas id="myChart7"></canvas>
+                                <canvas id="temperatura-viagem-atual"></canvas>
                             </div>
                             <div class="chart-container chart" style="position: relative;">
                                 <h1>Umidade Da Viagem Atual</h1>
-                                <canvas id="myChart8"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="viagem2" class="viagem"style="display: none;">
-                        <div id="cards-admin-f">
-                            <div class="card-admin-f">
-                                <div class="card-background">
-                                    <h2>Temperatura</h2>
-                                </div>
-                                <div class="card-information">
-                                    <h3>-20/80°C</h3>
-                                    <small>Menor/Maior Temperatura Alcançada</small>
-                                </div>
-                            </div>
-                            <div class="card-admin-f">
-                                <div class="card-background">
-                                    <h2>Umidade Relativa</h2>
-                                </div>
-                                <div class="card-information">
-                                    <h3>70/80%</h3>
-                                    <small>Menor/Maior Umidade Alcançada</small>
-                                </div>
-                            </div>
-                            <div class="card-admin-f">
-                                <div class="card-background">
-                                    <h2>Alertas Emitidos</h2>
-                                </div>
-                                <div class="card-information">
-                                    <h3>350</h3>
-                                    <small>Na viagem atual 350 alertas emitidos</small>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div id="graficos">
-                            <div class="chart-container chart" style="position: relative;">
-                                <h1>Temperatura Da Viagem Atual</h1>
-                                <canvas id="myChart9"></canvas>
-                            </div>
-                            <div class="chart-container chart" style="position: relative;">
-                                <h1>Umidade Da Viagem Atual</h1>
-                                <canvas id="myChart10"></canvas>
+                                <canvas id="umidade-viagem-atual"></canvas>
                             </div>
                         </div>
                     </div>
@@ -227,34 +184,28 @@
                     <div id="graficos">
                         <div class="chart-container chart" style="position: relative;">
                             <h1>Média De Alertas Mensal</h1>
-                            <canvas id="myChart1"></canvas>
+                            <canvas id="media-alertas-mensal"></canvas>
                         </div>
                         <div class="chart-container chart" style="position: relative;">
                             <h1>Média De Alertas Semanal</h1>
-                            <canvas id="myChart2"></canvas>
+                            <canvas id="media-alertas-semanal"></canvas>
                         </div>
                     </div>
 
                     <div id="graficos">
                         <div class="chart-container chart" style="position: relative;">
                             <h1>Média De Alertas Diário</h1>
-                            <canvas id="myChart3"></canvas>
+                            <canvas id="media-alertas-diario"></canvas>
                         </div>
                         <div class="chart-container chart" style="position: relative;">
                             <h1>Média De Alertas Por Hora</h1>
-                            <canvas id="myChart4"></canvas>
+                            <canvas id="media-alertas-hora"></canvas>
                         </div>
                     </div>
                     <div id="graficos">
-                        <div class="chart-container chart" style="position: relative;">
-                            <h1>Relação Alerta/Viagem</h1>
-
-                            <canvas id="myChart6"></canvas>
-
-                        </div>
                         <div class="chart-container chart" style="position: relative;width: 23vw;">
                             <h2>Observação Geral</h2>
-                            <canvas id="myChart5"></canvas>
+                            <canvas id="observacao-geral"></canvas>
                         </div>
 
                     </div>
@@ -265,346 +216,326 @@
 </body>
 
 <script>
-    const labels = [
-        'Abril',
-        'Maio',
-        'Junho',
-        'Julho',
-        'Agosto',
-    ];
+    carregarGraficoOperacao();
+    carregarGraficoEstrategico();
+    function carregarGraficoOperacao() {
+        // Operacional
+        // Label
+        let labelHorario = [
+            '09:00',
+            '10:00',
+            '11:00',
+            '12:00',
+            '13:00',
+            '14:00',
+            '15:00',
+            '16:00',
+            '17:00',
+            '18:00'
+        ];
+        /* Gráfico 1 */
 
-    const data1 = {
-        labels: labels,
-        datasets: [{
-            label: 'Alertas',
-            backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgb(255, 99, 132)',
-            data: [50, 10, 5, 2, 20, 30, 45, 100],
-        }]
-    };
+        let dadosGraficoTempAtual = [1, 2, 2, 4, 2, 6, 7, 5, 5, 5, 8, 0];
+        const dataGraficoTempAtual = {
+            labels: labelHorario,
+            datasets: [{
+                label: 'Alertas',
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                data: dadosGraficoTempAtual,
+            }]
+        };
 
-    const labels2 = [
-        'Segunda',
-        'Terça',
-        'Quarta',
-        'Quinta',
-        'Sexta',
-        'Sábado',
-        'Domingo'
-    ];
-    const labels3 = [
-        '04/05',
-        '06/05',
-        '07/05',
-        '08/05',
-        '09/05',
-        '10/05'
-    ];
-    const labels4 = [
-        '09:00',
-        '10:00',
-        '11:00',
-        '12:00',
-        '13:00',
-        '14:00',
-        '15:00',
-        '16:00',
-        '17:00',
-        '18:00'
-    ];
-
-    const data2 = {
-        labels: labels2,
-        datasets: [{
-            label: 'Alertas',
-            backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgb(255, 99, 132)',
-            data: [10, 15, 5, 25, 20, 30, 45, 100],
-        }]
-    };
-
-    const data3 = {
-        labels: labels3,
-        datasets: [{
-            label: 'Alertas',
-            backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgb(255, 99, 132)',
-            data: [10, 15, 5, 25, 20, 30, 45, 100],
-        }]
-    };
-    const data4 = {
-        labels: labels4,
-        datasets: [{
-            label: 'Alertas',
-            backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgb(255, 99, 132)',
-            data: [5, 15, 5, 25, 20, 30, 45, 5, 1, 50, 100],
-        }]
-    };
-
-    const data5 = {
-        labels: [
-            'Critico',
-            'Média',
-            'Atenção'
-        ],
-        datasets: [{
-            label: labels,
-            data: [10, 70, 20],
-            backgroundColor: [
-                'rgb(255, 99, 132)',
-                'rgb(54, 162, 235)',
-                'rgb(255, 205, 86)'
-            ],
-            hoverOffset: 4
-        }]
-    };
-
-    const data6 = {
-        datasets: [{
-            label: 'Alerta/Tempo',
-            data: [{
-                x: 20,
-                y: 8
-            }, {
-                x: 38,
-                y: 15
-            }, {
-                x: 5,
-                y: 2
-            }, {
-                x: 30,
-                y: 12
-            }, {
-                x: 15,
-                y: 6
-            }, {
-                x: 25,
-                y: 10
-            }, {
-                x: 1,
-                y: 2
-            }, {
-                x: 7,
-                y: 3
-            }],
-            backgroundColor: 'rgb(255, 99, 132)'
-        }],
-    };
-
-    const data7 = {
-        labels: labels4,
-        datasets: [{
-            label: 'Alertas',
-            backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgb(255, 99, 132)',
-            data: [1, 2, 2, 4, 2, 6, 7, 5, 5, 5, 8, 0],
-        }]
-    };
-
-    const data8 = {
-        labels: labels4,
-        datasets: [{
-            label: 'Alertas',
-            backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgb(255, 99, 132)',
-            data: [20, 25, 25, 35, 25, 45, 25, 25, 30, 25, 80],
-        }]
-    };
-
-
-
-
-    const config1 = {
-        type: 'line',
-        data: data1,
-        options: {
-            scales: {
-
-                y: {
-                    title: {
-                        color: '#3C9DCF',
-                        display: true,
-                        text: 'Alertas'
+        const graficoTempAtual = new Chart(
+            document.getElementById('temperatura-viagem-atual'),
+            {
+                type: 'line',
+                data: dataGraficoTempAtual,
+                options: {
+                    scales: {
+                        y: {
+                            title: {
+                                color: '#3C9DCF',
+                                display: true,
+                                text: 'Temperatura °C'
+                            }
+                        },
+                        x: {
+                            title: {
+                                color: '#3C9DCF',
+                                display: true,
+                                text: 'Hora'
+                            }
+                        }
                     }
                 }
             }
-        }
-    };
-    const config2 = {
-        type: 'line',
-        data: data2,
-        options: {
-            scales: {
-
-                y: {
-                    title: {
-                        color: '#3C9DCF',
-                        display: true,
-                        text: 'Alertas'
+        );
+        let dadosGraficoUmiAtual = [20, 25, 25, 35, 25, 45, 25, 25, 30, 25, 80];
+        const dataGraficoUmiAtual = {
+            labels: labelHorario,
+            datasets: [{
+                label: 'Alertas',
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                data: dadosGraficoUmiAtual,
+            }]
+        };
+        /* Gráfico 2 */
+        const graficoUmiAtual = new Chart(
+            document.getElementById('umidade-viagem-atual'),
+            {
+                type: 'line',
+                data: dataGraficoUmiAtual,
+                options: {
+                    scales: {
+                        y: {
+                            title: {
+                                color: '#3C9DCF',
+                                display: true,
+                                text: 'Umidade %'
+                            }
+                        },
+                        x: {
+                            title: {
+                                color: '#3C9DCF',
+                                display: true,
+                                text: 'Hora'
+                            }
+                        }
                     }
                 }
             }
-        }
-    };
-    const config3 = {
-        type: 'line',
-        data: data3,
-        options: {
-            scales: {
+        );
+    }
 
-                y: {
-                    title: {
-                        color: '#3C9DCF',
-                        display: true,
-                        text: 'Alertas'
+    function carregarGraficoEstrategico() {
+        const labelsMeses = [
+            'Abril',
+            'Maio',
+            'Junho',
+            'Julho',
+            'Agosto',
+        ];
+
+        const labelsSemana = [
+            'Segunda',
+            'Terça',
+            'Quarta',
+            'Quinta',
+            'Sexta',
+            'Sábado',
+            'Domingo'
+        ];
+        const labelsDias = [
+            '04/05',
+            '06/05',
+            '07/05',
+            '08/05',
+            '09/05',
+            '10/05'
+        ];
+        const labelsHoras = [
+            '09:00',
+            '10:00',
+            '11:00',
+            '12:00',
+            '13:00',
+            '14:00',
+            '15:00',
+            '16:00',
+            '17:00',
+            '18:00'
+        ];
+
+        // estrategico
+        let dadosAlertaMensal = [50, 10, 5, 2, 20, 30, 45, 100];
+        const dataAlertaMensal = {
+            labels: labelsMeses,
+            datasets: [{
+                label: 'Alertas',
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                data: dadosAlertaMensal,
+            }]
+        };
+        const alertasMensal = new Chart(
+            document.getElementById('media-alertas-mensal'),
+            {
+                type: 'line',
+                data: dataAlertaMensal,
+                options: {
+                    scales: {
+                        y: {
+                            title: {
+                                color: '#3C9DCF',
+                                display: true,
+                                text: 'Alertas'
+                            }
+                        }
                     }
                 }
             }
-        }
-    };
-    const config4 = {
-        type: 'line',
-        data: data4,
-        options: {
-            scales: {
+        );
 
-                y: {
-                    title: {
-                        color: '#3C9DCF',
-                        display: true,
-                        text: 'Alertas'
+        let dadosAlertasSemanal = [10, 15, 5, 25, 20, 30, 45, 100];
+        const dataAlertasSemanal = {
+            labels: labelsSemana,
+            datasets: [{
+                label: 'Alertas',
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                data: dadosAlertasSemanal,
+            }]
+        };
+        const alertasSemanal = new Chart(
+            document.getElementById('media-alertas-semanal'),
+            {
+                type: 'line',
+                data: dataAlertasSemanal,
+                options: {
+                    scales: {
+                        y: {
+                            title: {
+                                color: '#3C9DCF',
+                                display: true,
+                                text: 'Alertas'
+                            }
+                        }
                     }
                 }
             }
-        }
-    };
-    const config5 = {
-        type: 'doughnut',
-        data: data5,
-        options: {}
-    };
-    const config6 = {
-        type: 'scatter',
-        data: data6,
-        options: {
-            scales: {
-                y: {
-                    title: {
-                        color: '#3C9DCF',
-                        display: true,
-                        text: 'Tempo De Viagem Por Horas'
-                    }
-                },
-                x: {
-                    title: {
-                        color: '#3C9DCF',
-                        display: true,
-                        text: 'Quantidade de Alertas'
-                    }
-                }
-            }
-        }
-    };
+        );
 
 
-    const config7 = {
-        type: 'line',
-        data: data7,
-        options: {
-            scales: {
-                y: {
-                    title: {
-                        color: '#3C9DCF',
-                        display: true,
-                        text: 'Temperatura °C'
-                    }
-                },
-                x: {
-                    title: {
-                        color: '#3C9DCF',
-                        display: true,
-                        text: 'Hora'
+        let dadosAlertasDiarios = [10, 15, 5, 25, 20, 30, 45, 100];
+        const dataAlertasDiarios = {
+            labels: labelsDias,
+            datasets: [{
+                label: 'Alertas',
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                data: dadosAlertasDiarios,
+            }]
+        };
+        const alertasDiario = new Chart(
+            document.getElementById('media-alertas-diario'),
+            {
+                type: 'line',
+                data: dataAlertasDiarios,
+                options: {
+                    scales: {
+                        y: {
+                            title: {
+                                color: '#3C9DCF',
+                                display: true,
+                                text: 'Alertas'
+                            }
+                        }
                     }
                 }
             }
-        }
-    };
-    const config8 = {
-        type: 'line',
-        data: data8,
-        options: {
-            scales: {
-                y: {
-                    title: {
-                        color: '#3C9DCF',
-                        display: true,
-                        text: 'Umidade %'
-                    }
-                },
-                x: {
-                    title: {
-                        color: '#3C9DCF',
-                        display: true,
-                        text: 'Hora'
+        );
+
+
+        let dadosAlertasHoras = [5, 15, 5, 25, 20, 30, 45, 5, 1, 50, 100];
+        const dataAlertasHoras = {
+            labels: labelsHoras,
+            datasets: [{
+                label: 'Alertas',
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                data: dadosAlertasHoras,
+            }]
+        };
+        const alertasPHora = new Chart(
+            document.getElementById('media-alertas-hora'),
+            {
+                type: 'line',
+                data: dataAlertasHoras,
+                options: {
+                    scales: {
+                        y: {
+                            title: {
+                                color: '#3C9DCF',
+                                display: true,
+                                text: 'Alertas'
+                            }
+                        }
                     }
                 }
             }
-        }
-    };
-
-    // estrategico
-    const myChart1 = new Chart(
-        document.getElementById('myChart1'),
-        config1
-    );
-    const myChart2 = new Chart(
-        document.getElementById('myChart2'),
-        config2
-    );
-    const myChart3 = new Chart(
-        document.getElementById('myChart3'),
-        config3
-    );
-    const myChart4 = new Chart(
-        document.getElementById('myChart4'),
-        config4
-    );
-    const myChart5 = new Chart(
-        document.getElementById('myChart5'),
-        config5
-    );
-    const myChart6 = new Chart(
-        document.getElementById('myChart6'),
-        config6
-    );
-
-    //operacional
-
-    const myChart7 = new Chart(
-        document.getElementById('myChart7'),
-        config7
-    );
-    const myChart8 = new Chart(
-        document.getElementById('myChart8'),
-        config8
-    );
+        );
 
 
-    const myChart9 = new Chart(
-        document.getElementById('myChart9'),
-        config7
-    );
-    const myChart10 = new Chart(
-        document.getElementById('myChart10'),
-        config8
-    );
-
-
+        let dadosObservacaoGeral = [10, 70, 20]
+        let dataObservacaoGeral = {
+            labels: [
+                    'Critico',
+                    'Média',
+                    'Atenção'
+                ],
+            datasets: [{
+                data: dadosObservacaoGeral,
+                backgroundColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 205, 86)'
+                ],
+                hoverOffset: 4
+            }]
+        };
+        const observacaoGeral = new Chart(
+            document.getElementById('observacao-geral'),
+            {
+                type: 'doughnut',
+                data: dataObservacaoGeral,
+                options: {}
+            }
+        );
+    }
 
 </script>
 
 <script>
+
+    var dadosSession = obterDadosSession();
+    var nome = dadosSession.nomeUsuario;
+    var email = dadosSession.emailUsuario;
+    spanNome.innerHTML = dadosSession.nomeUsuario;
+
+    var viagem = [{
+        id: 1,
+        alertas: 10
+    }, {
+        id: 2,
+        alertas: 30
+    }, {
+        id: 3,
+        alertas: 20
+    }];
+    for (let i = 0; i < viagem.length; i++) {
+        let opt = document.createElement('option');
+        opt.value = viagem[i].id;
+        opt.innerHTML = `Viagem ${i + 1}`;
+        selectViagem.appendChild(opt);
+    }
+
+
+    function troca() {
+        let idViagem = Number(selectViagem.value);
+        let temp = document.getElementById('temperatura-viagem');
+        let umid = document.getElementById('umidade-viagem');
+        let alert = document.getElementById('alertas-viagem');
+        for (let i = 0; i < viagem.length; i++) {
+            if (viagem[i].id == idViagem) {
+                temp.innerHTML = `${-2}/${12}°C`;
+                umid.innerHTML = `${20}/${80}%`;
+                alert.innerHTML = viagem[i].alertas;
+            }
+        }
+    }
+
     function operacao() {
         btnOperacao.classList.add('selected');
         btnEstrategico.classList.remove('selected');
@@ -617,77 +548,6 @@
         btnOperacao.classList.remove('selected');
         idOperacao.style.display = 'none';
         idEstrategico.style.display = 'block';
-    }
-</script>
-
-<script>
-    var dadosSession = obterDadosSession();
-    var nome = dadosSession.nomeUsuario;
-    var email = dadosSession.emailUsuario;
-    spanNome.innerHTML = dadosSession.nomeUsuario;
-</script>
-
-<script>
-    function troca() {
-        viagemVar = selectViagem.value;
-        if (viagemVar == 1) {
-            viagem1.style.display = "block";
-            viagem2.style.display = "none";
-        }
-        else if (viagemVar == 2) {
-            viagem2.style.display = "block";
-            viagem1.style.display = "none";
-        }
-    }x
-</script>
-
-<script>
-    function obterViagens() {
-        fetch(`/entregas/obter/${usuario.fkCliente}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json"
-            }
-        }).then(function (resposta) {
-            console.log('Resposta: ', resposta);
-
-            if (resposta.ok) {
-                resposta.json().then(json => {
-                    console.log(json);
-
-                    var listaMedicamentos = json;
-
-                    if (listaMedicamentos.length > 0) {
-                        for (let i = 0; i < listaMedicamentos.length; i++) {
-                            var medicamento = listaMedicamentos[i];
-                            renderizarMedicamento(medicamento);
-                        }
-                    }
-                    adicionarBotaoParaAdicionar();
-                });
-
-            } else {
-                Swal.fire({
-                    title: 'Erro',
-                    text: 'Houve um erro ao carregar os medicamentos',
-                    icon: 'error',
-                    showConfirmButton: false,
-                    showDenyButton: true,
-                    denyButtonText: 'OK'
-                });
-            }
-
-        }).catch(function (erro) {
-            Swal.fire({
-                title: 'Erro',
-                text: 'Houve um erro ao carregar os medicamentos',
-                icon: 'error',
-                showConfirmButton: false,
-                showDenyButton: true,
-                denyButtonText: 'OK'
-            });
-            console.log(`ERRO: ${erro}`);
-        });
     }
 </script>
 
