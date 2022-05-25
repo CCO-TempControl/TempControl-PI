@@ -7,4 +7,9 @@ router.get('/fabricante/:idFabricante', function (request, response) {
   sensorController.listarPorFarmaceutica(request, response);
 })
 
+router.post('/solicitar', function (request, response) {
+  sensorController.solicitar(request, response);
+})
+
+
 module.exports = router;

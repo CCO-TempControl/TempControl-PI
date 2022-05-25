@@ -3,19 +3,24 @@ var registroModel = require('../models/registroModel');
 function obterDados(request, response) {
     var fkEntrega = request.params.fkEntregaServer;
     var ordenar = request.params.ordenarServer;
-    var limite = request.params.limiteServer;
+    var limite = parseInt(request.params.limiteServer);
 
-    if (limite <= 0 || typeof limite != 'number') { /* Verificar */
+    if (limite <= 0 || isNaN(limite)) {
         limite = 10;
     }
-    if (typeof ordenar != 'boolean') { /* Verificar */
+    if (ordenar != 'false' && ordenar != 'true') {
       ordenar = false;
+    } else {
+      if (ordenar == 'true') {
+        ordenar = true;
+      } else {
+        ordenar = false
+      }
     }
-
-    if (fkEntrega == undefined) {
-      response.status(400).send("Fk da Entrega é indefinido");
+    if (fkEntrega == 'undefined') {
+      response.status(400).send("Fk da Farmacêutica é indefinido");
     }  else {
-      registroModel.obterDados(fkEntrega, limite, ordenar).then(function (resultado) {
+      registroModel.obterDados(fkEntrega, ordenar, limite).then(function (resultado) {
         console.log(`\nResultados encontrados: ${resultado.length}`);
         console.log(`Resultados: ${JSON.stringify(resultado)}`);
   

@@ -13,7 +13,7 @@
     <title>GRÁFICOS/ALERTAS</title>
 </head>
 
-<body onload="setUp('admin-f'), obterDadosGrafico()">
+<body onload="setUp('admin-f')">
     <div class="wrapper">
         <div class="sidebar">
             <div class="dropdown">
@@ -216,9 +216,10 @@
 </body>
 
 <script>
-    carregarGraficoOperacao();
     carregarGraficoEstrategico();
-    function carregarGraficoOperacao() {
+    function plotarGraficoOperacao(resposta) {
+        console.log('iniciando plotagem do gráfico...');
+
         // Operacional
         // Label
         let labelHorario = [
@@ -237,14 +238,21 @@
 
         let dadosGraficoTempAtual = [1, 2, 2, 4, 2, 6, 7, 5, 5, 5, 8, 0];
         const dataGraficoTempAtual = {
-            labels: labelHorario,
+            labels: [],
             datasets: [{
                 label: 'Alertas',
                 backgroundColor: 'rgb(255, 99, 132)',
                 borderColor: 'rgb(255, 99, 132)',
-                data: dadosGraficoTempAtual,
+                data: [],
             }]
         };
+
+        for (i = 0; i < resposta.length; i++) {
+            var registro = resposta[i];
+            dataGraficoTempAtual.labels.push(registro.momento_grafico);
+            dataGraficoTempAtual.datasets[0].data.push(registro.umidade);
+            dataGraficoTempAtual.datasets[1].data.push(registro.temperatura);
+        }
 
         const graficoTempAtual = new Chart(
             document.getElementById('temperatura-viagem-atual'),
@@ -253,6 +261,31 @@
                 data: dataGraficoTempAtual,
                 options: {
                     scales: {
+                        yAxes: [{
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            id: 'y-temperatura',
+                            ticks: {
+                                beginAtZero: true,
+                                max: 100,
+                                min: 0
+                            }
+                        }, {
+                            type: 'linear',
+                            display: false,
+                            position: 'right',
+                            id: 'y-umidade',
+                            ticks: {
+                                beginAtZero: true,
+                                max: 100,
+                                min: 0
+                            },
+
+                            gridLines: {
+                                drawOnChartArea: false,
+                            },
+                        }],
                         y: {
                             title: {
                                 color: '#3C9DCF',
@@ -267,7 +300,11 @@
                                 text: 'Hora'
                             }
                         }
-                    }
+                    },
+                    responsive: true,
+                    animation: { duration: 500 },
+                    hoverMode: 'index',
+                    stacked: false
                 }
             }
         );
@@ -281,7 +318,18 @@
                 data: dadosGraficoUmiAtual,
             }]
         };
-        /* Gráfico 2 */
+
+        function sendData() {
+            var http = new XMLHttpRequest();
+            http.open('POST', 'http://localhost:3000/api/sendData', false);
+            http.send(null);
+        }
+
+        setInterval(() => {
+            sendData();
+        }, 2000);
+
+        /* Gráfico 2 
         const graficoUmiAtual = new Chart(
             document.getElementById('umidade-viagem-atual'),
             {
@@ -306,7 +354,9 @@
                     }
                 }
             }
-        );
+        ); */
+
+        setTimeout(() => atualizarGrafico(dados), 2000);
     }
 
     function carregarGraficoEstrategico() {
@@ -553,24 +603,26 @@
 </script>
 
 <script>
-    function obterDadosGrafico(idFarmaceutica) {
+    let proximaAtualizacao;
+
+    function obterDadosGrafico(ordenar, limite) {
         if (proximaAtualizacao != undefined) {
             clearTimeout(proximaAtualizacao);
         }
-
-        fetch(`/registro/obterDados/${idFarmaceutica}`, {
+        fetch(`/registro/obterDados/${usuario.fkCliente}&${ordenar}&${limite}, `, {
             cache: 'no-store',
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
             }
         }).then(function (response) {
+            console.log(response)
             if (response.ok) {
                 response.json().then(function (resposta) {
                     console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
                     resposta.reverse();
 
-                    plotarGrafico(resposta, idFarmaceutica);
+                    plotarGraficoOperacao(resposta);
                 });
             } else {
                 console.error('Nenhum dado encontrado ou erro na API');
@@ -583,102 +635,19 @@
     }
 
     // só altere aqui se souber o que está fazendo!
-    function plotarGrafico(resposta, idFarmaceutica) {
-        console.log('iniciando plotagem do gráfico...');
-
-        var dados = {
-            labels: [],
-            datasets: [
-                {
-                    yAxisID: 'y-umidade',
-                    label: 'Umidade',
-                    borderColor: '#32B9CD',
-                    backgroundColor: '#32b9cd8f',
-                    fill: true,
-                    data: []
-                },
-                {
-                    yAxisID: 'y-temperatura',
-                    label: 'Temperatura',
-                    borderColor: '#FFF',
-                    backgroundColor: '#32b9cd8f',
-                    fill: true,
-                    data: []
-                }
-            ]
-        };
-
-        for (i = 0; i < resposta.length; i++) {
-            var registro = resposta[i];
-            dados.labels.push(registro.momento_grafico);
-            dados.datasets[0].data.push(registro.umidade);
-            dados.datasets[1].data.push(registro.temperatura);
-        }
-
-        console.log(JSON.stringify(dados));
-
-        var ctx = canvas_grafico.getContext('2d');
-        window.grafico_linha = Chart.Line(ctx, {
-            data: dados,
-            //Configurações do gráfico
-            options: {
-                responsive: true,
-                animation: { duration: 500 },
-                hoverMode: 'index',
-                stacked: false,
-                title: {
-                    display: true,
-                    text: 'Histórico recente de umidade/temperatura'
-                },
-                scales: {
-                    yAxes: [{
-                        type: 'linear',
-                        display: true,
-                        position: 'left',
-                        id: 'y-temperatura',
-                        ticks: {
-                            beginAtZero: true,
-                            max: 100,
-                            min: 0
-                        }
-                    }, {
-                        type: 'linear',
-                        display: false,
-                        position: 'right',
-                        id: 'y-umidade',
-                        ticks: {
-                            beginAtZero: true,
-                            max: 100,
-                            min: 0
-                        },
-
-                        gridLines: {
-                            drawOnChartArea: false,
-                        },
-                    }],
-                }
-            }
-        });
-
-        function sendData() {
-            var http = new XMLHttpRequest();
-            http.open('POST', 'http://localhost:3000/api/sendData', false);
-            http.send(null);
-        }
-
-        setInterval(() => {
-            sendData();
-        }, 2000);
-
-        //Atualiza os dados de 5 em 5 segundos
-        setTimeout(() => atualizarGrafico(idFarmaceutica, dados), 2000);
-    }
 
     // só mexer se quiser alterar o tempo de atualização
     // ou se souber o que está fazendo!
-    function atualizarGrafico(idFarmaceutica, dados) {
-
-        fetch(`/medidas/tempo-real/${idFarmaceutica}`, { cache: 'no-store' }).then(function (response) {
+    function atualizarGrafico(dados) {
+        let ordenar = true;
+        let limite = 1;
+        fetch(`/registro/obterDados/${usuario.fkCliente}&${ordenar}&${limite}`, {
+            cache: 'no-store',
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(function (response) {
             if (response.ok) {
                 response.json().then(function (novoRegistro) {
 
@@ -695,11 +664,11 @@
 
                     window.grafico_linha.update();
 
-                    proximaAtualizacao = setTimeout(() => atualizarGrafico(idFarmaceutica, dados), 2000);
+                    proximaAtualizacao = setTimeout(() => atualizarGrafico(usuario.fkCliente, dados), 2000);
                 });
             } else {
                 console.error('Nenhum dado encontrado ou erro na API');
-                proximaAtualizacao = setTimeout(() => atualizarGrafico(idFarmaceutica, dados), 2000);
+                proximaAtualizacao = setTimeout(() => atualizarGrafico(usuario.fkCliente, dados), 2000);
             }
         })
             .catch(function (error) {

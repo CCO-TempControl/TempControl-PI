@@ -41,52 +41,10 @@
                 <img src="img/logo_nome_sembg.png">
             </div>
             <div class="info">
-                <!-- <table class="tabela"style="border-collapse: collapse;">
-                        <tr class="tituloTabela">
-                            <th colspan="6">Temperatura</th>
-                        </tr>
-                        <tr class="metricas">
-                            <td class="critico">Crítico</td>
-                            <td class="alerta">Alerta</td>
-                            <td class="ideal">Ideal</td>
-                            <td class="ideal">Ideal</td>
-                            <td class="alerta2">Alerta</td>
-                            <td class="critico">Crítico</td>
-                        </tr>
-                        <tr class="valorMetrica">
-                            <td class="valor"><input type="number" id="tempCritica1"></td>
-                            <td class="valor"><input type="number" id="tempAlerta"></td>
-                            <td class="valor"><input type="number" id="tempIdeal"></td>
-                            <td class="valor"><input type="number" id="tempIdeal2"></td>
-                            <td class="valor"><input type="number" id="tempAlerta2"></td>
-                            <td class="valor"><input type="number" id="tempCritica2"></td>
-                        </tr>
-                    </table>
-                    <br>
-                    <table class="tabela"style="border-collapse: collapse;">
-                        <tr class="tituloTabela">
-                            <th colspan="6">Umidade</th>
-                        </tr>
-                        <tr class="metricas">
-                            <td class="critico">Crítico</td>
-                            <td class="alerta">Alerta</td>
-                            <td class="ideal">Ideal</td>
-                            <td class="ideal">Ideal</td>
-                            <td class="alerta2">Alerta</td>
-                            <td class="critico">Crítico</td>
-                        </tr>
-                        <tr class="valorMetrica">
-                            <td class="valor"></td>
-                            <td class="valor"></td>
-                            <td class="valor"></td>
-                            <td class="valor"></td>
-                            <td class="valor"></td>
-                            <td class="valor"></td>
-                        </tr>
-                    </table> -->
                 <div id="lista-medicamentos-container">
                     <h1>Sensores</h1>
-                    <button onclick="cadastrarMedicamento()">Solicitar Sensor</button>
+                    <input type="number" id="qtd-sensores">
+                    <button onclick="cadastrarSensor()">Solicitar Sensor</button>
                     <div class="lista-dados">
                         <ul id="ulListaMedicamentos" class="ul-lista-dados">
                             <li class="medicamento-container-titulo">
@@ -120,26 +78,12 @@
 
 <script>
     var dadosDaSessao = obterDadosSession();
-    function cadastrarMedicamento() {
-        var nome = nomeMedicamento.value;
-        var validade = validadeMedicamento.value
-        var temperaturaMinima = tempMin.value;
-        var temperaturaMaxima = tempMax.value;
-        var umidadeMinima = umiMin.value;
-        var umidadeMaxima = umiMax.value;
-        console.log({
-            "idCliente": dadosDaSessao.fkCliente,
-            "nome": nome,
-            "validade": validade,
-            "tempMin": temperaturaMinima,
-            "tempMax": temperaturaMaxima,
-            "umiMin": umidadeMinima,
-            "umiMax": umidadeMaxima
-        });
-        if (nome == "" || validade =="" || temperaturaMinima == "" || temperaturaMaxima == "" || umidadeMinima == "" || umidadeMaxima == "") {
+    function cadastrarSensor() {
+        let qtdSensores = document.getElementById('qtd-sensores').value;
+        if (qtdSensores <= 0) {
             Swal.fire({
                 title: 'Erro',
-                text: 'Todos os campos são obrigatórios',
+                text: 'Digite uma quantidade maior do que 0.',
                 icon: 'error',
                 showConfirmButton: false,
                 showDenyButton: true,
@@ -147,106 +91,21 @@
             });
             return;
         }
-        fetch("/medicamentos", {
+
+        fetch("/sensores/solicitar", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                "idCliente": String(dadosDaSessao.fkCliente),
-                "nome": nome,
-                "validade": validade,
-                "tempMin": temperaturaMinima,
-                "tempMax": temperaturaMaxima,
-                "umiMin": umidadeMinima,
-                "umiMax": umidadeMaxima
+                "idCliente": usuario.fkCliente,
+                "quantidadeServer": qtdSensores,
             })
         }).then(function (response) {
             console.log(response);
         });
-        // Faz o insert no banco
-        // if () não der erro ao adicionar
-        medicamentos.innerHTML += `<li class="medicamentoContainer">
-                                <span class="pedidoNum tituloTabelaContainer" id="nomePedido">${nome}</span>
-                                <span class="pedidoTemp tituloTabelaContainer" id="tempMinPedido">${temperaturaMinima}ºC/${temperaturaMaxima}ºC</span>
-                                <span class="pedidoUmi tituloTabelaContainer" id="UmiMinPedido">${umidadeMinima}%/${umidadeMaxima}%</span>
-                            </li>`;
     }
 </script>
-<!-- <script>
-    function cadastrarMedicamento() {
-        new Promise(() => {
-        }).then(function (resposta) {
-            console.log('Resposta: ', resposta);
-
-            if (resposta.ok) {
-                console.log(resposta);
-
-                resposta.json().then(json => {
-                    console.log(json);
-
-                    sessionStorage.USUARIO = JSON.stringify(json);
-                    sessionStorage.ID_CLIENTE = json.fkCliente;
-                    sessionStorage.TIPO_USUARIO = json.tipoUsuario;
-                    sessionStorage.NOME_USUARIO = json.nomeUsuario;
-                    sessionStorage.ID_USUARIO = json.idUsuario;
-
-                    Swal.fire({
-                        title: 'Suceso',
-                        text: 'Login realizado com sucesso',
-                        icon: 'success',
-                        timer: 2000,
-                        timerProgressBar: true,
-                        confirmButtonColor: '#34e269',
-                        willClose: () => {
-                            if (json.tipoUsuario != '' && json.tipoUsuario != undefined) {
-                                window.location.replace(`./restrito/${json.tipoUsuario}/index.html`);
-                            } else {
-                                throw new Error('Tipo de usuário inválido')
-                            }
-                        }
-                    });
-                });
-            } else {
-                if (resposta.status == 403) {
-                    resposta.text().then(text => {
-                        Swal.fire({
-                            title: 'Erro',
-                            text: text,
-                            icon: 'error',
-                            showConfirmButton: false,
-                            showDenyButton: true,
-                            denyButtonText: 'OK'
-                        });
-                    })
-                } else {
-                    Swal.fire({
-                        title: 'Erro',
-                        text: 'Houve um erro ao realizar o login!',
-                        icon: 'error',
-                        showConfirmButton: false,
-                        showDenyButton: true,
-                        denyButtonText: 'OK'
-                    });
-                }
-
-            }
-        }).catch(function (erro) {
-            Swal.fire({
-                title: 'Erro',
-                text: 'Houve um erro ao realizar o login!',
-                icon: 'error',
-                showConfirmButton: false,
-                showDenyButton: true,
-                denyButtonText: 'OK'
-            });
-            console.log(`ERRO: ${erro}`);
-        })
-
-        return false;
-    }
-
-</script> -->
 
 <script>
     var dadosSession = obterDadosSession();
