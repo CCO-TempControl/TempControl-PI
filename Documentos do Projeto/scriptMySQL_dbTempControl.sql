@@ -109,11 +109,7 @@ CREATE TABLE lote (
 
 -- Tabela registro
 CREATE TABLE registro (
-  fkEntrega INT NOT NULL,
-  FOREIGN KEY (fkEntrega) REFERENCES entrega (idEntrega),
-  
-  idRegistro INT NOT NULL,
-  PRIMARY KEY (fkEntrega, idRegistro),
+  idRegistro INT PRIMARY KEY AUTO_INCREMENT,
   
   dht11temperatura DECIMAL(3,1),
   dht11umidade DECIMAL(3,1),
@@ -122,5 +118,8 @@ CREATE TABLE registro (
   ldr DECIMAL(3,1),
   situacaoTemperatura CHAR(1) CHECK(situacaoTemperatura = 'I' OR situacaoTemperatura = 'A' OR situacaoTemperatura = 'C'),
   situacaoUmidade CHAR(1) CHECK(situacaoUmidade = 'I' OR situacaoUmidade = 'A' OR situacaoUmidade = 'C'),
-  horario DATETIME NOT NULL
+  horario DATETIME NOT NULL,
+  fkEntrega INT NOT NULL,
+  FOREIGN KEY (fkEntrega) REFERENCES entrega (idEntrega)
 );
+
