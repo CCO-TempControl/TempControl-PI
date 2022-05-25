@@ -1,10 +1,17 @@
 const serialport = require('serialport');
 const express = require('express');
 const mysql = require('mysql2');
+const sql = require('mssql');
 
 const SERIAL_BAUD_RATE = 9600;
-const SERVIDOR_PORTA = 3000;
-const HABILITAR_OPERACAO_INSERIR = false;
+const SERVIDOR_PORTA = 3300;
+const HABILITAR_OPERACAO_INSERIR = true;
+
+// escolha deixar a linha 'desenvolvimento' descomentada se quiser conectar seu arduino ao banco de dados local, MySQL Workbench
+// const AMBIENTE = 'desenvolvimento';
+
+// escolha deixar a linha 'producao' descomentada se quiser conectar seu arduino ao banco de dados remoto, SQL Server
+const AMBIENTE = 'producao';
 
 const serial = async (
     valoresDht11Umidade,
@@ -13,15 +20,26 @@ const serial = async (
     valoresLm35Temperatura,
     valoresChave
 ) => {
-    const poolBancoDados = mysql.createPool(
-        {
-            host: 'localhost',
-            port: 3306,
-            user: 'root',
-            password: 'urubu100',
-            database: 'metricas'
-        }
-    ).promise();
+    let poolBancoDados = ''
+
+    if (AMBIENTE == 'desenvolvimento') {
+        poolBancoDados = mysql.createPool(
+            {
+                // CREDENCIAIS DO BANCO LOCAL - MYSQL WORKBENCH
+                host: 'localhost',
+                user: 'USUARIO_DO_BANCO_LOCAL',
+                password: 'SENHA_DO_BANCO_LOCAL',
+                database: 'DATABASE_LOCAL'
+            }
+        ).promise();
+    } else if (AMBIENTE == 'producao') {
+
+        console.log('Projeto rodando inserindo dados em nuvem. Configure as credenciais abaixo.')
+
+    } else {
+        throw new Error('Ambiente não configurado. Verifique o arquivo "main.js" e tente novamente.');
+    }
+
 
     const portas = await serialport.SerialPort.list();
     const portaArduino = portas.find((porta) => porta.vendorId == 2341 && porta.productId == 43);
@@ -52,10 +70,39 @@ const serial = async (
         valoresChave.push(chave);
 
         if (HABILITAR_OPERACAO_INSERIR) {
-            await poolBancoDados.execute(
-                'INSERT INTO sensores (dht11_umidade, dht11_temperatura, luminosidade, lm35_temperatura, chave) VALUES (?, ?, ?, ?, ?)',
-                [dht11Umidade, dht11Temperatura, luminosidade, lm35Temperatura, chave]
-            );
+
+            if (AMBIENTE == 'producao') {
+
+                // Este insert irá inserir os dados na tabela "medida" -> altere se necessário
+                // Este insert irá inserir dados de fk_aquario id=1 >> você deve ter o aquario de id 1 cadastrado.
+                sqlquery = `INSERT INTO medida (dht11_umidade, dht11_temperatura, luminosidade, lm35_temperatura, chave, momento, fk_aquario) VALUES (${dht11Umidade}, ${dht11Temperatura}, ${luminosidade}, ${lm35Temperatura}, ${chave}, CURRENT_TIMESTAMP, 1)`;
+
+                // CREDENCIAIS DO BANCO REMOTO - SQL SERVER
+                const connStr = "Server=servidor-acquatec.database.windows.net;Database=bd-acquatec;User Id=usuarioParaAPIArduino_datawriter;Password=#Gf_senhaParaAPI;";
+
+                function inserirComando(conn, sqlquery) {
+                    conn.query(sqlquery);
+                    console.log("valores inseridos no banco: ", dht11Umidade + ", " + dht11Temperatura + ", " + luminosidade + ", " + lm35Temperatura + ", " + chave)
+                }
+
+                sql.connect(connStr)
+                    .then(conn => inserirComando(conn, sqlquery))
+                    .catch(err => console.log("erro! " + err));
+
+            } else if (AMBIENTE == 'desenvolvimento') {
+
+                // Este insert irá inserir os dados na tabela "medida" -> altere se necessário
+                // Este insert irá inserir dados de fk_aquario id=1 >> você deve ter o aquario de id 1 cadastrado.
+                await poolBancoDados.execute(
+                    'INSERT INTO medida (dht11_umidade, dht11_temperatura, luminosidade, lm35_temperatura, chave, momento, fk_aquario) VALUES (?, ?, ?, ?, ?, now(), 1)',
+                    [dht11Umidade, dht11Temperatura, luminosidade, lm35Temperatura, chave]
+                );
+                console.log("valores inseridos no banco: ", dht11Umidade + ", " + dht11Temperatura + ", " + luminosidade + ", " + lm35Temperatura + ", " + chave)
+
+            } else {
+                throw new Error('Ambiente não configurado. Verifique o arquivo "main.js" e tente novamente.');
+            }
+
         }
 
     });
