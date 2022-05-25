@@ -46,7 +46,7 @@
                     <input type="number" id="qtd-sensores">
                     <button onclick="cadastrarSensor()">Solicitar Sensor</button>
                     <div class="lista-dados">
-                        <ul id="ulListaMedicamentos" class="ul-lista-dados">
+                        <ul id="ul-lista-sensor" class="ul-lista-dados">
                             <li class="medicamento-container-titulo">
                                 <span class="titulo-tabela-container">ID</span>
                                 <span class="titulo-tabela-container">Equipamento</span>
@@ -77,40 +77,78 @@
 </body>
 
 <script>
-    var dadosDaSessao = obterDadosSession();
-    function cadastrarSensor() {
-        let qtdSensores = document.getElementById('qtd-sensores').value;
-        if (qtdSensores <= 0) {
+    var dadosSession = obterDadosSession();
+    var fkCliente = dadosSession.fkCliente;
+    var fkAdmin = dadosSession.idUsuario;
+    spanNome.innerHTML = dadosSession.nomeUsuario;
+
+    function renderizarSensor(sensor, i) {
+        let lista = document.getElementById('ul-lista-sensor');
+        let estadoSensor = 'Livre';
+        let nomeTransportadora = '';
+         /**
+         * * Verificar 
+         */
+        if (sensor.fkTransportadora != 'null') {
+            estadoSensor = 'Em uso'
+            nomeTransportadora = `<span class="pedido-umi titulo-tabela-container" id="umiMinPedido">${sensor.nomeCliente}</span>`;
+        }
+        lista.innerHTML += `
+            <li id="liSensor#${sensor.idSensor}" class="medicamento-container">
+                <span class="pedido-num titulo-tabela-container" id="nomePedido">${sensor.idSensor}</span>
+                <span class="pedido-temp titulo-tabela-container" id="tempMinPedido">Sensor ${i}</span>
+                <span class="pedido-umi titulo-tabela-container" id="umiMinPedido">${estadoSensor}</span>
+                ${nomeTransportadora}
+            </li>
+        `;
+    }
+
+    function carregarSensores() {
+        fetch(`/sensores/fabricante/${usuario.fkCliente}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(function (resposta) {
+            console.log('Resposta: ', resposta);
+
+            if (resposta.ok) {
+                resposta.json().then(json => {
+                    console.log(json);
+
+                    var listaSensor = json;
+
+                    if (listaSensor.length > 0) {
+                        for (let i = 0; i < listaSensor.length; i++) {
+                            var sensor = listaSensor[i];
+                            renderizarSensor(sensor, i);
+                        }
+                    }
+                });
+
+            } else {
+                Swal.fire({
+                    title: 'Erro',
+                    text: 'Houve um erro ao carregar os sensores',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    showDenyButton: true,
+                    denyButtonText: 'OK'
+                });
+            }
+
+        }).catch(function (erro) {
             Swal.fire({
                 title: 'Erro',
-                text: 'Digite uma quantidade maior do que 0.',
+                text: 'Houve um erro ao carregar os sensores',
                 icon: 'error',
                 showConfirmButton: false,
                 showDenyButton: true,
                 denyButtonText: 'OK'
             });
-            return;
-        }
-
-        fetch("/sensores/solicitar", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                "idCliente": usuario.fkCliente,
-                "quantidadeServer": qtdSensores,
-            })
-        }).then(function (response) {
-            console.log(response);
+            console.log(`ERRO: ${erro}`);
         });
     }
-</script>
 
-<script>
-    var dadosSession = obterDadosSession();
-    var fkCliente = dadosSession.fkCliente;
-    var fkAdmin = dadosSession.idUsuario;
-    spanNome.innerHTML = dadosSession.nomeUsuario
 </script>
 </html>

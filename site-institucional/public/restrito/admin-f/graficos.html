@@ -554,7 +554,7 @@
     var email = dadosSession.emailUsuario;
     spanNome.innerHTML = dadosSession.nomeUsuario;
 
-    var viagem = [{
+    var viagens = [{
         id: 1,
         alertas: 10
     }, {
@@ -566,7 +566,7 @@
     }];
     for (let i = 0; i < viagem.length; i++) {
         let opt = document.createElement('option');
-        opt.value = viagem[i].id;
+        opt.value = viagens[i].id;
         opt.innerHTML = `Viagem ${i + 1}`;
         selectViagem.appendChild(opt);
     }
@@ -577,13 +577,13 @@
         let temp = document.getElementById('temperatura-viagem');
         let umid = document.getElementById('umidade-viagem');
         let alert = document.getElementById('alertas-viagem');
-        for (let i = 0; i < viagem.length; i++) {
-            if (viagem[i].id == idViagem) {
-                temp.innerHTML = `${-2}/${12}°C`;
-                umid.innerHTML = `${20}/${80}%`;
-                alert.innerHTML = viagem[i].alertas;
-            }
-        }
+        let viagem = viagens.filter((viagem) => {
+            return viagem.id == idViagem;
+        })
+        
+        temp.innerHTML = `${-2}/${12}°C`;
+        umid.innerHTML = `${20}/${80}%`;
+        alert.innerHTML = viagem[0].alertas;
     }
 
     function operacao() {
