@@ -216,10 +216,9 @@
 </body>
 
 <script>
+    var graficos = [];
     carregarGraficoEstrategico();
-    function plotarGraficoOperacao(resposta) {
-        console.log('iniciando plotagem do gráfico...');
-
+    function renderizarGrafico() {
         // Operacional
         // Label
         let labelHorario = [
@@ -246,13 +245,6 @@
                 data: [],
             }]
         };
-
-        for (i = 0; i < resposta.length; i++) {
-            var registro = resposta[i];
-            dataGraficoTempAtual.labels.push(registro.momento_grafico);
-            dataGraficoTempAtual.datasets[0].data.push(registro.umidade);
-            dataGraficoTempAtual.datasets[1].data.push(registro.temperatura);
-        }
 
         const graficoTempAtual = new Chart(
             document.getElementById('temperatura-viagem-atual'),
@@ -308,6 +300,9 @@
                 }
             }
         );
+        graficos.push(graficoTempAtual);
+
+
         let dadosGraficoUmiAtual = [20, 25, 25, 35, 25, 45, 25, 25, 30, 25, 80];
         const dataGraficoUmiAtual = {
             labels: labelHorario,
@@ -319,17 +314,6 @@
             }]
         };
 
-        function sendData() {
-            var http = new XMLHttpRequest();
-            http.open('POST', 'http://localhost:3000/api/sendData', false);
-            http.send(null);
-        }
-
-        setInterval(() => {
-            sendData();
-        }, 2000);
-
-        /* Gráfico 2 
         const graficoUmiAtual = new Chart(
             document.getElementById('umidade-viagem-atual'),
             {
@@ -354,9 +338,13 @@
                     }
                 }
             }
-        ); */
+        );
+        graficos.push(graficoUmiAtual);
 
-        setTimeout(() => atualizarGrafico(dados), 2000);
+        graficos.forEach((grafico) => {
+            obterDadosGrafico(grafico, true, 10)
+        })
+
     }
 
     function carregarGraficoEstrategico() {
@@ -553,7 +541,7 @@
     var nome = dadosSession.nomeUsuario;
     var email = dadosSession.emailUsuario;
     spanNome.innerHTML = dadosSession.nomeUsuario;
-
+    
     var viagens = [{
         id: 1,
         alertas: 10
@@ -580,7 +568,7 @@
         let viagem = viagens.filter((viagem) => {
             return viagem.id == idViagem;
         })
-        
+
         temp.innerHTML = `${-2}/${12}°C`;
         umid.innerHTML = `${20}/${80}%`;
         alert.innerHTML = viagem[0].alertas;
@@ -605,7 +593,7 @@
 <script>
     let proximaAtualizacao;
 
-    function obterDadosGrafico(ordenar, limite) {
+    function obterDadosGrafico(grafico, ordenar, limite) {
         if (proximaAtualizacao != undefined) {
             clearTimeout(proximaAtualizacao);
         }
@@ -622,7 +610,7 @@
                     console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
                     resposta.reverse();
 
-                    plotarGraficoOperacao(resposta);
+                    plotarGraficoOperacao(resposta, grafico.data);
                 });
             } else {
                 console.error('Nenhum dado encontrado ou erro na API');
@@ -634,10 +622,29 @@
 
     }
 
-    // só altere aqui se souber o que está fazendo!
+    function plotarGraficoOperacao(resposta, dados) {
+        console.log('iniciando plotagem do gráfico...');
 
-    // só mexer se quiser alterar o tempo de atualização
-    // ou se souber o que está fazendo!
+        for (i = 0; i < resposta.length; i++) {
+                var registro = resposta[i];
+                dados.labels.push(registro.momento_grafico);
+                dados.datasets[0].data.push(registro.umidade);
+                dados.datasets[1].data.push(registro.temperatura);
+        }
+
+        function sendData() {
+            var http = new XMLHttpRequest();
+            http.open('POST', 'http://localhost:3000/api/sendData', false);
+            http.send(null);
+        }
+
+        setInterval(() => {
+            sendData();
+        }, 2000);
+        
+        setTimeout(() => atualizarGrafico(dados), 2000);
+    }
+
     function atualizarGrafico(dados) {
         let ordenar = true;
         let limite = 1;
@@ -664,11 +671,11 @@
 
                     window.grafico_linha.update();
 
-                    proximaAtualizacao = setTimeout(() => atualizarGrafico(usuario.fkCliente, dados), 2000);
+                    proximaAtualizacao = setTimeout(() => atualizarGrafico(dados), 2000);
                 });
             } else {
                 console.error('Nenhum dado encontrado ou erro na API');
-                proximaAtualizacao = setTimeout(() => atualizarGrafico(usuario.fkCliente, dados), 2000);
+                proximaAtualizacao = setTimeout(() => atualizarGrafico(dados), 2000);
             }
         })
             .catch(function (error) {

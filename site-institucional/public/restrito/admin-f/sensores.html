@@ -82,6 +82,10 @@
     var fkAdmin = dadosSession.idUsuario;
     spanNome.innerHTML = dadosSession.nomeUsuario;
 
+    function cadastrarSensor() {
+        window.location.href = "https://tempcontrol.atlassian.net/servicedesk/customer/portals";
+    }
+
     function renderizarSensor(sensor, i) {
         let lista = document.getElementById('ul-lista-sensor');
         let estadoSensor = 'Livre';
