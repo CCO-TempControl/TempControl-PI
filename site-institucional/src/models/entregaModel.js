@@ -15,7 +15,7 @@ function obter(fkFarmaceutica) {
   console.log("ACESSEI O ENTREGA MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function obter():", fkFarmaceutica);
 
   var instrucao = `
-    Select * from entrega where fkFarmaceutica = '${fkFarmaceutica}'
+    SELECT * FROM entrega;
   `;
 
   console.log("Executando a instrução SQL: \n" + instrucao);
@@ -23,5 +23,6 @@ function obter(fkFarmaceutica) {
 }
 
 module.exports = {
-  cadastrar
+  cadastrar,
+  obter
 }

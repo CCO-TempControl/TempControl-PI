@@ -14,7 +14,7 @@
   <title>ENTREGAS</title>
 </head>
 
-<body onload="setUp('admin-f')">
+<body onload="setUp('admin-f');carregarEntregas()">
   <div class="wrapper">
     <div class="sidebar">
       <div class="dropdown">
@@ -203,10 +203,72 @@
   var dadosSession = obterDadosSession();
   var nome = dadosSession.nomeUsuario;
   var email = dadosSession.emailUsuario;
+  var idCliente = dadosSession.fkCliente;
   spanNome.innerHTML = dadosSession.nomeUsuario;
 
-  spanNome.value = nome;
-  emailInput.value = email;
+
+  var entregas = [];
+
+    function carregarEntregas() {
+        fetch(`/entregas/obter/${idCliente}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(function (resposta) {
+            console.log('Resposta: ', resposta);
+
+            if (resposta.ok) {
+                resposta.json().then(json => {
+                    console.log(json);
+                
+                    entregas = json;
+                    if (entregas.length > 0) {
+                        for (let index = 0; index < entregas.length; index++) {
+                            var entrega = entregas[index];
+                            alert( entrega.idEntrega);
+                            renderizarEntrega(entrega);
+                        }
+                    }
+                });
+
+            } else {
+                Swal.fire({
+                    title: 'Erro',
+                    text: 'Houve um erro ao carregar as entregas',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    showDenyButton: true,
+                    denyButtonText: 'OK'
+                });
+            }
+
+        }).catch(function (erro) {
+            Swal.fire({
+                title: 'Erro',
+                text: 'Houve um erro ao carregar as entregas',
+                icon: 'error',
+                showConfirmButton: false,
+                showDenyButton: true,
+                denyButtonText: 'OK'
+            });
+            console.log(`ERRO: ${erro}`);
+        });
+    }
+
+
+    function renderizarEntrega(entregas) {
+        ulListaEntregas.innerHTML += `
+            <li id="${entregas.idEntrega}" class="medicamento-container">
+                <span class="titulo-tabela-container">${entregas.horaSaida}</span>
+                <span class="titulo-tabela-container">${entregas.horaChegada}</span>
+                <span class="titulo-tabela-container">${entregas.dataEntrega}</span>
+                <span class="titulo-tabela-container">${entregas.aprovada}</span>
+            </li>
+        `;
+    }
+
+         
 </script>
 
 </html>

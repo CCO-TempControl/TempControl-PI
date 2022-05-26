@@ -91,12 +91,12 @@ function solicitar(request, response) {
 }
 
 function obter(request, response) {
-    var idCliente = request.body.idClienteServer;
+    var fkCliente = request.params.fkCliente;
 
-    if (idCliente == undefined) {
-        response.status(400).send("idCliente está undefined!");
+    if (fkCliente == undefined) {
+        response.status(400).send("fkCliente está undefined!");
     } else {
-        entregaModel.obter(idCliente).then(
+        entregaModel.obter(fkCliente).then(
             function (resultado) {
 
                 response.json(resultado);
