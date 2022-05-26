@@ -15,6 +15,8 @@
 //esse comando é importado da biblioteca DHT, aqui ele "inicia" o sensor, apenas o dht
 DHT dht(DHTPIN, DHT11);
 
+const int sensor = 1;
+
 //Função responsável pela inicialização geral da placa
 void setup(){
   pinMode(DHTPIN, INPUT); //pinMode é o comando que inicia a entrada e saida de dados do sensor , entrada = input , saída = output
@@ -26,6 +28,9 @@ void setup(){
 }
 
 void loop(){
+  Serial.print(sensor);
+  Serial.print(";");
+  
   float dht11_umidade = dht.readHumidity();
   float dht11_temperatura = dht.readTemperature();
   Serial.print(dht11_umidade); // Apresenta no monitor serial a umidade capturada pelo DHT11
@@ -55,7 +60,7 @@ void loop(){
   else{
     Serial.print("0");
   }
-  
+
   // é feito a quebra de linha da apresentação dos dados apresentados no monitor serial
   Serial.println("");
   delay(1000); // o comando é executado a cada 1000 milesegundos 

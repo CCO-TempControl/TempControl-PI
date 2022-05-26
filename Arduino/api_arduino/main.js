@@ -8,10 +8,10 @@ const SERVIDOR_PORTA = 3300;
 const HABILITAR_OPERACAO_INSERIR = true;
 
 // escolha deixar a linha 'desenvolvimento' descomentada se quiser conectar seu arduino ao banco de dados local, MySQL Workbench
-// const AMBIENTE = 'desenvolvimento';
+const AMBIENTE = 'desenvolvimento';
 
 // escolha deixar a linha 'producao' descomentada se quiser conectar seu arduino ao banco de dados remoto, SQL Server
-const AMBIENTE = 'producao';
+// const AMBIENTE = 'producao';
 
 const serial = async (
     valoresDht11Umidade,
@@ -27,9 +27,9 @@ const serial = async (
             {
                 // CREDENCIAIS DO BANCO LOCAL - MYSQL WORKBENCH
                 host: 'localhost',
-                user: 'USUARIO_DO_BANCO_LOCAL',
-                password: 'SENHA_DO_BANCO_LOCAL',
-                database: 'DATABASE_LOCAL'
+                user: 'aluno',
+                password: 'sptech',
+                database: 'dbTempControl'
             }
         ).promise();
     } else if (AMBIENTE == 'producao') {
@@ -57,11 +57,12 @@ const serial = async (
     });
     arduino.pipe(new serialport.ReadlineParser({ delimiter: '\r\n' })).on('data', async (data) => {
         const valores = data.split(';');
-        const dht11Umidade = parseFloat(valores[0]);
-        const dht11Temperatura = parseFloat(valores[1]);
-        const luminosidade = parseFloat(valores[2]);
-        const lm35Temperatura = parseFloat(valores[3]);
-        const chave = parseInt(valores[4]);
+        const sensor = parseInt(valores[0]);
+        const dht11Umidade = parseFloat(valores[1]);
+        const dht11Temperatura = parseFloat(valores[2]);
+        const luminosidade = parseFloat(valores[3]);
+        const lm35Temperatura = parseFloat(valores[4]);
+        const chave = parseInt(valores[5]);
 
         valoresDht11Umidade.push(dht11Umidade);
         valoresDht11Temperatura.push(dht11Temperatura);
@@ -90,14 +91,116 @@ const serial = async (
                     .catch(err => console.log("erro! " + err));
 
             } else if (AMBIENTE == 'desenvolvimento') {
+                if (isNaN(sensor)) {
+                    return;
+                }
+
+                var resultado = await poolBancoDados.query(
+                    `
+                        SELECT 
+                            e.idEntrega, 
+                            MAX(m.tempMin) as 'minTemperatura', 
+                            MIN(m.tempMax) as 'maxTemperatura', 
+                            MAX(m.umidMin) as 'minUmidade', 
+                            MIN(m.umidMax) as 'maxUmidade'
+                        FROM entrega e
+                        INNER JOIN lote l ON l.fkEntrega = e.idEntrega
+                        INNER JOIN medicamento m ON m.idMedicamento = l.fkMedicamento
+                        WHERE 
+                            e.fkSensor = ${sensor} 
+                            AND e.horaSaida IS NOT NULL 
+                            AND e.horaChegada IS NULL
+                        GROUP BY e.idEntrega
+                        ORDER BY e.horaSaida DESC
+                        LIMIT 1;
+                    `
+                );
+
+                console.log(resultado);
+
+                var dadosSelect = resultado[0][0];
+
+                console.log(dadosSelect);
+
+                if (Object.values(dadosSelect).length <= 0) {
+                    return;
+                }
+
+                var minTemp = parseFloat(dadosSelect.minTemperatura);
+                var maxTemp = parseFloat(dadosSelect.maxTemperatura);
+
+                var medianaTemp = (minTemp + maxTemp) / 2;
+                var q1Temp = (minTemp + medianaTemp) / 2;
+                var q3Temp = (maxTemp + medianaTemp) / 2;
+
+                var situacaoTemperatura = 'I'
+
+                if (
+                    dht11Temperatura <= minTemp 
+                    || dht11Temperatura >= maxTemp
+                ) {
+                    situacaoTemperatura = 'C';
+
+                } else if (
+                    dht11Temperatura <= q1Temp 
+                    || dht11Temperatura >= q3Temp
+                ) {
+                    situacaoTemperatura = 'A';
+
+                }
+
+                var minUmid = parseFloat(dadosSelect.minUmidade);
+                var maxUmid = parseFloat(dadosSelect.maxUmidade);
+
+                var medianaUmid = (minUmid + maxUmid) / 2;
+                var q1Umid = (minUmid + medianaUmid) / 2;
+                var q3Umid = (maxUmid + medianaUmid) / 2;
+
+                var situacaoUmidade = 'I'
+
+                if (
+                    dht11Umidade <= minUmid 
+                    || dht11Umidade >= maxUmid
+                ) {
+                    situacaoUmidade = 'C';
+
+                } else if (
+                    dht11Umidade <= q1Umid 
+                    || dht11Umidade >= q3Umid
+                ) {
+                    situacaoUmidade = 'A';
+
+                }
+
+                var insert = `
+                    INSERT INTO registro 
+                    (
+                        dht11temperatura, 
+                        dht11umidade, 
+                        ldr, 
+                        lm35, 
+                        trc5000,
+                        situacaoTemperatura
+                        situacaoUmidade,
+                        horario,
+                        fkEntrega
+                    )
+                    VALUES (
+                        ${isNaN(dht11Temperatura) ? null : dht11Temperatura},
+                        ${isNaN(dht11Umidade) ? null : dht11Umidade},
+                        ${isNaN(luminosidade) ? null : luminosidade},
+                        ${isNaN(chave) ? null : chave},
+                        ${isNaN(dht11Temperatura) ? null : `'${situacaoTemperatura}'`},
+                        ${isNaN(dht11Umidade) ? null : `'${situacaoUmidade}'`},
+                        now(),
+                        ${dadosSelect.idEntrega}
+                    )
+                `;
 
                 // Este insert irá inserir os dados na tabela "medida" -> altere se necessário
                 // Este insert irá inserir dados de fk_aquario id=1 >> você deve ter o aquario de id 1 cadastrado.
-                await poolBancoDados.execute(
-                    'INSERT INTO medida (dht11_umidade, dht11_temperatura, luminosidade, lm35_temperatura, chave, momento, fk_aquario) VALUES (?, ?, ?, ?, ?, now(), 1)',
-                    [dht11Umidade, dht11Temperatura, luminosidade, lm35Temperatura, chave]
-                );
-                console.log("valores inseridos no banco: ", dht11Umidade + ", " + dht11Temperatura + ", " + luminosidade + ", " + lm35Temperatura + ", " + chave)
+                await poolBancoDados.execute(insert);
+                console.log("Insert no banco: ", insert);
 
             } else {
                 throw new Error('Ambiente não configurado. Verifique o arquivo "main.js" e tente novamente.');
