@@ -37,11 +37,7 @@ function listarPorCliente(request, response) {
       console.log(`\nResultados encontrados: ${resultado.length}`);
       console.log(`Resultados: ${JSON.stringify(resultado)}`); // transforma JSON em String
 
-      if (resultado.length == 0) {
-        response.status(403).send("idCliente inválido");
-      } else {
-        response.send(resultado);
-      }
+      response.json(resultado);
     }).catch(function (erro) {
       console.log(erro);
       console.log("\nHouve um erro ao realizar a busca de veículos! Erro: ", erro.sqlMessage);

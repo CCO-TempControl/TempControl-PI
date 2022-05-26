@@ -536,7 +536,6 @@
 </script>
 
 <script>
-
     var dadosSession = obterDadosSession();
     var nome = dadosSession.nomeUsuario;
     var email = dadosSession.emailUsuario;
@@ -552,7 +551,7 @@
         id: 3,
         alertas: 20
     }];
-    for (let i = 0; i < viagem.length; i++) {
+    for (let i = 0; i < viagens.length; i++) {
         let opt = document.createElement('option');
         opt.value = viagens[i].id;
         opt.innerHTML = `Viagem ${i + 1}`;

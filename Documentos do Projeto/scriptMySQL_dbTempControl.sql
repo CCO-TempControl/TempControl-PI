@@ -120,9 +120,9 @@ CREATE TABLE registro (
   
   dht11temperatura DECIMAL(5,2),
   dht11umidade DECIMAL(5,2),
-  ldr DECIMAL(5,2),
-  lm35 DECIMAL(5,2),
-  trc5000 INT,
+  ldrluminosidade DECIMAL(6,2),
+  lm35temperatura DECIMAL(5,2),
+  trc5000chave INT,
   
   situacaoTemperatura CHAR(1), 
   CONSTRAINT CK_registro_situacaoTemperatura CHECK(situacaoTemperatura IN ('I','A','C')),
@@ -134,4 +134,3 @@ CREATE TABLE registro (
   fkEntrega INT NOT NULL,
   CONSTRAINT FK_registro_fkEntrega FOREIGN KEY (fkEntrega) REFERENCES entrega (idEntrega)
 );
-

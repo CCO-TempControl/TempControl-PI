@@ -27,8 +27,8 @@ const serial = async (
             {
                 // CREDENCIAIS DO BANCO LOCAL - MYSQL WORKBENCH
                 host: 'localhost',
-                user: 'aluno',
-                password: 'sptech',
+                user: 'root',
+                password: 'docker',
                 database: 'dbTempControl'
             }
         ).promise();
@@ -95,36 +95,15 @@ const serial = async (
                     return;
                 }
 
-                var resultado = await poolBancoDados.query(
-                    `
-                        SELECT 
-                            e.idEntrega, 
-                            MAX(m.tempMin) as 'minTemperatura', 
-                            MIN(m.tempMax) as 'maxTemperatura', 
-                            MAX(m.umidMin) as 'minUmidade', 
-                            MIN(m.umidMax) as 'maxUmidade'
-                        FROM entrega e
-                        INNER JOIN lote l ON l.fkEntrega = e.idEntrega
-                        INNER JOIN medicamento m ON m.idMedicamento = l.fkMedicamento
-                        WHERE 
-                            e.fkSensor = ${sensor} 
-                            AND e.horaSaida IS NOT NULL 
-                            AND e.horaChegada IS NULL
-                        GROUP BY e.idEntrega
-                        ORDER BY e.horaSaida DESC
-                        LIMIT 1;
-                    `
-                );
-
-                console.log(resultado);
+                var resultado = await poolBancoDados.query(`SELECT e.idEntrega, MAX(m.tempMin) as 'minTemperatura', MIN(m.tempMax) as 'maxTemperatura', MAX(m.umidMin) as 'minUmidade', MIN(m.umidMax) as 'maxUmidade' FROM entrega e INNER JOIN lote l ON l.fkEntrega = e.idEntrega INNER JOIN medicamento m ON m.idMedicamento = l.fkMedicamento WHERE e.fkSensor = ${sensor} AND e.horaSaida IS NOT NULL AND e.horaChegada IS NULL GROUP BY e.idEntrega ORDER BY e.horaSaida DESC LIMIT 1;`);
 
                 var dadosSelect = resultado[0][0];
 
-                console.log(dadosSelect);
-
-                if (Object.values(dadosSelect).length <= 0) {
+                if (dadosSelect == undefined) {
                     return;
                 }
+
+                console.log(dadosSelect);
 
                 var minTemp = parseFloat(dadosSelect.minTemperatura);
                 var maxTemp = parseFloat(dadosSelect.maxTemperatura);
@@ -173,28 +152,7 @@ const serial = async (
                 }
 
                 var insert = `
-                    INSERT INTO registro 
-                    (
-                        dht11temperatura, 
-                        dht11umidade, 
-                        ldr, 
-                        lm35, 
-                        trc5000,
-                        situacaoTemperatura
-                        situacaoUmidade,
-                        horario,
-                        fkEntrega
-                    )
-                    VALUES (
-                        ${isNaN(dht11Temperatura) ? null : dht11Temperatura},
-                        ${isNaN(dht11Umidade) ? null : dht11Umidade},
-                        ${isNaN(luminosidade) ? null : luminosidade},
-                        ${isNaN(chave) ? null : chave},
-                        ${isNaN(dht11Temperatura) ? null : `'${situacaoTemperatura}'`},
-                        ${isNaN(dht11Umidade) ? null : `'${situacaoUmidade}'`},
-                        now(),
-                        ${dadosSelect.idEntrega}
-                    )
+                    INSERT INTO registro (dht11temperatura, dht11umidade, ldrluminosidade, lm35temperatura, trc5000chave, situacaoTemperatura, situacaoUmidade, horario, fkEntrega) VALUES (${isNaN(dht11Temperatura) ? null : dht11Temperatura}, ${isNaN(dht11Umidade) ? null : dht11Umidade}, ${isNaN(luminosidade) ? null : luminosidade}, ${isNaN(lm35Temperatura) ? null : lm35Temperatura}, ${isNaN(chave) ? null : chave}, ${isNaN(dht11Temperatura) ? null : `'${situacaoTemperatura}'`}, ${isNaN(dht11Umidade) ? null : `'${situacaoUmidade}'`}, now(), ${dadosSelect.idEntrega});
                 `;
 
                 // Este insert irá inserir os dados na tabela "medida" -> altere se necessário

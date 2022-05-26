@@ -140,18 +140,28 @@
                                         <div>Ações</div>
                                     </li>
                                     `;
-                    veiculosEncontrados.forEach(veiculo => {
 
+                    if (veiculosEncontrados.length == 0) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Aviso',
+                            text: 'Nenhum veículo foi encontrado'
+                        })
+                    }
+
+                    for (var index = 0; index < veiculosEncontrados.length; index++) {
+                        var veiculoAtual = veiculosEncontrados[index];
+                        
                         document.getElementById("lista").innerHTML += `
-                        <li class="tabela-linha">
-                            <div>${veiculo.idVeiculo}</div>
-                            <div>${veiculo.modelo}</div>
-                            <div>${veiculo.placa}</div>
-                            <div>${veiculo.ano}</div>
-                            <div><button onclick="excluirVeiculo(${veiculo.idVeiculo})" class="btnExcluir"></button>|<button onclick="editarVeiculo(${veiculo.idVeiculo})" class="btnEditar"></button></div>
-                        </li>
-                        `;
-                    });
+                            <li class="tabela-linha">
+                                <div>${veiculoAtual.idVeiculo}</div>
+                                <div>${veiculoAtual.modelo}</div>
+                                <div>${veiculoAtual.placa}</div>
+                                <div>${veiculoAtual.ano}</div>
+                                <div><button onclick="excluirVeiculo(${veiculoAtual.idVeiculo})" class="btnExcluir"></button>|<button onclick="editarVeiculo(${veiculoAtual.idVeiculo})" class="btnEditar"></button></div>
+                            </li>
+                        `;                        
+                    }
                 });
             } else {
                 Swal.fire({

@@ -199,7 +199,7 @@
             return;
         }
 
-        fetch("/medicamentos", {
+        fetch("/medicamentos/cadastrar", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -220,12 +220,18 @@
                 response.json().then(json => {
                     console.log(json);
 
-                    medicamentos.push(json);
-                    renderizarMedicamento(json);
+                    medicamentos = json;
+                    ulListaMedicamentos.innerHTML = '';
+                    for (var index = 0; index < medicamentos.length; index++) {
+                        var medicamentoAtual = medicamentos[index];
+
+                        renderizarMedicamento(medicamentoAtual)
+                        
+                    }
 
                     Swal.fire({
                         title: 'Suceso',
-                        text: 'Login realizado com sucesso',
+                        text: 'Medicamento cadastrado com sucesso',
                         icon: 'success',
                         timer: 2000,
                         timerProgressBar: true,

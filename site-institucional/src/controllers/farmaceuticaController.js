@@ -40,8 +40,8 @@ function cadastrar(request, response) {
             response.status(500).json(erro.sqlMessage);
           });
 
-        for (let index = 1; index <= qtdSensor; index++) {
-          sensorModel.inserir(idFarmaceutica, index).catch(function (erro) {
+        for (var index = 1; index <= qtdSensor; index++) {
+          sensorModel.inserir(idFarmaceutica).catch(function (erro) {
             console.log(erro);
             console.log(
                 "\nHouve um erro ao realizar o cadastro! Erro: ",

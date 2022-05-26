@@ -38,25 +38,7 @@ function solicitar(request, response) {
   } else if (qtdSensores <= 0) {
     response.status(400).send("Quantidade de sensor menor que 0");
   } else {
-
-    sensorModel.inserir(idFarmaceutica).then(function (resultado) {
-      console.log(`\nResultados encontrados: ${resultado.length}`);
-      console.log(`Resultados: ${JSON.stringify(resultado)}`);
-
-      console.log(resultado);
-
-      response.json(resultado);
-    }).catch(function (erro) {
-      console.log(erro);
-      console.log(
-        "\nHouve um erro ao realizar o cadastro! Erro: ",
-        erro.sqlMessage
-      );
-
-      response.status(500).json(erro.sqlMessage);
-    });
-
-    for (let i = 0; i <= qtdSensores; i++) {
+    for (let i = 1; i <= qtdSensores; i++) {
       sensorModel.inserir(idFarmaceutica).then(function (resultado) {
         console.log(`\nResultados encontrados: ${resultado.length}`);
         console.log(`Resultados: ${JSON.stringify(resultado)}`);

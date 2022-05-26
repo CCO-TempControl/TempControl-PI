@@ -10,7 +10,6 @@ function solicitar(request, response) {
     var dataEntrega = request.body.dataEntregaServer;
     var idTransportadora = request.body.idTransportadoraServer;
     var idSensor = request.body.idSensorServer;
-    var idCliente = request.body.idClienteServer;
 
     if (origem == undefined) {
         response.status(400).send("Origem está undefined!");
@@ -24,10 +23,8 @@ function solicitar(request, response) {
         response.status(400).send("idTransportadora está undefined!");
     } else if (idSensor == undefined) {
         response.status(400).send("idSensor está undefined!");
-    } else if (idCliente == undefined) {
-        response.status(400).send("idCliente está undefined!");
     } else {
-        entregaModel.cadastrar(dataEntrega, idCliente, idSensor, idTransportadora).then(
+        entregaModel.cadastrar(dataEntrega, idSensor, idTransportadora).then(
             function (resultado) {
                 var idEntrega = resultado.insertId;
 
@@ -73,7 +70,7 @@ function solicitar(request, response) {
                         });
                 }
 
-                sensorModel.atualizar(idCliente, idSensor, idTransportadora)
+                sensorModel.atualizar(idSensor, idTransportadora)
                     .catch(function (erro) {
                         console.log(erro);
                         console.log("\nHouve um erro ao realizar o cadastro! Erro: ", erro.sqlMessage);
