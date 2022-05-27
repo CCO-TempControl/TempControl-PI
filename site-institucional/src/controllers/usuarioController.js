@@ -131,7 +131,7 @@ function alterarDados(request, response) {
 
 
 function listarPorCliente(request, response) {
-  let idCliente = request.body.idClienteServer;
+  let idCliente = request.params.idCliente;
 
   if (idCliente == undefined) {
     response.status(400).send("Seu email está undefined!");

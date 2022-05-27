@@ -11,7 +11,7 @@ router.post('/autenticar', function (request, response) {
   usuarioController.entrar(request, response)
 });
 
-router.post('/listarPorCliente', function (request, response) {
+router.get('/listarPorCliente/:idCliente', function (request, response) {
   usuarioController.listarPorCliente(request, response)
 });
 

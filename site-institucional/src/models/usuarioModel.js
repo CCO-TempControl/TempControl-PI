@@ -69,7 +69,7 @@ function buscarPorIdCliente(idCliente) {
   console.log("ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function buscarPorIdCliente():", idCliente);
 
   var instrucao = `
-    SELECT * FROM usuario WHERE fkCliente = ${idCliente}
+  SELECT u.nomeUsuario,u.emailUsuario,u.tipoUsuario,a.nomeUsuario AS admin FROM usuario AS u LEFT jOIN usuario AS a ON u.fkAdmin = a.idUsuario WHERE u.fkCliente = ${idCliente};
   `;
 
   console.log("Executando a instrução SQL: \n" + instrucao);
