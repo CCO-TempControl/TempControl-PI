@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <div style="display: flex;">
+            <select id="cmbEntrega"></select>
+        </div>
+        <div style="display: flex; justify-content: space-around;">
+            <div id="divTemperatura"></div>
+            <div id="divAlerta"></div>
+            <div id="divUmidade"></div>
+        </div>
+        <div style="display: flex; justify-content: space-around;">
+            <canvas id="chartTemp"></canvas>
+            <canvas id="chartUmid"></canvas>
+        </div>
+        <div style="display: flex; justify-content: space-around;">
+            <div id="divCriticoBaixo"></div>
+            <div id="divAvisoBaixo"></div>
+            <div id="divIdeal"></div>
+            <div id="divAvisoAlto"></div>
+            <div id="divCriticoAlto"></div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    var entregas = []
+
+    function carregarEntregas() {
+        fetch(`/entregas/operacao/${fkCliente}`, {
+            cache: 'no-store',
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(resposta => {
+            console.log('Resposta: ', resposta);
+
+            if (resposta.ok) {
+                resposta.json().then(json => {
+                    console.log(json);
+
+                    entregas = json;
+
+                    if (entregas > 0) {
+                        for (var index = 0; index < entregas.length; index++) {
+                            var entrega = entregas[index];
+                            var ocorrencia = index + 1;
+                            
+                            renderizarOptEntrega(entrega, ocorrencia);
+                        }
+                    }
+                });
+            }
+        })
+    }
+
+    function renderizarOptEntrega(entrega, i) {
+        cmbEntrega.innerHTML += `
+            <option id="optEntrega#${entrega.idEntrega}" value="${entrega.idEntrega}">Entrega ${i}</option>
+        `;
+    }
+</script>

@@ -217,7 +217,9 @@
 
 <script>
     var graficos = [];
+
     carregarGraficoEstrategico();
+    
     function renderizarGrafico() {
         // Operacional
         // Label
@@ -536,25 +538,12 @@
 </script>
 
 <script>
-    var dadosSession = obterDadosSession();
-    var nome = dadosSession.nomeUsuario;
-    var email = dadosSession.emailUsuario;
-    spanNome.innerHTML = dadosSession.nomeUsuario;
-    
-    var viagens = [{
-        id: 1,
-        alertas: 10
-    }, {
-        id: 2,
-        alertas: 30
-    }, {
-        id: 3,
-        alertas: 20
-    }];
+    var viagens = [];
+
     for (let i = 0; i < viagens.length; i++) {
         let opt = document.createElement('option');
         opt.value = viagens[i].id;
-        opt.innerHTML = `Viagem ${i + 1}`;
+        opt.innerHTML = `Entrega ${i + 1}`;
         selectViagem.appendChild(opt);
     }
 

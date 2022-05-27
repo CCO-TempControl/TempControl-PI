@@ -134,3 +134,18 @@ CREATE TABLE registro (
   fkEntrega INT NOT NULL,
   CONSTRAINT FK_registro_fkEntrega FOREIGN KEY (fkEntrega) REFERENCES entrega (idEntrega)
 );
+
+SELECT 
+	e.idEntrega,
+	MIN(dht11temperatura) as 'menorTempAlcancada',
+	MAX(dht11temperatura) as 'maiorTempAlcancada',
+    MIN(dht11umidade) as 'menorUmidAlcancada',
+	MAX(dht11umidade) as 'maiorUmidAlcancada',
+    (
+		SELECT COUNT(situacaoTemperatura) 
+        FROM registro r
+        INNER JOIN entrega e ON e.idEntrega = r.fkEntrega
+        WHERE r.situacaoTemperatura <> 'I' OR r.situacaoUmidade <> 'I'
+	) as 'qtdAlertas',
+    
+FROM registro r;
