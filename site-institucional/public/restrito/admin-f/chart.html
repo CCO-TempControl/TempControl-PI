@@ -13,9 +13,10 @@
   <script src="../../assets/js/validacoes.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/date-fns/1.30.1/date_fns.min.js" integrity="sha512-F+u8eWHrfY8Xw9BLzZ8rG/0wIvs0y+JyRJrXjp3VjtFPylAEEGwKbua5Ip/oiVhaTDaDs4eU2Xtsxjs/9ag2bQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <title>USUÁRIOS</title>
 </head>
-<body onload="carregarEntregas();obterDadosGrafico(1000,true,10);">
+<body onload="carregarEntregas();">
     <div>
         <div style="display: flex;">
             <select id="cmbEntrega"></select>
@@ -39,43 +40,50 @@
     </div>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <script>
-      var dadosSession = obterDadosSession();
-  var nome = dadosSession.nomeUsuario;
-  var email = dadosSession.emailUsuario;
-  var fkCliente = dadosSession.fkCliente;
-  var idAdmin = dadosSession.idUsuario;
-    var entregas = []
+    var dadosSession = obterDadosSession();
+    var nome = dadosSession.nomeUsuario;
+    var email = dadosSession.emailUsuario;
+    var fkCliente = dadosSession.fkCliente;
+    var idAdmin = dadosSession.idUsuario;
+
+    var entregaSolicitada = 0;
+    var obtendoDados = false;
+    var entregas = [];
+    
+    var ctx = chartTemp.getContext('2d');
+    var grafico = new Chart(ctx, {
+        data: {
+            labels: [],
+            datasets: [
+                {
+                    axis: 'y',
+                    yAxisID: 'y-temperatura',
+                    label: 'Temperatura',
+                    borderColor: '#32b9cd8f',
+                    backgroundColor: '#32b9cd8f',
+                    data: []
+                }
+            ]
+        },
+        type: 'line',
+        options: {
+            responsive: true,
+            animation: { duration: 500 },
+            hoverMode: 'index',
+            stacked: false,
+            title: {
+                display: false,
+                text: 'Dados capturados'
+            }
+        }
+    });
+
+    setInterval(() => {
+        if (!obtendoDados && entregaSolicitada > 0) {
+            obterDadosOperacao();
+        }
+    }, 1000);
 
     function carregarEntregas() {
         fetch(`/entregas/obter/${fkCliente}`, {
@@ -94,6 +102,9 @@
                     entregas = json;
 
                     if (entregas.length > 0) {
+                        entregaSolicitada = entregas[0].idEntrega;
+                        cmbEntrega.value = entregaSolicitada;
+
                         for (var index = 0; index < entregas.length; index++) {
                             var entrega = entregas[index];
                             var ocorrencia = index + 1;
@@ -111,148 +122,66 @@
         `;
     }
 
+    function obterDadosOperacao() {
+        obtendoDados = true;
+        obterDadosGraficoOperacao();
+        obterDadosKPIOperacao();
+        setTimeout(() => {
+            obtendoDados = false;
+        }, 250);
+    }
 
-    function obterDadosGrafico(idAquario,ordenar,limite) {
-        fetch(`/registro/obterDados/${idAquario}&${ordenar}&${limite}`, { cache: 'no-store' }).then(function (response) {
+    function obterDadosGraficoOperacao() {
+        fetch(`/registro/obterDados/${entregaSolicitada}&${true}&${10}`, { cache: 'no-store' }).then(function (response) {
             if (response.ok) {
                 response.json().then(function (resposta) {
                     console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
                     resposta.reverse();
 
-                    plotarGrafico(resposta, idAquario);
+                    plotarGrafico(resposta, entregaSolicitada);
                 });
             } else {
                 console.error('Nenhum dado encontrado ou erro na API');
             }
-        })
-            .catch(function (error) {
-                console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
-            });
+        }).catch(function (error) {
+            console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
+        });
     }
 
     // Esta função *plotarGrafico* usa os dados capturados na função anterior para criar o gráfico
     // Configura o gráfico (cores, tipo, etc), materializa-o na página e, 
     // A função *plotarGrafico* também invoca a função *atualizarGrafico*
-    function plotarGrafico(resposta, idAquario) {
+    function plotarGrafico(resposta, idEntrega) {
         console.log('iniciando plotagem do gráfico...');
-
-        var dados = {
-            labels: [],
-            datasets: [
-                {
-                    yAxisID: 'y-temperatura',
-                    label: 'Temperatura',
-                    borderColor: '#FFF',
-                    backgroundColor: '#32b9cd8f',
-                    fill: true,
-                    data: []
-                }
-            ]
-        };
 
         for (i = 0; i < resposta.length; i++) {
             var registro = resposta[i];
-            dados.labels.push(registro.horario);
-            dados.datasets[0].data.push(registro.dht11temperatura);
+
+            var dataFormatada = dateFns.format(registro.horario, 'hh:mm DD/MM/YY');
+            var temperatura = parseFloat(registro.dht11temperatura)
+
+            grafico.data.labels.push(dataFormatada);
+            grafico.data.datasets[0].data.push(temperatura);
         }
+    }
 
-        console.log(JSON.stringify(dados));
-
-        var ctx = chartTemp.getContext('2d');
-        window.grafico_linha = new Chart(ctx, {
-            data: dados,
-            type: 'line',
-            options: {
-                responsive: true,
-                animation: { duration: 500 },
-                hoverMode: 'index',
-                stacked: false,
-                title: {
-                    display: false,
-                    text: 'Dados capturados'
-                },
-
+    function obterDadosKPIOperacao() {
+        fetch(`/entregas/operacao/kpi/${entregaSolicitada}`, {
+            cache: 'no-store',
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
             }
-        });
-        setTimeout(() => atualizarGrafico(idAquario, dados), 2000);
+        }).then(resposta => {
+            console.log('Resposta: ', resposta);
+
+            if (resposta.ok) {
+                resposta.json().then(json => {
+                    console.log("Olha aqui",json);
+                });
+            }
+        }).catch(erro => {
+            console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
+        })
     }
-
-    function atualizarGrafico(idAquario, dados) {
-
-fetch(`/registro/tempo-real/${idAquario}`, { cache: 'no-store' }).then(function (response) {
-    if (response.ok) {
-        response.json().then(function (novoRegistro) {
-
-            console.log(`Dados recebidos: ${JSON.stringify(novoRegistro)}`);
-            console.log(`Dados atuais do gráfico: ${dados}`);
-
-            // tirando e colocando valores no gráfico
-            dados.labels.shift(); // apagar o primeiro
-            dados.labels.push(novoRegistro[0].momento_grafico); // incluir um novo momento
-            
-            dados.datasets[0].data.shift();  // apagar o primeiro de umidade
-            dados.datasets[0].data.push(novoRegistro[0].umidade); // incluir uma nova medida de umidade
-            
-            dados.datasets[1].data.shift();  // apagar o primeiro de temperatura
-            dados.datasets[1].data.push(novoRegistro[0].temperatura); // incluir uma nova medida de temperatura
-
-            window.grafico_linha.update();
-
-            // Altere aqui o valor em ms se quiser que o gráfico atualize mais rápido ou mais devagar
-            proximaAtualizacao = setTimeout(() => atualizarGrafico(idAquario, dados), 2000);
-        });
-    } else {
-        console.error('Nenhum dado encontrado ou erro na API');
-        // Altere aqui o valor em ms se quiser que o gráfico atualize mais rápido ou mais devagar
-        proximaAtualizacao = setTimeout(() => atualizarGrafico(idAquario, dados), 2000);
-    }
-})
-    .catch(function (error) {
-        console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
-    });
-
-}
-    
-/* 
-const selectElement = document.getElementById('cmbEntrega');
-selectElement.addEventListener('click', (event) => {
-const optionValue = cmbEntrega.value;
-alert("sexo");
-renderiza(optionValue);
-alert("sexo");
-}); *//* 
-
-    function renderiza(optionValue) {
-        metrica.innerHTML += `
-        <div id="cards-admin-f">
-                            <div class="card-admin-f">
-                                <div class="card-background">
-                                    <h2>Temperatura</h2>
-                                </div>
-                                <div class="card-information">
-                                    <h3 id="temperatura-viagem">${}</h3>
-                                    <small>Menor/Maior Temperatura Alcançada</small>
-                                </div>
-                            </div>
-                            <div class="card-admin-f">
-                                <div class="card-background">
-                                    <h2>Umidade Relativa</h2>
-                                </div>
-                                <div class="card-information">
-                                    <h3 id="umidade-viagem">20/80%</h3>
-                                    <small>Menor/Maior Umidade Alcançada</small>
-                                </div>
-                            </div>
-                            <div class="card-admin-f">
-                                <div class="card-background">
-                                    <h2>Alertas Emitidos</h2>
-                                </div>
-                                <div class="card-information">
-                                    <h3 id="alertas-viagem">20</h3>
-                                    <small>Na viagem atual 20 alertas emitidos</small>
-                                </div>
-                            </div>
-                        </div>
-        `; */
-
 </script>

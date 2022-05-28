@@ -105,7 +105,43 @@ function obter(request, response) {
         })
     }
 }
+
+function operacaoInicial(request, response) {
+    var fkCliente = request.params.fkCliente;
+
+    if (fkCliente == undefined) {
+        response.status(400).send("fkCliente está undefined!");
+    } else {
+        entregaModel.operacaoInicial(fkCliente).then(result => {
+            response.json(result);
+        }).catch(erro => {
+            console.log(erro);
+            console.log("\nHouve um erro ao realizar o cadastro! Erro: ", erro.sqlMessage);
+            response.status(500).json(erro.sqlMessage);
+        });
+    }
+}
+
+function operacaoKPI(request, response) {
+    var idEntrega = request.params.idEntrega;
+
+    if (idEntrega == undefined){
+        response.status(400).send("idEntrega está undefined!");
+    } else {
+        entregaModel.operacaoKPI(idEntrega).then(result => {
+            console.log("Resultado Aqui",result);
+            response.json(result);
+        }).catch(erro => {
+            console.log(erro);
+            console.log("\nHouve um erro ao realizar o cadastro! Erro: ", erro.sqlMessage);
+            response.status(500).json(erro.sqlMessage);
+        });
+    }
+}
+
 module.exports = {
     solicitar,
-    obter
+    obter,
+    operacaoInicial,
+    operacaoKPI
 }

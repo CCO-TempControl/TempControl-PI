@@ -137,15 +137,21 @@ CREATE TABLE registro (
 
 SELECT 
 	e.idEntrega,
-	MIN(dht11temperatura) as 'menorTempAlcancada',
-	MAX(dht11temperatura) as 'maiorTempAlcancada',
-    MIN(dht11umidade) as 'menorUmidAlcancada',
-	MAX(dht11umidade) as 'maiorUmidAlcancada',
+	MIN(r.dht11temperatura) as 'menorTempAlcancada',
+	MAX(r.dht11temperatura) as 'maiorTempAlcancada',
+    MIN(r.dht11umidade) as 'menorUmidAlcancada',
+	MAX(r.dht11umidade) as 'maiorUmidAlcancada',
     (
-		SELECT COUNT(situacaoTemperatura) 
+		SELECT COUNT(idRegistro) 
         FROM registro r
         INNER JOIN entrega e ON e.idEntrega = r.fkEntrega
         WHERE r.situacaoTemperatura <> 'I' OR r.situacaoUmidade <> 'I'
-	) as 'qtdAlertas',
-    
-FROM registro r;
+	) as 'qtdAlertas'
+FROM registro r
+INNER JOIN entrega e ON r.fkEntrega = e.idEntrega
+INNER JOIN sensor s ON s.fkTransportadora = e.fkTransportadora
+INNER JOIN cliente f ON f.idCliente = s.fkFarmaceutica
+WHERE f.idCliente = 2
+GROUP BY e.idEntrega;
+
+
