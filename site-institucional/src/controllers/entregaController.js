@@ -2,6 +2,7 @@ var entregaModel = require('../models/entregaModel');
 var enderecoModel = require('../models/enderecoModel');
 var loteModel = require('../models/loteModel');
 var sensorModel = require('../models/sensorModel');
+var funcoes = require('../../public/assets/js/funcoes');
 
 function solicitar(request, response) {
     var origem = request.body.origemServer;
@@ -29,13 +30,13 @@ function solicitar(request, response) {
                 var idEntrega = resultado.insertId;
 
                 enderecoModel.inserir(
-                    idEntrega, 
-                    1, 
-                    origem.endereco, 
-                    origem.bairro, 
-                    origem.cidade, 
-                    origem.uf, 
-                    origem.numero, 
+                    idEntrega,
+                    1,
+                    origem.endereco,
+                    origem.bairro,
+                    origem.cidade,
+                    origem.uf,
+                    origem.numero,
                     origem.cep
                 ).catch(function (erro) {
                     console.log(erro);
@@ -44,13 +45,13 @@ function solicitar(request, response) {
                 })
 
                 enderecoModel.inserir(
-                    idEntrega, 
-                    2, 
-                    destino.endereco, 
-                    destino.bairro, 
-                    destino.cidade, 
-                    destino.uf, 
-                    destino.numero, 
+                    idEntrega,
+                    2,
+                    destino.endereco,
+                    destino.bairro,
+                    destino.cidade,
+                    destino.uf,
+                    destino.numero,
                     destino.cep
                 ).catch(function (erro) {
                     console.log(erro);
@@ -60,7 +61,7 @@ function solicitar(request, response) {
 
                 for (var index = 0; index < carregamento.length; index++) {
                     var lote = carregamento[index];
-                    
+
 
                     loteModel.inserir(lote.medicamento.idMedicamento, idEntrega, lote.qtd)
                         .catch(function (erro) {
@@ -125,11 +126,11 @@ function operacaoInicial(request, response) {
 function operacaoKPI(request, response) {
     var idEntrega = request.params.idEntrega;
 
-    if (idEntrega == undefined){
+    if (idEntrega == undefined) {
         response.status(400).send("idEntrega está undefined!");
     } else {
         entregaModel.operacaoKPI(idEntrega).then(result => {
-            console.log("Resultado Aqui",result);
+            console.log("Resultado Aqui", result);
             response.json(result);
         }).catch(erro => {
             console.log(erro);
@@ -139,9 +140,115 @@ function operacaoKPI(request, response) {
     }
 }
 
+function listarSolicitacoesTransportadora(request, response) {
+    var idTransportadora = request.body.idTransportadoraServer;
+    console.log(`idTransportadora: ${idTransportadora}`);
+
+    if (idTransportadora == undefined) {
+        response.status(400).send("idTransportadora está undefined!");
+    } else {
+        entregaModel.listarSolicitacoesTransportadora(idTransportadora).then(function (resultado) {
+            console.log(`\nResultados encontrados: ${resultado.length}`);
+            console.log(`Resultados: ${JSON.stringify(resultado)}`); // transforma JSON em String
+
+            if (resultado.length == 0) {
+                response.status(403).send("idTransportadora inválido");
+            } else {
+                response.send(resultado);
+            }
+        }).catch(function (erro) {
+            console.log(erro);
+            console.log("\nHouve um erro ao realizar a busca das entregas! Erro: ", erro.sqlMessage);
+            response.status(500).json(erro.sqlMessage);
+        });
+    }
+}
+
+function obterDados(request, response) {
+    const idCliente = request.body.idClienteServer;
+    const idEntrega = request.body.idEntregaServer;
+
+    if (idCliente == undefined) {
+        response.status(400).send("idCliente está undefined!");
+    } else if (idEntrega == undefined) {
+        response.status(400).send("idEntrega está undefined!");
+    } else {
+        entregaModel.obterDados(idEntrega, idCliente).then(function (resultado) {
+            console.log(`\nResultados encontrados: ${resultado.length}`);
+            console.log(`Resultados: ${JSON.stringify(resultado)}`); // transforma JSON em String
+
+            if (resultado.length == 0) {
+                response.status(403).send("idEntrega ou idCliente inválido");
+            } else {
+                response.send(resultado);
+            }
+        }).catch(function (erro) {
+            console.log(erro);
+            console.log("\nHouve um erro ao realizar a busca das entregas! Erro: ", erro.sqlMessage);
+            response.status(500).json(erro.sqlMessage);
+        });
+    }
+}
+
+function aprovarEntrega(request, response) {
+    const idCliente = request.body.idClienteServer;
+    const idEntrega = request.body.idEntregaServer;
+
+    if (idCliente == undefined) {
+        response.status(400).send("idCliente está undefined!");
+    } else if (idEntrega == undefined) {
+        response.status(400).send("idEntrega está undefined!");
+    } else {
+        entregaModel.aprovarEntrega(idEntrega, idCliente).then(function (resultado) {
+            console.log(`\nResultados encontrados: ${resultado.length}`);
+            console.log(`Resultados: ${JSON.stringify(resultado)}`); // transforma JSON em String
+
+            if (resultado.length == 0) {
+                response.status(403).send("idEntrega ou idCliente inválido");
+            } else {
+                response.send(resultado);
+            }
+        }).catch(function (erro) {
+            console.log(erro);
+            console.log("\nHouve um erro ao aprovar a entrega! Erro: ", erro.sqlMessage);
+            response.status(500).json(erro.sqlMessage);
+        });
+    }
+}
+
+function negarEntrega(request, response) {
+    const idCliente = request.body.idClienteServer;
+    const idEntrega = request.body.idEntregaServer;
+
+    if (idCliente == undefined) {
+        response.status(400).send("idCliente está undefined!");
+    } else if (idEntrega == undefined) {
+        response.status(400).send("idEntrega está undefined!");
+    } else {
+        entregaModel.negarEntrega(idEntrega, idCliente).then(function (resultado) {
+            console.log(`\nResultados encontrados: ${resultado.length}`);
+            console.log(`Resultados: ${JSON.stringify(resultado)}`); // transforma JSON em String
+
+            if (resultado.length == 0) {
+                response.status(403).send("idEntrega ou idCliente inválido");
+            } else {
+                response.send(resultado);
+            }
+        }).catch(function (erro) {
+            console.log(erro);
+            console.log("\nHouve um erro ao negar a entrega! Erro: ", erro.sqlMessage);
+            response.status(500).json(erro.sqlMessage);
+        });
+    }
+}
+
 module.exports = {
     solicitar,
     obter,
     operacaoInicial,
-    operacaoKPI
+    operacaoKPI,
+    listarSolicitacoesTransportadora,
+    obterDados,
+    aprovarEntrega,
+    negarEntrega
 }

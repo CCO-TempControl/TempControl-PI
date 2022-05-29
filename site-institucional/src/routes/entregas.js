@@ -19,4 +19,20 @@ router.get('/operacao/kpi/:idEntrega', function (request, response) {
   entregaController.operacaoKPI(request, response);
 });
 
+router.post('/listar-solicitacoes-transportadora', function (request, response) {
+  entregaController.listarSolicitacoesTransportadora(request, response);
+});
+
+router.post('/obterDados', function (request, response) {
+  entregaController.obterDados(request, response);
+});
+
+router.post('/aprovarEntrega', function(request, response){
+  entregaController.aprovarEntrega(request, response);
+})
+
+router.post('/negarEntrega', function(request, response){
+  entregaController.negarEntrega(request, response);
+})
+
 module.exports = router;

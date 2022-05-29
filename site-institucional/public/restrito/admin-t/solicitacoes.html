@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/2eecc47c4e.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="style.css">
+    <!-- <link rel="stylesheet" href="../style.css"> -->
+    <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
+    <script src="../../assets/js/funcoes.js"></script>
+    <title>DashBoard</title>
+
+    <style>
+        table,
+        td,
+        th {
+            border: 1px solid;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .cartao{
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body onload="obterSolicitacoes();">
+    <div class="wrapper">
+        <div class="sidebar">
+            <div class="dropdown">
+                <a href="#"><i class="fa-solid fa-circle-user" style="font-size:70px;  color: white;"></i></a>
+                <div class="dropdown-content">
+                    <h4>Olá <span id="spanNome"></span></h4>
+                </div>
+            </div>
+            <ul>
+                <li><a href="./index.html"><i class="fas fa-home"></i>Home</a></li>
+                <li><a href="./solicitacoes.html"><i class="fas fa-solid fa-file-contract"></i>Solicitações</a></li>
+                <li><a href=""><i class="fas fa-regular fa-truck-ramp-box"></i>Entregas</a></li>
+                <li><a href="./veiculos.html"><i class="fas fa-regular fa-truck"></i>Veículos</a></li>
+                <li><a href=""><i class="fas fa-solid fa-pager"></i>Sensores</a></li>
+                <li><a href="./graficos.html"><i class="fas fa-solid fa-chart-gantt"></i></i>Gráficos/Alertas</a></li>
+                <li><a href="./usuarios.html"><i class="fas fa-solid fa-users"></i>Usuários</a></li>
+                <li><a href="../../index.html" onclick="sair()"><i class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
+            </ul>
+
+        </div>
+        <div class="main_content">
+            <div class="header">
+                <!-- <input type="text" placeholder="Pesquise.."> -->
+                <img src="img/logo_nome_sembg.png">
+            </div>
+            <div class="info">
+                <!-- Login -->
+                <div class="banner-form alt-banner sign">
+                    <div class="container">
+                        <div class="cartao">
+                            <div class="tabela tabelaSolicitacoes">
+                                <h1>Solicitações Recebidas</h1>
+                                <ul id="lista">
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    var dadosSession = obterDadosSession();
+    var fkCliente = dadosSession.fkCliente;
+    var fkAdmin = dadosSession.idUsuario;
+    spanNome.innerHTML = dadosSession.nomeUsuario
+
+    function obterSolicitacoes() {
+        const idTransportadoraVar = fkCliente;
+
+        console.log(`idTransportadora: ${idTransportadoraVar}`);
+        fetch(`/entregas/listar-solicitacoes-transportadora`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                idTransportadoraServer: idTransportadoraVar
+            })
+        }).then(function (response) {
+            if (response.ok) {
+                //esvaziando a lista que está sendo exibida
+                let elementosNaLista = document.getElementsByClassName('tabela-linha');
+                for (let index = 0; index < elementosNaLista.length; index++) {
+                    elementosNaLista[index].remove();
+                }
+
+                response.json().then(function (solicitacoesEncontradas) {
+                    document.getElementById("lista").innerHTML = `
+                                    <li class="tabela-cabecalho">
+                                        <div>Farmaceutica</div>
+                                        <div>Trajeto</div>
+                                        <div>Carregamento</div>
+                                        <div>Data de Entrega</div>
+                                    </li>
+                                    `;
+                    for (let index = 0; index < solicitacoesEncontradas.length; index += 2) {
+                        let solicitacao = solicitacoesEncontradas[index];
+
+                        let dataCompleta = solicitacao.dataEntrega.split('-');
+                        let ano = dataCompleta[0];
+                        let mes = dataCompleta[1];
+                        let dia = dataCompleta[2];
+                        let horario = dataCompleta[3];
+                        document.getElementById("lista").innerHTML += `
+                        <li class="tabela-linha" onclick="mostrarEntrega(${solicitacao.idEntrega})">
+                            <div>${solicitacao.nomeCliente}</div>
+                            <div><strong>Origem:</strong> ${solicitacao.endereco}, ${solicitacao.numero} (${solicitacao.cidade} - ${solicitacao.uf})<br>
+                            <strong>Destino:</strong> ${solicitacoesEncontradas[index+1].endereco}, ${solicitacoesEncontradas[index+1].numero} (${solicitacoesEncontradas[index+1].cidade} - ${solicitacoesEncontradas[index+1].uf})</div>
+                            <div>${solicitacao.qtd} X ${solicitacao.nome}</div>
+                            <div>${dia}/${mes}/${ano} às ${horario}</div>
+                        </li>
+                        `;
+                    }
+                    console.log(`Data: ${solicitacoesEncontradas[0].dataEntrega}`);
+                });
+            } else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Vazio',
+                    text: 'Nenhuma solicitação foi encontrada'
+                })
+                console.error('Nenhum dado encontrado ou erro na API');
+            }
+        })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos veículos cadastrados ${error.message}`);
+            });
+    }
+
+    function mostrarEntrega(idEntrega){
+        window.location.href = `entregas.html?idEntrega=${idEntrega}`;
+    }
+
+    function sair() {
+        signOut();
+    }
+
+</script>
+</html>

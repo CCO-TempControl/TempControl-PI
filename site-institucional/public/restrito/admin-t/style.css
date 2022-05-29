@@ -884,7 +884,7 @@ div.data-table {
 }
 
 .tabela .lista li {
-  height: 55px;
+  min-height: 55px;
   width: 100%;
   display: flex;
   align-items: center;
@@ -900,7 +900,8 @@ div.data-table {
 
 .tabela .tabela-linha,
 .tabela .tabela-cabecalho {
-  height: 55px;
+  height: fit-content;
+  min-height: 55px;
   width: 100%;
   display: flex;
   align-items: center;
@@ -914,12 +915,11 @@ div.data-table {
   font-weight: 700;
 }
 
-.tabela .lista div {
-  width: 34%;
-  height: fit-content;
+.tabela #lista div {
+  flex-basis: 100%;
   display: flex;
+  padding: 1%;
   justify-content: center;
-  align-items: center;
 }
 
 .tabela .btnExcluir,
@@ -952,3 +952,15 @@ div.data-table {
   color: #000000;
   border: 1px solid black;
 }
+
+/* Solicitações */
+
+.tabelaSolicitacoes #lista div {
+  flex-direction: column;
+}
+
+.tabelaSolicitacoes .tabela-linha:hover{
+  cursor: pointer;
+}
+
+/* Entregas */

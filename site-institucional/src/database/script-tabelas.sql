@@ -12,44 +12,51 @@ USE dbTempControl;
 CREATE TABLE cliente (
   idCliente INT PRIMARY KEY AUTO_INCREMENT,
   nomeCliente VARCHAR(45) NOT NULL,
-  cnpjCliente CHAR(14) UNIQUE NOT NULL,
+  cnpjCliente CHAR(14) NOT NULL,
   telefoneCliente CHAR(10) NOT NULL,
-  tipoCliente CHAR(1) CHECK(tipoCliente = 'F' OR tipoCliente = 'T')
+  tipoCliente CHAR(1),
+  CONSTRAINT UK_cliente_cnpj UNIQUE (cnpjCliente),
+  CONSTRAINT CK_cliente_tipoCliente CHECK(tipoCliente = 'F' OR tipoCliente = 'T')
 );
 
 -- Tabela usuario
 CREATE TABLE usuario (
   idUsuario INT PRIMARY KEY AUTO_INCREMENT,
   nomeUsuario VARCHAR(45) NOT NULL,
-  emailUsuario VARCHAR(45) UNIQUE NOT NULL,
+  emailUsuario VARCHAR(45) NOT NULL,
   senhaUsuario CHAR(128) NOT NULL,
-  tipoUsuario VARCHAR(13) CHECK(tipoUsuario = 'admin-f' OR tipoUsuario = 'admin-t' OR tipoUsuario = 'laboratorio' OR tipoUsuario = 'logistico' OR tipoUsuario = 'transportador'),
+  tipoUsuario VARCHAR(13), 
+  CONSTRAINT CK_usuario_tipoUsuario CHECK(tipoUsuario IN ('admin-f', 'admin-t', 'laboratorio', 'logistico', 'transportador')),
+  CONSTRAINT UK_usuario_emailUsuario UNIQUE(emailUsuario),
+  
   fkCliente INT NOT NULL,
-  FOREIGN KEY (fkCliente) REFERENCES cliente (idCliente),
+  CONSTRAINT FK_usuario_fkCliente FOREIGN KEY (fkCliente) REFERENCES cliente (idCliente),
+  
   fkAdmin INT NULL,
-  FOREIGN KEY (fkAdmin) REFERENCES usuario (idUsuario)
+  CONSTRAINT FK_usuario_fkAdmin FOREIGN KEY (fkAdmin) REFERENCES usuario (idUsuario)
 ) AUTO_INCREMENT = 10;
 
 -- Tabela veiculo
 CREATE TABLE veiculo (
   idVeiculo INT PRIMARY KEY AUTO_INCREMENT,
   modelo VARCHAR(45) NOT NULL,
-  placa CHAR(8) UNIQUE NOT NULL,
+  placa CHAR(8) NOT NULL,
   ano CHAR(4),
+  CONSTRAINT UK_veiculo_placa UNIQUE(placa),
+  
   fkTransportadora INT NOT NULL,
-  FOREIGN KEY (fkTransportadora) REFERENCES cliente (idCliente)
+  CONSTRAINT FK_veiculo_fkTransportadora FOREIGN KEY (fkTransportadora) REFERENCES cliente (idCliente)
 ) AUTO_INCREMENT = 100;
 
 -- Tabela sensor
 CREATE TABLE sensor (
+  idSensor INT PRIMARY KEY AUTO_INCREMENT,
+
   fkFarmaceutica INT NOT NULL,
-  FOREIGN KEY (fkFarmaceutica) REFERENCES cliente (idCliente), 
-  
-  idSensor INT NOT NULL,
-  PRIMARY KEY (fkFarmaceutica, idSensor),
+  CONSTRAINT FK_sensor_fkFarmaceutica FOREIGN KEY (fkFarmaceutica) REFERENCES cliente (idCliente), 
   
   fkTransportadora INT NULL,
-  FOREIGN KEY (fkTransportadora) REFERENCES cliente (idCliente)
+  CONSTRAINT FK_sensor_fkTransportadora FOREIGN KEY (fkTransportadora) REFERENCES cliente (idCliente)
 );
 
 -- Tabela entrega
@@ -58,33 +65,33 @@ CREATE TABLE entrega (
   horaSaida DATETIME,
   horaChegada DATETIME,
   dataEntrega DATETIME NOT NULL,
-  aprovada CHAR(1) CHECK(aprovada = 'S' or aprovada = 'N' or aprovada = 'P'),
+  aprovada CHAR(1),
+  CONSTRAINT CK_entrega_aprovada CHECK(aprovada = 'S' or aprovada = 'N' or aprovada = 'P'),
   
   fkVeiculo INT NULL,
-  FOREIGN KEY (fkVeiculo) REFERENCES veiculo (idVeiculo),
+  CONSTRAINT FK_entrega_fkVeiculo FOREIGN KEY (fkVeiculo) REFERENCES veiculo (idVeiculo),
   
-  fkFarmaceutica INT NOT NULL,
   fkSensor INT NOT NULL,
-  FOREIGN KEY (fkFarmaceutica, fkSensor) REFERENCES sensor (fkFarmaceutica, idSensor),
+  CONSTRAINT FK_entrega_fkSensor FOREIGN KEY (fkSensor) REFERENCES sensor (idSensor),
   
   fkTransportadora INT NOT NULL,
-  FOREIGN KEY (fkTransportadora) REFERENCES cliente (idCliente)
+  CONSTRAINT FK_entrega_fkTransportadora FOREIGN KEY (fkTransportadora) REFERENCES cliente (idCliente)
 ) AUTO_INCREMENT = 1000;
 
 -- Tabela endereco
 CREATE TABLE endereco (
 	fkEntrega INT,
-    FOREIGN KEY (fkEntrega) REFERENCES entrega (idEntrega),
+    CONSTRAINT FK_endereco_fkEntrega FOREIGN KEY (fkEntrega) REFERENCES entrega (idEntrega),
     
 	idEndereco INT,
 	PRIMARY KEY(fkEntrega, idEndereco),
     
-  endereco VARCHAR(45) NOT NULL,
-  bairro VARCHAR(45) NOT NULL,
-  cidade VARCHAR(45) NOT NULL,
-  uf CHAR(2) NOT NULL,
-  numero INT NOT NULL,
-  cep CHAR(9) NOT NULL
+    endereco VARCHAR(45) NOT NULL,
+    bairro VARCHAR(45) NOT NULL,
+    cidade VARCHAR(45) NOT NULL,
+    uf CHAR(2) NOT NULL,
+    numero INT NOT NULL,
+    cep CHAR(9) NOT NULL
 );
 
 -- Tabela medicamento
@@ -92,41 +99,44 @@ CREATE TABLE medicamento (
   idMedicamento INT PRIMARY KEY AUTO_INCREMENT,
   nome VARCHAR(45) NOT NULL,
   validade INT,
-  tempMin DECIMAL(3,1) NOT NULL,
-  tempMax DECIMAL(3,1) NOT NULL,
-  umidMin DECIMAL(3,1),
-  umidMax DECIMAL(3,1),
+  tempMin DECIMAL(5,2) NOT NULL,
+  tempMax DECIMAL(5,2) NOT NULL,
+  umidMin DECIMAL(5,2) NOT NULL,
+  umidMax DECIMAL(5,2) NOT NULL,
   
   fkFarmaceutica INT NOT NULL,
-  FOREIGN KEY (fkFarmaceutica) REFERENCES cliente (idCliente)
+  CONSTRAINT FK_medicamento_fkFarmaceutica FOREIGN KEY (fkFarmaceutica) REFERENCES cliente (idCliente)
 ) AUTO_INCREMENT = 100;
 
 -- Tabela lote
 CREATE TABLE lote (
   fkMedicamento INT NOT NULL,
-  FOREIGN KEY (fkMedicamento) REFERENCES medicamento (idMedicamento),
+  CONSTRAINT FK_lote_fkMedicamento FOREIGN KEY (fkMedicamento) REFERENCES medicamento (idMedicamento),
   fkEntrega INT NOT NULL,
-  FOREIGN KEY (fkEntrega) REFERENCES entrega (idEntrega),
+  CONSTRAINT FK_lote_fkEntrega FOREIGN KEY (fkEntrega) REFERENCES entrega (idEntrega),
   PRIMARY KEY (fkMedicamento, fkEntrega),
   qtd INT NOT NULL
 );
 
 -- Tabela registro
 CREATE TABLE registro (
+  idRegistro INT PRIMARY KEY AUTO_INCREMENT,
+  
+  dht11temperatura DECIMAL(5,2),
+  dht11umidade DECIMAL(5,2),
+  ldrluminosidade DECIMAL(6,2),
+  lm35temperatura DECIMAL(5,2),
+  trc5000chave INT,
+  
+  situacaoTemperatura CHAR(1), 
+  CONSTRAINT CK_registro_situacaoTemperatura CHECK(situacaoTemperatura IN ('I','A','C')),
+  
+  situacaoUmidade CHAR(1),
+  CONSTRAINT CK_registro_situacaoUmidade CHECK(situacaoUmidade IN ('I','A','C')),
+  
+  horario DATETIME NOT NULL,
   fkEntrega INT NOT NULL,
-  FOREIGN KEY (fkEntrega) REFERENCES entrega (idEntrega),
-  
-  idRegistro INT NOT NULL,
-  PRIMARY KEY (fkEntrega, idRegistro),
-  
-  dht11temperatura DECIMAL(3,1),
-  dht11umidade DECIMAL(3,1),
-  lm35 DECIMAL(3,1),
-  trc5000 INT,
-  ldr DECIMAL(3,1),
-  situacaoTemperatura CHAR(1) CHECK(situacaoTemperatura = 'I' OR situacaoTemperatura = 'A' OR situacaoTemperatura = 'C'),
-  situacaoUmidade CHAR(1) CHECK(situacaoUmidade = 'I' OR situacaoUmidade = 'A' OR situacaoUmidade = 'C'),
-  horario DATETIME NOT NULL
+  CONSTRAINT FK_registro_fkEntrega FOREIGN KEY (fkEntrega) REFERENCES entrega (idEntrega)
 );
 
 
