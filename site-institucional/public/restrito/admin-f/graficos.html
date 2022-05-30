@@ -237,8 +237,8 @@
         ];
         /* Gráfico 1 */
 
-        let dadosGraficoTempAtual = [1, 2, 2, 4, 2, 6, 7, 5, 5, 5, 8, 0];
-        const dataGraficoTempAtual = {
+        let dadosGraficoTempAtual = [];
+        var dataGraficoTempAtual = {
             labels: [],
             datasets: [{
                 label: 'Alertas',
@@ -248,38 +248,13 @@
             }]
         };
 
-        const graficoTempAtual = new Chart(
+        var graficoTempAtual = new Chart(
             document.getElementById('temperatura-viagem-atual'),
             {
                 type: 'line',
                 data: dataGraficoTempAtual,
                 options: {
                     scales: {
-                        yAxes: [{
-                            type: 'linear',
-                            display: true,
-                            position: 'left',
-                            id: 'y-temperatura',
-                            ticks: {
-                                beginAtZero: true,
-                                max: 100,
-                                min: 0
-                            }
-                        }, {
-                            type: 'linear',
-                            display: false,
-                            position: 'right',
-                            id: 'y-umidade',
-                            ticks: {
-                                beginAtZero: true,
-                                max: 100,
-                                min: 0
-                            },
-
-                            gridLines: {
-                                drawOnChartArea: false,
-                            },
-                        }],
                         y: {
                             title: {
                                 color: '#3C9DCF',
@@ -305,18 +280,18 @@
         graficos.push(graficoTempAtual);
 
 
-        let dadosGraficoUmiAtual = [20, 25, 25, 35, 25, 45, 25, 25, 30, 25, 80];
-        const dataGraficoUmiAtual = {
-            labels: labelHorario,
+        let dadosGraficoUmiAtual = [];
+        var dataGraficoUmiAtual = {
+            labels: [],
             datasets: [{
                 label: 'Alertas',
                 backgroundColor: 'rgb(255, 99, 132)',
                 borderColor: 'rgb(255, 99, 132)',
-                data: dadosGraficoUmiAtual,
+                data: [],
             }]
         };
 
-        const graficoUmiAtual = new Chart(
+        var graficoUmiAtual = new Chart(
             document.getElementById('umidade-viagem-atual'),
             {
                 type: 'line',
@@ -344,6 +319,7 @@
         graficos.push(graficoUmiAtual);
 
         graficos.forEach((grafico) => {
+            console.log(grafico.data)
             obterDadosGrafico(grafico, true, 10)
         })
 
@@ -597,8 +573,8 @@
                 response.json().then(function (resposta) {
                     console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
                     resposta.reverse();
-
-                    plotarGraficoOperacao(resposta, grafico.data);
+                    
+                    plotarGraficoOperacao(resposta, grafico.config._config.data, grafico);
                 });
             } else {
                 console.error('Nenhum dado encontrado ou erro na API');
@@ -610,27 +586,24 @@
 
     }
 
-    function plotarGraficoOperacao(resposta, dados) {
+    function plotarGraficoOperacao(resposta, dados, grafico) {
         console.log('iniciando plotagem do gráfico...');
-
+        console.log(dados)
         for (i = 0; i < resposta.length; i++) {
                 var registro = resposta[i];
-                dados.labels.push(registro.momento_grafico);
-                dados.datasets[0].data.push(registro.umidade);
-                dados.datasets[1].data.push(registro.temperatura);
+                dados.labels.push(registro.horario);
+                console.log(dados.datasets[0].data  )
+                dados.datasets[0].data.push(registro.dht11umidade);
+                /* dados.datasets[1].data.push(registro.dht11temperatura); */
         }
+        grafico.update()
 
-        function sendData() {
-            var http = new XMLHttpRequest();
-            http.open('POST', 'http://localhost:3000/api/sendData', false);
-            http.send(null);
-        }
 
         setInterval(() => {
             sendData();
         }, 2000);
         
-        setTimeout(() => atualizarGrafico(dados), 2000);
+       /*  setTimeout(() => atualizarGrafico(dados), 2000); */
     }
 
     function atualizarGrafico(dados) {
