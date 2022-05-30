@@ -13,7 +13,7 @@
     <title>GRÁFICOS/ALERTAS</title>
 </head>
 
-<body onload="setUp('admin-f')">
+<body onload="setUp('admin-f'), carregarEntregas()">
     <div class="wrapper">
         <div class="sidebar">
             <div class="dropdown">
@@ -217,9 +217,14 @@
 
 <script>
     var graficos = [];
-    renderizarGrafico()
+    var proximaAtualizacao;
+
+    var entregaSolicitada = 0;
+    var obtendoDados = false;
+    var entregas = [];
+
     carregarGraficoEstrategico();
-    
+
     function renderizarGrafico() {
         // Operacional
         // Label
@@ -317,11 +322,10 @@
             }
         );
         graficos.push(graficoUmiAtual);
+        for (let i = 0; i < graficos.length; i++) {
+            obterDadosGrafico(graficos[i], true, 10)
 
-        graficos.forEach((grafico) => {
-            console.log(grafico.data)
-            obterDadosGrafico(grafico, true, 10)
-        })
+        }
 
     }
 
@@ -511,19 +515,130 @@
         );
     }
 
+    function obterDadosGrafico(grafico, ordenar, limite) {
+        if (proximaAtualizacao != undefined) {
+            clearTimeout(proximaAtualizacao);
+        }
+        let viagemElement = document.getElementById('selectViagem');
+        console.log(viagemElement.value);
+        let fkEntrega = viagemElement.value;
+        fetch(`/registro/obterDados/${fkEntrega}&${ordenar}&${limite}, `, {
+            cache: 'no-store',
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(function (response) {
+            console.log(response)
+            if (response.ok) {
+                response.json().then(function (resposta) {
+                    console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+                    resposta.reverse();
+                    
+                    plotarGraficoOperacao(resposta, grafico);
+                });
+            } else {
+                console.error('Nenhum dado encontrado ou erro na API');
+            }
+        })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
+            });
+
+    }
+
+    function plotarGraficoOperacao(resposta, grafico) {
+        console.log('iniciando plotagem do gráfico...');
+        console.log(grafico)
+        for (i = 0; i < resposta.length; i++) {
+                var registro = resposta[i];
+                grafico.data.labels.push(new Date(registro.horario).toLocaleTimeString());
+                grafico.data.datasets[0].data.push(registro.dht11umidade);
+                /* grafico.datasets[1].data.push(registro.dht11temperatura); */
+        }
+        grafico.update()
+        
+        setTimeout(() => atualizarGrafico(grafico), 2000);
+    }
+
+    function atualizarGrafico(grafico) {
+        let ordenar = true;
+        let limite = 1;
+        fetch(`/registro/obterDados/${usuario.fkCliente}&${ordenar}&${limite}`, {
+            cache: 'no-store',
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(function (response) {
+            if (response.ok) {
+                response.json().then(function (novoRegistro) {
+
+                    console.log(`Dados recebidos: ${JSON.stringify(novoRegistro)}`);
+                    console.log(`Dados atuais do gráfico: ${grafico}`);
+
+                    // tirando e colocando valores no gráfico
+                    grafico.data.labels.shift(); // apagar o primeiro
+                    grafico.data.labels.push(new Date(novoRegistro[0].horario).toLocaleTimeString()); // incluir um novo momento
+                    grafico.data.datasets[0].data.shift();  // apagar o primeiro de umidade
+                    grafico.data.datasets[0].data.push(novoRegistro[0].dht11umidade); // incluir uma nova medida de umidade
+
+                    grafico.update();
+
+                    proximaAtualizacao = setTimeout(() => atualizarGrafico(grafico), 2000);
+                });
+            } else {
+                console.error('Nenhum dado encontrado ou erro na API');
+                proximaAtualizacao = setTimeout(() => atualizarGrafico(grafico), 2000);
+            }
+        })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
+            });
+
+    }
+
+    function carregarEntregas() {
+        fetch(`/entregas/obter/${usuario.fkCliente}`, {
+            cache: 'no-store',
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(resposta => {
+            console.log('Resposta: ', resposta);
+
+            if (resposta.ok) {
+                resposta.json().then(json => {
+                    console.log(json);
+
+                    entregas = json;
+
+                    if (entregas.length > 0) {
+                        entregaSolicitada = entregas[0].idEntrega;
+                        let viagemElement = document.getElementById('selectViagem');
+                        viagemElement.value = entregaSolicitada;
+
+                        for (var index = 0; index < entregas.length; index++) {
+                            var entrega = entregas[index];
+                            var ocorrencia = index + 1;
+                            renderizarOptEntrega(entrega, ocorrencia);
+                        }
+                        renderizarGrafico();
+                    }
+                });
+            }
+        })
+    }
+
+    function renderizarOptEntrega(entrega, i) {
+        selectViagem.innerHTML += `
+            <option id="optEntrega#${entrega.idEntrega}" value="${entrega.idEntrega}">Entrega ${i}</option>
+        `;
+    }
 </script>
 
 <script>
-    var viagens = [];
-
-    for (let i = 0; i < viagens.length; i++) {
-        let opt = document.createElement('option');
-        opt.value = viagens[i].id;
-        opt.innerHTML = `Entrega ${i + 1}`;
-        selectViagem.appendChild(opt);
-    }
-
-
     function troca() {
         let idViagem = Number(selectViagem.value);
         let temp = document.getElementById('temperatura-viagem');
@@ -536,6 +651,11 @@
         temp.innerHTML = `${-2}/${12}°C`;
         umid.innerHTML = `${20}/${80}%`;
         alert.innerHTML = viagem[0].alertas;
+
+        for (let i = 0; i < graficos.length; i++) {
+            grafico[0].labels = [];
+            grafico[0].data.datasets[0].data = [];
+        }
     }
 
     function operacao() {
@@ -554,92 +674,6 @@
 
 </script>
 
-<script>
-    let proximaAtualizacao;
 
-    function obterDadosGrafico(grafico, ordenar, limite) {
-        if (proximaAtualizacao != undefined) {
-            clearTimeout(proximaAtualizacao);
-        }
-        fetch(`/registro/obterDados/${usuario.fkCliente}&${ordenar}&${limite}, `, {
-            cache: 'no-store',
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json"
-            }
-        }).then(function (response) {
-            console.log(response)
-            if (response.ok) {
-                response.json().then(function (resposta) {
-                    console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
-                    resposta.reverse();
-                    
-                    plotarGraficoOperacao(resposta, grafico.config._config.data, grafico);
-                });
-            } else {
-                console.error('Nenhum dado encontrado ou erro na API');
-            }
-        })
-            .catch(function (error) {
-                console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
-            });
-
-    }
-
-    function plotarGraficoOperacao(resposta, dados, grafico) {
-        console.log('iniciando plotagem do gráfico...');
-        console.log(dados)
-        for (i = 0; i < resposta.length; i++) {
-                var registro = resposta[i];
-                dados.labels.push(new Date(registro.horario).toLocaleTimeString());
-                console.log(dados.datasets[0].data)
-                dados.datasets[0].data.push(registro.dht11umidade);
-                /* dados.datasets[1].data.push(registro.dht11temperatura); */
-        }
-        grafico.update()
-        
-        setTimeout(() => atualizarGrafico(dados), 2000);
-    }
-
-    function atualizarGrafico(dados) {
-        let ordenar = true;
-        let limite = 1;
-        fetch(`/registro/obterDados/${usuario.fkCliente}&${ordenar}&${limite}`, {
-            cache: 'no-store',
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json"
-            }
-        }).then(function (response) {
-            if (response.ok) {
-                response.json().then(function (novoRegistro) {
-
-                    console.log(`Dados recebidos: ${JSON.stringify(novoRegistro)}`);
-                    console.log(`Dados atuais do gráfico: ${dados}`);
-
-                    // tirando e colocando valores no gráfico
-                    dados.labels.shift(); // apagar o primeiro
-                    dados.labels.push(novoRegistro[0].momento_grafico); // incluir um novo momento
-                    dados.datasets[0].data.shift();  // apagar o primeiro de umidade
-                    dados.datasets[0].data.push(novoRegistro[0].umidade); // incluir uma nova medida de umidade
-                    dados.datasets[1].data.shift();  // apagar o primeiro de umidade
-                    dados.datasets[1].data.push(novoRegistro[0].temperatura); // incluir uma nova medida de umidade
-
-                    window.grafico_linha.update();
-
-                    proximaAtualizacao = setTimeout(() => atualizarGrafico(dados), 2000);
-                });
-            } else {
-                console.error('Nenhum dado encontrado ou erro na API');
-                proximaAtualizacao = setTimeout(() => atualizarGrafico(dados), 2000);
-            }
-        })
-            .catch(function (error) {
-                console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
-            });
-
-    }
-
-</script>
 
 </html>
