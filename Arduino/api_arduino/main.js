@@ -92,14 +92,16 @@ const serial = async (
 
             } else if (AMBIENTE == 'desenvolvimento') {
                 if (isNaN(sensor)) {
+                    console.log("Sensor não Encontrado");
                     return;
                 }
-
+                /* A horaChegada na entrega precisa ser nula! */
                 var resultado = await poolBancoDados.query(`SELECT e.idEntrega, MAX(m.tempMin) as 'minTemperatura', MIN(m.tempMax) as 'maxTemperatura', MAX(m.umidMin) as 'minUmidade', MIN(m.umidMax) as 'maxUmidade' FROM entrega e INNER JOIN lote l ON l.fkEntrega = e.idEntrega INNER JOIN medicamento m ON m.idMedicamento = l.fkMedicamento WHERE e.fkSensor = ${sensor} AND e.horaSaida IS NOT NULL AND e.horaChegada IS NULL GROUP BY e.idEntrega ORDER BY e.horaSaida DESC LIMIT 1;`);
-
+                
                 var dadosSelect = resultado[0][0];
-
+                
                 if (dadosSelect == undefined) {
+                    console.log("Problema ao encontrar a entrega");
                     return;
                 }
 
