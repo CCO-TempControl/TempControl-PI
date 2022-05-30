@@ -17,7 +17,7 @@ function obterDados(request, response) {
         ordenar = false
       }
     }
-    if (fkEntrega == 'undefined') {
+    if (fkEntrega == undefined) {
       response.status(400).send("Fk da Farmacêutica é indefinido");
     }  else {
       registroModel.obterDados(fkEntrega, ordenar, limite).then(function (resultado) {
@@ -30,7 +30,36 @@ function obterDados(request, response) {
       }).catch(function (erro) {
         console.log(erro);
         console.log(
-            "\nHouve um erro ao realizar o cadastro! Erro: ",
+            "\nHouve um erro ao obter os dados dos sensores! Erro: ",
+            erro.sqlMessage
+        );
+        
+        response.status(500).json(erro.sqlMessage);
+      });
+    }
+
+}
+
+function obterAlertas(request, response) {
+    var fkEntrega = request.params.fkEntregaServer;
+    var tipoDado = request.params.tipoDadoServer;
+
+    if (fkEntrega == undefined) {
+      response.status(400).send("Fk da Farmacêutica é indefinido");
+    } else if (tipoDado == undefined) {
+      response.status(400).send("Tipo do Dado é indefinido");
+    }  else {
+      registroModel.obterAlertas(fkEntrega, tipoDado).then(function (resultado) {
+        console.log(`\nResultados encontrados: ${resultado.length}`);
+        console.log(`Resultados: ${JSON.stringify(resultado)}`);
+  
+        console.log(resultado);
+  
+        response.json(resultado);
+      }).catch(function (erro) {
+        console.log(erro);
+        console.log(
+            "\nHouve um erro ao obter os dados dos sensores! Erro: ",
             erro.sqlMessage
         );
         
@@ -41,5 +70,6 @@ function obterDados(request, response) {
 }
 
 module.exports = {
-  obterDados
+  obterDados,
+  obterAlertas
 }

@@ -216,16 +216,20 @@
 </body>
 
 <script>
-    var graficos = [];
-    var proximaAtualizacao;
+    var graficos = {
+        'operacional': [],
+        'estrategico': []
+    };
+    var proximaAtualizacao = {
+        'operacional': [],
+        'estrategico': []
+    };
 
     var entregaSolicitada = 0;
     var obtendoDados = false;
     var entregas = [];
 
-    carregarGraficoEstrategico();
-
-    function renderizarGrafico() {
+    function renderizarGraficosOperacionais() {
         // Operacional
         // Label
         let labelHorario = [
@@ -282,7 +286,7 @@
                 }
             }
         );
-        graficos.push(graficoTempAtual);
+        graficos.operacional.push(graficoTempAtual);
 
 
         let dadosGraficoUmiAtual = [];
@@ -321,15 +325,25 @@
                 }
             }
         );
-        graficos.push(graficoUmiAtual);
-        for (let i = 0; i < graficos.length; i++) {
-            obterDadosGrafico(graficos[i], true, 10)
-
-        }
-
+        graficos.operacional.push(graficoUmiAtual);
+        
+        plotarGraficosOperacionais();
     }
-
-    function carregarGraficoEstrategico() {
+    
+    function plotarGraficosOperacionais() {
+        for (let i = 0; i < graficos.operacional.length; i++) {
+            let tipoDado;
+            let tipoGrafico = 'operacional';
+            if (i == 0) {
+                tipoDado = 'dht11temperatura'
+            } else if (i == 1) {
+                tipoDado = 'dht11umidade'
+            }
+            obterDadosGrafico(graficos.operacional[i], true, 10, tipoGrafico, tipoDado);
+        }
+    }
+    
+    function renderizarGraficosEstrategicos() {
         const labelsMeses = [
             'Abril',
             'Maio',
@@ -371,12 +385,12 @@
         // estrategico
         let dadosAlertaMensal = [50, 10, 5, 2, 20, 30, 45, 100];
         const dataAlertaMensal = {
-            labels: labelsMeses,
+            labels: [],
             datasets: [{
                 label: 'Alertas',
                 backgroundColor: 'rgb(255, 99, 132)',
                 borderColor: 'rgb(255, 99, 132)',
-                data: dadosAlertaMensal,
+                data: [],
             }]
         };
         const alertasMensal = new Chart(
@@ -397,6 +411,7 @@
                 }
             }
         );
+        graficos.estrategico.push(alertasMensal);
 
         let dadosAlertasSemanal = [10, 15, 5, 25, 20, 30, 45, 100];
         const dataAlertasSemanal = {
@@ -426,7 +441,7 @@
                 }
             }
         );
-
+        graficos.estrategico.push(alertasSemanal);
 
         let dadosAlertasDiarios = [10, 15, 5, 25, 20, 30, 45, 100];
         const dataAlertasDiarios = {
@@ -456,7 +471,7 @@
                 }
             }
         );
-
+        graficos.estrategico.push(alertasDiario);
 
         let dadosAlertasHoras = [5, 15, 5, 25, 20, 30, 45, 5, 1, 50, 100];
         const dataAlertasHoras = {
@@ -486,6 +501,7 @@
                 }
             }
         );
+        graficos.estrategico.push(alertasPHora);
 
 
         let dadosObservacaoGeral = [10, 70, 20]
@@ -515,14 +531,13 @@
         );
     }
 
-    function obterDadosGrafico(grafico, ordenar, limite) {
+    function obterDadosGrafico(grafico, ordenar, limite, tipoGrafico, tipoDado) {
         if (proximaAtualizacao != undefined) {
             clearTimeout(proximaAtualizacao);
         }
         let viagemElement = document.getElementById('selectViagem');
-        console.log(viagemElement.value);
         let fkEntrega = viagemElement.value;
-        fetch(`/registro/obterDados/${fkEntrega}&${ordenar}&${limite}, `, {
+        fetch(`/registro/obterDados/${fkEntrega}&${ordenar}&${limite}`, {
             cache: 'no-store',
             method: "GET",
             headers: {
@@ -535,7 +550,7 @@
                     console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
                     resposta.reverse();
                     
-                    plotarGraficoOperacao(resposta, grafico);
+                    plotarGrafico(resposta, grafico, tipoGrafico, tipoDado);
                 });
             } else {
                 console.error('Nenhum dado encontrado ou erro na API');
@@ -547,21 +562,20 @@
 
     }
 
-    function plotarGraficoOperacao(resposta, grafico) {
+    function plotarGrafico(resposta, grafico, tipoGrafico, tipoDado) {
         console.log('iniciando plotagem do gráfico...');
-        console.log(grafico)
+        console.log(tipoDado)
         for (i = 0; i < resposta.length; i++) {
                 var registro = resposta[i];
                 grafico.data.labels.push(new Date(registro.horario).toLocaleTimeString());
-                grafico.data.datasets[0].data.push(registro.dht11umidade);
+                grafico.data.datasets[0].data.push(registro[tipoDado]);
                 /* grafico.datasets[1].data.push(registro.dht11temperatura); */
         }
-        grafico.update()
-        
-        setTimeout(() => atualizarGrafico(grafico), 2000);
+        grafico.update();
+        proximaAtualizacao[tipoGrafico].push(setTimeout(() => atualizarGrafico(grafico, tipoGrafico, tipoDado), 2000));
     }
 
-    function atualizarGrafico(grafico) {
+    function atualizarGrafico(grafico, tipoGrafico, tipoDado) {
         let ordenar = true;
         let limite = 1;
         fetch(`/registro/obterDados/${usuario.fkCliente}&${ordenar}&${limite}`, {
@@ -581,15 +595,15 @@
                     grafico.data.labels.shift(); // apagar o primeiro
                     grafico.data.labels.push(new Date(novoRegistro[0].horario).toLocaleTimeString()); // incluir um novo momento
                     grafico.data.datasets[0].data.shift();  // apagar o primeiro de umidade
-                    grafico.data.datasets[0].data.push(novoRegistro[0].dht11umidade); // incluir uma nova medida de umidade
+                    grafico.data.datasets[0].data.push(novoRegistro[0][tipoDado]); // incluir uma nova medida de umidade
 
                     grafico.update();
 
-                    proximaAtualizacao = setTimeout(() => atualizarGrafico(grafico), 2000);
+                    proximaAtualizacao[tipoGrafico].push(setTimeout(() => {atualizarGrafico(grafico, tipoGrafico, tipoDado); proximaAtualizacao[tipoGrafico].shift();}, 2000));
                 });
             } else {
                 console.error('Nenhum dado encontrado ou erro na API');
-                proximaAtualizacao = setTimeout(() => atualizarGrafico(grafico), 2000);
+                proximaAtualizacao[tipoGrafico].push(setTimeout(() => {atualizarGrafico(grafico, tipoGrafico, tipoDado); proximaAtualizacao[tipoGrafico].shift();}, 2000));
             }
         })
             .catch(function (error) {
@@ -624,7 +638,7 @@
                             var ocorrencia = index + 1;
                             renderizarOptEntrega(entrega, ocorrencia);
                         }
-                        renderizarGrafico();
+                        renderizarGraficosOperacionais();
                     }
                 });
             }
@@ -635,6 +649,54 @@
         selectViagem.innerHTML += `
             <option id="optEntrega#${entrega.idEntrega}" value="${entrega.idEntrega}">Entrega ${i}</option>
         `;
+    }
+
+    function obterAlertasGrafico(grafico, tipoGrafico, tipoDado) {
+        if (proximaAtualizacao != undefined) {
+            clearTimeout(proximaAtualizacao);
+        }
+        let viagemElement = document.getElementById('selectViagem');
+        let fkEntrega = viagemElement.value;
+        fetch(`/registro/obterAlertas/${fkEntrega}&${tipoDado}`, {
+            cache: 'no-store',
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(function (response) {
+            console.log(response)
+            if (response.ok) {
+                response.json().then(function (resposta) {
+                    console.log(`Dados recebidos: `, JSON.stringify(resposta));
+                    resposta.reverse();
+                    
+                    plotarGraficoEstrategico(resposta, grafico, tipoGrafico, tipoDado);
+                });
+            } else {
+                console.error('Nenhum dado encontrado ou erro na API');
+            }
+        })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
+            });
+
+    }
+
+    function plotarGraficoEstrategico(resposta, grafico, tipoGrafico, tipoDado) {
+        console.log('iniciando plotagem do gráfico...');
+        console.log(tipoDado)
+        for (i = 0; i < resposta.length; i++) {
+                var registro = resposta[i];
+                if (tipoDado == 'nomeDia') {
+                    grafico.data.labels.push(registro.nomeDia);
+                } else if (tipoDado == 'dia') {
+                    grafico.data.labels.push(`${registro.dia}/${registro.mes}`);
+                } else if (tipoDado == 'mes') {
+                    grafico.data.labels.push(registro.mes);
+                }
+                grafico.data.datasets[0].data.push((registro.quantidadeAlerta / registro.quantidadeRegistro) * 100);
+        }
+        grafico.update();
     }
 </script>
 
@@ -652,10 +714,15 @@
         umid.innerHTML = `${20}/${80}%`;
         alert.innerHTML = viagem[0].alertas;
 
-        for (let i = 0; i < graficos.length; i++) {
-            grafico[0].labels = [];
-            grafico[0].data.datasets[0].data = [];
+        for (let i = 0; i < graficos.operacional.length; i++) {
+            grafico.operacional[i].labels = [];
+            grafico.operacional[i].data.datasets[0].data = [];
         }
+        for (let i = 0; i < proximaAtualizacao.operacional.length; i++) {
+            clearTimeout(proximaAtualizacao.operacional[i]);
+        }
+        proximaAtualizacao.operacional = [];
+        plotarGraficosOperacionais();
     }
 
     function operacao() {
@@ -665,11 +732,32 @@
         idOperacao.style.display = 'block';
     }
 
-    function estrategico() {
+    async function estrategico() {
         btnEstrategico.classList.add('selected');
         btnOperacao.classList.remove('selected');
         idOperacao.style.display = 'none';
         idEstrategico.style.display = 'block';
+        for (let i = 0; i < proximaAtualizacao.operacional.length; i++) {
+            clearTimeout(proximaAtualizacao.operacional[i]);
+        }
+        proximaAtualizacao.operacional = [];
+        renderizarGraficosEstrategicos();
+        
+        let tipoGrafico = 'estrategico';
+        let tipoDado = 'mes';
+        /* for (let i = 0; i < graficos.estrategico.length; i++) {
+            if (i == 0) {
+                tipoDado = 'mes';
+            } else if (i == 1) {
+                tipoDado = 'nomeDia';
+            } else if (i == 2) {
+                tipoDado = 'dia';
+            } else if (i== 3) {
+                tipoDado = 'tempo';
+            }
+            
+        } */
+        await obterAlertasGrafico(graficos.estrategico[0], tipoGrafico, tipoDado)
     }
 
 </script>

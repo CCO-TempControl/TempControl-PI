@@ -18,7 +18,7 @@ function listarPorFarmaceutica(request, response) {
     }).catch(function (erro) {
       console.log(erro);
       console.log(
-        "\nHouve um erro ao realizar o cadastro! Erro: ",
+        "\nHouve um erro ao listar o medicamento! Erro: ",
         erro.sqlMessage
       );
 
@@ -64,7 +64,7 @@ function cadastrarMedicamento(request, response) {
         }).catch(function (erro) {
           console.log(erro);
           console.log(
-            "\nHouve um erro ao realizar o cadastro! Erro: ",
+            "\nHouve um erro ao realizar o cadastro do medicamento! Erro: ",
             erro.sqlMessage
           );
 
@@ -74,7 +74,7 @@ function cadastrarMedicamento(request, response) {
     ).catch(function (erro) {
       console.log(erro);
       console.log(
-        "\nHouve um erro ao realizar o cadastro! Erro: ",
+        "\nHouve um erro ao realizar o cadastro do medicamento! Erro: ",
         erro.sqlMessage
       );
 
@@ -102,7 +102,7 @@ function deletarMedicamento(request, response) {
         }).catch(function (erro) {
           console.log(erro);
           console.log(
-            "\nHouve um erro ao realizar o cadastro! Erro: ",
+            "\nHouve um erro ao deletar o medicamento! Erro: ",
             erro.sqlMessage
           );
 
@@ -112,7 +112,7 @@ function deletarMedicamento(request, response) {
     ).catch(function (erro) {
       console.log(erro);
       console.log(
-        "\nHouve um erro ao realizar o cadastro! Erro: ",
+        "\nHouve um erro ao deletar o medicamento! Erro: ",
         erro.sqlMessage
       );
 
@@ -161,7 +161,7 @@ function editarMedicamento(request, response) {
         }).catch(function (erro) {
           console.log(erro);
           console.log(
-            "\nHouve um erro ao realizar o cadastro! Erro: ",
+            "\nHouve um erro ao editar o medicamento! Erro: ",
             erro.sqlMessage
           );
 
@@ -171,7 +171,7 @@ function editarMedicamento(request, response) {
     ).catch(function (erro) {
       console.log(erro);
       console.log(
-        "\nHouve um erro ao realizar o cadastro! Erro: ",
+        "\nHouve um erro ao editar o medicamento! Erro: ",
         erro.sqlMessage
       );
 
