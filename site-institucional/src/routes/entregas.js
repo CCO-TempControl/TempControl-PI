@@ -11,6 +11,10 @@ router.get('/obter/:fkCliente', function (request, response) {
   entregaController.obter(request, response);
 });
 
+router.get('/renderizarEntrega/:fkCliente', function (request, response) {
+  entregaController.renderizarEntrega(request, response);
+});
+
 router.get('/operacao/inicial/:fkCliente', function (request, response) {
   entregaController.operacaoInicial(request, response);
 });

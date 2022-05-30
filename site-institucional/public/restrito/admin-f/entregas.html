@@ -47,7 +47,6 @@
           </div>
           <div id="divDeliveries" class="data-table">
             <div class="lista-dados">
-              <p>Selecione um sensor para se utilizado durante o transporte</p>
               <ul id="ulListaEntregas" class="ul-lista-dados">
                   <li class="medicamento-container-titulo">
                     <span class="titulo-tabela-container">Transportadora</span>
@@ -210,7 +209,7 @@
   var entregas = [];
 
     function carregarEntregas() {
-        fetch(`/entregas/obter/${idCliente}`, {
+        fetch(`/entregas/renderizarEntrega/${idCliente}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -226,7 +225,6 @@
                     if (entregas.length > 0) {
                         for (let index = 0; index < entregas.length; index++) {
                             var entrega = entregas[index];
-                            alert( entrega.idEntrega);
                             renderizarEntrega(entrega);
                         }
                     }
@@ -257,13 +255,16 @@
     }
 
 
-    function renderizarEntrega(entregas) {
+    function renderizarEntrega(idFarmaceutica) {
         ulListaEntregas.innerHTML += `
-            <li id="${entregas.idEntrega}" class="medicamento-container">
-                <span class="titulo-tabela-container">${entregas.horaSaida}</span>
-                <span class="titulo-tabela-container">${entregas.horaChegada}</span>
-                <span class="titulo-tabela-container">${entregas.dataEntrega}</span>
-                <span class="titulo-tabela-container">${entregas.aprovada}</span>
+            <li id="${idFarmaceutica.nomeCliente}" class="medicamento-container">
+                <span class="titulo-tabela-container">${idFarmaceutica.nomeCliente}</span>
+                <span class="titulo-tabela-container">${idFarmaceutica.endereco}, ${idFarmaceutica.bairro}, ${idFarmaceutica.cidade}, ${idFarmaceutica.uf}, ${idFarmaceutica.numero}, ${idFarmaceutica.cep}</span>
+                <span class="titulo-tabela-container">${idFarmaceutica.nome}</span>
+                <span class="titulo-tabela-container">${idFarmaceutica.minTemperatura}, ${idFarmaceutica.maxTemperatura}, ${idFarmaceutica.minUmidade}, ${idFarmaceutica.maxUmidade}</span>
+                <span class="titulo-tabela-container">${idFarmaceutica.DataLimite}</span>
+                <span class="titulo-tabela-container">${idFarmaceutica.DataEntrega}</span>
+                <span class="titulo-tabela-container">${idFarmaceutica.aprovada}</span>
             </li>
         `;
     }

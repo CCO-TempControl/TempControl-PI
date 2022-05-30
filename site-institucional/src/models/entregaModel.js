@@ -11,6 +11,19 @@ function cadastrar(dataEntrega, fkSensor, fkTransportadora) {
   return database.executar(instrucao);
 }
 
+function renderizarEntrega(idFarmaceutica) {
+  var instrucao = `
+  SELECT cliente.nomeCliente, endereco.*,	 MAX(m.tempMin) as 'minTemperatura', MIN(m.tempMax) as 'maxTemperatura', 
+  MAX(m.umidMin) as 'minUmidade', MIN(m.umidMax) as 'maxUmidade', e.dataEntrega AS 'DataLimite', e.horaChegada AS 'DataEntrega', e.aprovada, medicamento.nome
+   FROM entrega e INNER JOIN lote l ON l.fkEntrega = e.idEntrega INNER JOIN
+   medicamento m ON m.idMedicamento = l.fkMedicamento INNER JOIN cliente ON idCliente = fkTransportadora INNER JOIN endereco 
+   ON endereco.fkEntrega = idEntrega, medicamento INNER JOIN lote on idMedicamento = fkMedicamento WHERE m.fkFarmaceutica = ${idFarmaceutica} GROUP BY e.idEntrega;
+  `;
+
+  console.log("Executando a instrução SQL: \n" + instrucao);
+  return database.executar(instrucao);
+}
+
 function obter(fkFarmaceutica) {
   console.log("ACESSEI O ENTREGA MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function obter():", fkFarmaceutica);
 
@@ -103,6 +116,7 @@ function negarEntrega(idEntrega, idCliente){
 module.exports = {
   cadastrar,
   obter,
+  renderizarEntrega,
   operacaoInicial,
   operacaoKPI,
   listarSolicitacoesTransportadora,

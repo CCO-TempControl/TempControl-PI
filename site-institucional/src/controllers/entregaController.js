@@ -242,6 +242,25 @@ function negarEntrega(request, response) {
     }
 }
 
+function renderizarEntrega(request, response) {
+    var fkCliente = request.params.fkCliente;
+
+    if (fkCliente == undefined) {
+        response.status(400).send("fkCliente está undefined!");
+    } else {
+        entregaModel.renderizarEntrega(fkCliente).then(
+            function (resultado) {
+
+                response.json(resultado);
+            }
+        ).catch(function (erro) {
+            console.log(erro);
+            console.log("\nHouve um erro ao realizar o cadastro! Erro: ", erro.sqlMessage);
+            response.status(500).json(erro.sqlMessage);
+        })
+    }
+}
+
 module.exports = {
     solicitar,
     obter,
@@ -250,5 +269,6 @@ module.exports = {
     listarSolicitacoesTransportadora,
     obterDados,
     aprovarEntrega,
-    negarEntrega
+    negarEntrega,
+    renderizarEntrega
 }
