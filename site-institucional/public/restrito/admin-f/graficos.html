@@ -217,7 +217,7 @@
 
 <script>
     var graficos = [];
-
+    renderizarGrafico()
     carregarGraficoEstrategico();
     
     function renderizarGrafico() {
@@ -591,19 +591,14 @@
         console.log(dados)
         for (i = 0; i < resposta.length; i++) {
                 var registro = resposta[i];
-                dados.labels.push(registro.horario);
-                console.log(dados.datasets[0].data  )
+                dados.labels.push(new Date(registro.horario).toLocaleTimeString());
+                console.log(dados.datasets[0].data)
                 dados.datasets[0].data.push(registro.dht11umidade);
                 /* dados.datasets[1].data.push(registro.dht11temperatura); */
         }
         grafico.update()
-
-
-        setInterval(() => {
-            sendData();
-        }, 2000);
         
-       /*  setTimeout(() => atualizarGrafico(dados), 2000); */
+        setTimeout(() => atualizarGrafico(dados), 2000);
     }
 
     function atualizarGrafico(dados) {
