@@ -23,21 +23,21 @@ function obterAlertas(fkEntrega, tipoDado) {
     if (tipoDado == 'mes') {
         instrucao = `
                     SELECT COUNT(situacaoTemperatura) as 'quantidadeRegistro', (
-                            select COUNT(situacaoTemperatura) from registro r2
+                            select COUNT(*) from registro r2
                             WHERE (r2.situacaoTemperatura <> 'I' or r2.situacaoUmidade <> 'I') and r2.fkEntrega = 1 and r1.idRegistro = r2.idRegistro) as 'quantidadeAlerta',
                             MONTHNAME(horario) as 'mes'
                     FROM registro r1 WHERE fkEntrega = 1 GROUP BY MONTHNAME(horario) order by horario desc;`;
     } else if (tipoDado == 'nomeDia') {
         instrucao = `
                     SELECT COUNT(situacaoTemperatura) as 'quantidadeRegistro', (
-                        select COUNT(situacaoTemperatura) from registro r2
+                        select COUNT(*) from registro r2
                         WHERE (r2.situacaoTemperatura <> 'I' or r2.situacaoUmidade <> 'I') and r2.fkEntrega = 1 and r1.idRegistro = r2.idRegistro) as 'quantidadeAlerta',
                         DAYNAME(horario) as 'nomeDia'
                     FROM registro r1 WHERE fkEntrega = 1 AND MONTH(horario) = ${new Date().getMonth()} GROUP BY DAYNAME(horario);`;
     } else if (tipoDado == 'dia') {
         instrucao = `
                     SELECT COUNT(situacaoTemperatura) as 'quantidadeRegistro', (
-                        select COUNT(situacaoTemperatura) from registro r2
+                        select COUNT(*) from registro r2
                         WHERE (r2.situacaoTemperatura <> 'I' or r2.situacaoUmidade <> 'I') and r2.fkEntrega = 1 and r1.idRegistro = r2.idRegistro) as 'quantidadeAlerta',
                         DAY(horario) as 'dia',
                         MONTH(horario) as 'mes'
@@ -51,7 +51,19 @@ function obterAlertas(fkEntrega, tipoDado) {
     return database.executar(instrucao);
 }
 
+function obterKPI(fkEntrega) {
+    console.log("ACESSEI O SENSOR MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function obterKPI():", fkEntrega);
+
+    var instrucao = `
+        SELECT MIN(dht11temperatura) as 'temperaturaminima', MAX(dht11temperatura) as 'temperaturamaxima', MIN(dht11umidade) as 'umidademinima', MAX(dht11umidade) as 'umidademaxima', (SELECT COUNT(*) FROM registro WHERE fkEntrega = ${fkEntrega} and (situacaoTemperatura <> 'I' or situacaoUmidade <> 'I')) as 'qtdalertas' FROM registro WHERE fkEntrega = ${fkEntrega} GROUP BY fkEntrega; 
+    `;
+    
+    console.log("Executando a instrução SQL: \n" + instrucao);
+    return database.executar(instrucao);
+}
+
 module.exports = {
     obterDados,
-    obterAlertas
+    obterAlertas,
+    obterKPI
 }

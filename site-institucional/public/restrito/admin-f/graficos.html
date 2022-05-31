@@ -760,6 +760,23 @@
         await obterAlertasGrafico(graficos.estrategico[0], tipoGrafico, tipoDado)
     }
 
+    function carregarKPI(fkEntrega) {
+        fetch(`/registro/obterKPI/${fkEntrega}`, {
+            cache: 'no-store',
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(function (response) {
+            console.log(response)
+            if (response.ok) {
+                response.json().then(function (resposta) {
+                    console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+                });
+            }
+            });
+    }
+
 </script>
 
 

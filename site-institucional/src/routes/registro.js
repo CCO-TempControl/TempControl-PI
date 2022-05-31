@@ -15,6 +15,9 @@ router.get('/obterAlertas/:fkEntregaServer&:tipoDadoServer', function (request, 
   registroController.obterAlertas(request, response);
 });
 
+router.get('/obterKPI/:fkEntregaServer', function (request, response) {
+  registroController.obterKPI(request, response);
+});
 
 
 module.exports = router;

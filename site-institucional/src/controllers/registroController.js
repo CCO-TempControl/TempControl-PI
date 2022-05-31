@@ -69,7 +69,34 @@ function obterAlertas(request, response) {
 
 }
 
+function obterKPI(request, response) {
+    var fkEntrega = request.params.fkEntregaServer;
+
+    if (fkEntrega == undefined) {
+      response.status(400).send("Fk da Farmacêutica é indefinido");
+    }  else {
+      registroModel.obterKPI(fkEntrega).then(function (resultado) {
+        console.log(`\nResultados encontrados: ${resultado.length}`);
+        console.log(`Resultados: ${JSON.stringify(resultado)}`);
+  
+        console.log(resultado);
+  
+        response.json(resultado);
+      }).catch(function (erro) {
+        console.log(erro);
+        console.log(
+            "\nHouve um erro ao obter os dados dos sensores! Erro: ",
+            erro.sqlMessage
+        );
+        
+        response.status(500).json(erro.sqlMessage);
+      });
+    }
+
+}
+
 module.exports = {
   obterDados,
-  obterAlertas
+  obterAlertas,
+  obterKPI
 }
