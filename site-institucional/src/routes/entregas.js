@@ -7,6 +7,11 @@ router.post('/solicitar', function (request, response) {
   entregaController.solicitar(request, response);
 });
 
+router.get('/kpi-index/:idCliente', function (request, response) {
+  entregaController.dadosKPI(request, response);
+});
+
+
 router.get('/obter/:fkCliente', function (request, response) {
   entregaController.obter(request, response);
 });

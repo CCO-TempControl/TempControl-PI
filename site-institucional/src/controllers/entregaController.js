@@ -4,6 +4,11 @@ var loteModel = require('../models/loteModel');
 var sensorModel = require('../models/sensorModel');
 var funcoes = require('../../public/assets/js/funcoes');
 
+
+function dadosKPI(request, response){
+    var id = request.params.idCliente
+}
+
 function solicitar(request, response) {
     var origem = request.body.origemServer;
     var destino = request.body.destinoServer;
@@ -263,6 +268,7 @@ function renderizarEntrega(request, response) {
 
 module.exports = {
     solicitar,
+    dadosKPI,
     obter,
     operacaoInicial,
     operacaoKPI,

@@ -12,7 +12,7 @@
     <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
     <title>DASHBOARD</title>
 </head>
-<body onload="setUp('admin-f')">
+<body onload="setUp('admin-f');">
     <div class="wrapper">
         <div class="sidebar">
             <div class="dropdown">
@@ -45,36 +45,32 @@
                             <h2>Sensores Disponiveis</h2>
                         </div>
                         <div class="card-information">
-                            <h3>3</h3>
-                            <small>$12.456 foram gasto com sistema</small>
+                            <h3 id="kpiSensores"></h3>
                         </div>
                     </div>
                     <div class="card-admin-f">
                         <div class="card-background">
-                            <h2>Viagens Com Problema </h2>
+                            <h2>Entregas Com Problema</h2>
                         </div>
                         <div class="card-information">
-                            <h3>456</h3>
-                            <small>20% de falha na ultima semana</small>
+                            <h3 id="kpiEntregasProblema"></h3>
                         </div>
                     </div>
                     <div class="card-admin-f">
                         <div class="card-background">
-                            <h2>Média De Alertas Mensal</h2>
+                            <h2>Média De Alertas Por Entrega</h2>
                         </div>
                         <div class="card-information">
-                            <h3>3.92</h3>
-                            <small>A cada 10 viagens uma da problema</small>
+                            <h3 id="kpiMediaAlertaEntrega"></h3>
                         </div>
                         
                     </div>
                     <div class="card-admin-f">
                         <div class="card-background">
-                            <h2>Último Transporte Realizado</h2>
+                            <h2>Último Entrega Realizado</h2>
                         </div>
                         <div class="card-information">
-                            <h3>Realizada Com Sucesso</h3>
-                            <small>0 Alertas Emitidos</small> 
+                            <h3><span id="kpiUltimoTransporte"></span> Alertas Emitidos</h3> 
                         </div>
                         
                     </div>
@@ -107,13 +103,26 @@
 </body>
 
 <script>
-    var dadosSession = obterDadosSession();
-    var nome=  dadosSession.nomeUsuario;
-    var email= dadosSession.emailUsuario;
-    spanNome.innerHTML = dadosSession.nomeUsuario;
-
-    nomeSmall.innerHTML = nome;
-    emailSmall.innerHTML = email;
+    function carregarKPIs() {
+        fetch(`/entregas/kpi-index/${usuario.fkCliente}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(resposta => {
+            
+        }).catch(erro => {
+            Swal.fire({
+                title: 'Erro',
+                text: 'Houve um erro ao carregar os medicamentos',
+                icon: 'error',
+                showConfirmButton: false,
+                showDenyButton: true,
+                denyButtonText: 'OK'
+            });
+            console.log(`ERRO: ${erro}`);
+        })
+    }
 </script>
 
 </html>
