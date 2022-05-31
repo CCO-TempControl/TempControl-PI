@@ -18,7 +18,7 @@ function obterDados(request, response) {
       }
     }
     if (fkEntrega == undefined) {
-      response.status(400).send("Fk da Farmacêutica é indefinido");
+      response.status(400).send("Fk da Entrega é indefinido");
     }  else {
       registroModel.obterDados(fkEntrega, ordenar, limite).then(function (resultado) {
         console.log(`\nResultados encontrados: ${resultado.length}`);
@@ -41,15 +41,15 @@ function obterDados(request, response) {
 }
 
 function obterAlertas(request, response) {
-    var fkEntrega = request.params.fkEntregaServer;
+    var fkCliente = request.params.fkClienteServer;
     var tipoDado = request.params.tipoDadoServer;
 
-    if (fkEntrega == undefined) {
+    if (fkCliente == undefined) {
       response.status(400).send("Fk da Farmacêutica é indefinido");
     } else if (tipoDado == undefined) {
       response.status(400).send("Tipo do Dado é indefinido");
     }  else {
-      registroModel.obterAlertas(fkEntrega, tipoDado).then(function (resultado) {
+      registroModel.obterAlertas(fkCliente, tipoDado).then(function (resultado) {
         console.log(`\nResultados encontrados: ${resultado.length}`);
         console.log(`Resultados: ${JSON.stringify(resultado)}`);
   

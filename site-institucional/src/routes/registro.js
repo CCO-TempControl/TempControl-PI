@@ -11,7 +11,7 @@ router.get('/obterDados/:fkEntregaServer&:ordenarServer&:limiteServer', function
   registroController.obterDados(request, response);
 });
 
-router.get('/obterAlertas/:fkEntregaServer&:tipoDadoServer', function (request, response) {
+router.get('/obterAlertas/:fkClienteServer&:tipoDadoServer', function (request, response) {
   registroController.obterAlertas(request, response);
 });
 

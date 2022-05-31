@@ -57,7 +57,7 @@
                                     <h2>Temperatura</h2>
                                 </div>
                                 <div class="card-information">
-                                    <h3 id="temperatura-viagem">-2/12°C</h3>
+                                    <h3 id="temperatura-viagem"></h3>
                                     <small>Menor/Maior Temperatura Alcançada</small>
                                 </div>
                             </div>
@@ -66,7 +66,7 @@
                                     <h2>Umidade Relativa</h2>
                                 </div>
                                 <div class="card-information">
-                                    <h3 id="umidade-viagem">20/80%</h3>
+                                    <h3 id="umidade-viagem"></h3>
                                     <small>Menor/Maior Umidade Alcançada</small>
                                 </div>
                             </div>
@@ -75,7 +75,7 @@
                                     <h2>Alertas Emitidos</h2>
                                 </div>
                                 <div class="card-information">
-                                    <h3 id="alertas-viagem">20</h3>
+                                    <h3 id="alertas-viagem"></h3>
                                     <small>Na viagem atual 20 alertas emitidos</small>
                                 </div>
                             </div>
@@ -216,6 +216,30 @@
 </body>
 
 <script>
+    var mesesPtBr = {
+        'January': 'Janeiro',
+        'February': 'Fevereiro',
+        'March': 'Março',
+        'April': 'Abril',
+        'May': 'Maio',
+        'June': 'Junho',
+        'July': 'Julho',
+        'August': 'Agosto',
+        'September': 'Setembro',
+        'October': 'Outubro',
+        'November': 'Novembro',
+        'December': 'Dezembro'
+    };
+    var nomeDiaPtBr = {
+        'Monday': 'Segunda-Feira',
+        'Tuesday': 'Terça-Feira',
+        'Wednesday': 'Quarta-Feira',
+        'Thursday': 'Quinta-Feira',
+        'Friday': 'Sexta-Feira',
+        'Saturday': 'Sábado',
+        'Sunday': 'Domingo'
+    }
+    
     var graficos = {
         'operacional': [],
         'estrategico': []
@@ -383,7 +407,6 @@
         ];
 
         // estrategico
-        let dadosAlertaMensal = [50, 10, 5, 2, 20, 30, 45, 100];
         const dataAlertaMensal = {
             labels: [],
             datasets: [{
@@ -411,16 +434,19 @@
                 }
             }
         );
-        graficos.estrategico.push(alertasMensal);
+        graficos.estrategico.push({
+            'tipo': 'mes',
+            'grafico':alertasMensal
+        });
 
         let dadosAlertasSemanal = [10, 15, 5, 25, 20, 30, 45, 100];
         const dataAlertasSemanal = {
-            labels: labelsSemana,
+            labels: [], /* labelsSemana */
             datasets: [{
                 label: 'Alertas',
                 backgroundColor: 'rgb(255, 99, 132)',
                 borderColor: 'rgb(255, 99, 132)',
-                data: dadosAlertasSemanal,
+                data: [],
             }]
         };
         const alertasSemanal = new Chart(
@@ -441,16 +467,18 @@
                 }
             }
         );
-        graficos.estrategico.push(alertasSemanal);
+        graficos.estrategico.push({
+            'tipo': 'nomeDia',
+            'grafico':alertasSemanal
+        });
 
-        let dadosAlertasDiarios = [10, 15, 5, 25, 20, 30, 45, 100];
         const dataAlertasDiarios = {
-            labels: labelsDias,
+            labels: [],/* labelsDias */
             datasets: [{
                 label: 'Alertas',
                 backgroundColor: 'rgb(255, 99, 132)',
                 borderColor: 'rgb(255, 99, 132)',
-                data: dadosAlertasDiarios,
+                data: [],
             }]
         };
         const alertasDiario = new Chart(
@@ -471,16 +499,18 @@
                 }
             }
         );
-        graficos.estrategico.push(alertasDiario);
+        graficos.estrategico.push({
+            'tipo': 'dia',
+            'grafico':alertasDiario
+        });
 
-        let dadosAlertasHoras = [5, 15, 5, 25, 20, 30, 45, 5, 1, 50, 100];
         const dataAlertasHoras = {
-            labels: labelsHoras,
+            labels: [], /* labelsHoras */
             datasets: [{
                 label: 'Alertas',
                 backgroundColor: 'rgb(255, 99, 132)',
                 borderColor: 'rgb(255, 99, 132)',
-                data: dadosAlertasHoras,
+                data: [],
             }]
         };
         const alertasPHora = new Chart(
@@ -501,7 +531,10 @@
                 }
             }
         );
-        graficos.estrategico.push(alertasPHora);
+        graficos.estrategico.push({
+            'tipo': 'tempo',
+            'grafico':alertasPHora
+        });
 
 
         let dadosObservacaoGeral = [10, 70, 20]
@@ -639,6 +672,7 @@
                             renderizarOptEntrega(entrega, ocorrencia);
                         }
                         renderizarGraficosOperacionais();
+                        carregarKPI();
                     }
                 });
             }
@@ -657,7 +691,7 @@
         }
         let viagemElement = document.getElementById('selectViagem');
         let fkEntrega = viagemElement.value;
-        fetch(`/registro/obterAlertas/${fkEntrega}&${tipoDado}`, {
+        fetch(`/registro/obterAlertas/${usuario.fkCliente}&${tipoDado}`, {
             cache: 'no-store',
             method: "GET",
             headers: {
@@ -684,15 +718,19 @@
 
     function plotarGraficoEstrategico(resposta, grafico, tipoGrafico, tipoDado) {
         console.log('iniciando plotagem do gráfico...');
-        console.log(tipoDado)
+        console.log(tipoDado);
+
         for (i = 0; i < resposta.length; i++) {
                 var registro = resposta[i];
                 if (tipoDado == 'nomeDia') {
-                    grafico.data.labels.push(registro.nomeDia);
+                    grafico.data.labels.push(nomeDiaPtBr[registro.nomeDia]);
                 } else if (tipoDado == 'dia') {
                     grafico.data.labels.push(`${registro.dia}/${registro.mes}`);
                 } else if (tipoDado == 'mes') {
-                    grafico.data.labels.push(registro.mes);
+                    grafico.data.labels.push(mesesPtBr[registro.mes]);
+                } else if (tipoDado == 'tempo') {
+                    grafico.data.labels.push(registro.tempo);
+                    
                 }
                 grafico.data.datasets[0].data.push((registro.quantidadeAlerta / registro.quantidadeRegistro) * 100);
         }
@@ -743,24 +781,14 @@
         proximaAtualizacao.operacional = [];
         renderizarGraficosEstrategicos();
         
-        let tipoGrafico = 'estrategico';
-        let tipoDado = 'mes';
-        /* for (let i = 0; i < graficos.estrategico.length; i++) {
-            if (i == 0) {
-                tipoDado = 'mes';
-            } else if (i == 1) {
-                tipoDado = 'nomeDia';
-            } else if (i == 2) {
-                tipoDado = 'dia';
-            } else if (i== 3) {
-                tipoDado = 'tempo';
-            }
-            
-        } */
-        await obterAlertasGrafico(graficos.estrategico[0], tipoGrafico, tipoDado)
+        for (let i = 0; i < graficos.estrategico.length; i++) {
+            await obterAlertasGrafico(graficos.estrategico[i].grafico, 'estrategico', graficos.estrategico[i].tipo);
+        }
     }
 
-    function carregarKPI(fkEntrega) {
+    function carregarKPI() {
+        let viagemElement = document.getElementById('selectViagem');
+        let fkEntrega = viagemElement.value;
         fetch(`/registro/obterKPI/${fkEntrega}`, {
             cache: 'no-store',
             method: "GET",
@@ -772,6 +800,13 @@
             if (response.ok) {
                 response.json().then(function (resposta) {
                     console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+                    let informacoes = resposta[0];
+                    let temperaturaElement = document.getElementById('temperatura-viagem');
+                    let umidadeElement = document.getElementById('umidade-viagem');
+                    let alertaElement = document.getElementById('alertas-viagem');
+                    temperaturaElement.innerHTML = `${informacoes.temperaturaminima}/${informacoes.temperaturamaxima}°C`;
+                    umidadeElement.innerHTML = `${informacoes.umidademinima}/${informacoes.umidademaxima}%`;
+                    alertaElement.innerHTML = `${informacoes.qtdalertas}`;
                 });
             }
             });
