@@ -24,6 +24,25 @@ function renderizarEntrega(idFarmaceutica) {
   return database.executar(instrucao);
 }
 
+function dadosKPI(idCliente) {
+  var instrucao = `
+      SELECT 
+      (SELECT COUNT(idSensor) FROM sensor WHERE fkFarmaceutica =  ${idCliente} AND fkTransportadora IS NULL) 
+        as 'qtdSensorLivre',
+        (SELECT COUNT(DISTINCT idEntrega) FROM entrega e INNER JOIN sensor s ON e.fkSensor = s.idSensor INNER JOIN registro r ON r.fkEntrega = e.idEntrega WHERE (r.situacaoTemperatura <> 'I' OR r.situacaoUmidade <> 'I') AND e.aprovada = 'S' AND s.fkFarmaceutica =  ${idCliente}) 
+        as 'qtdEntregasProblema',
+        (SELECT ROUND((COUNT(r.idRegistro) / (SELECT COUNT(e.idEntrega) FROM entrega e WHERE e.horaChegada IS NOT NULL)), 2) FROM registro r INNER JOIN entrega e ON r.fkEntrega = e.idEntrega  WHERE (r.situacaoTemperatura <> 'I' OR r.situacaoUmidade <> 'I'))
+        as 'mediaAlertaEntrega',	
+        (SELECT COUNT(r.idRegistro) FROM entrega e INNER JOIN registro r ON e.idEntrega = r.fkEntrega INNER JOIN sensor s ON s.idSensor = e.fkSensor WHERE (r.situacaoTemperatura <> 'I' OR r.situacaoUmidade <> 'I') AND e.horaChegada IS NOT NULL AND s.fkFarmaceutica =  ${idCliente} GROUP BY e.idEntrega ORDER BY e.horaChegada DESC LIMIT 1) 
+        as 'qtdAlertasUltimaEntrega'
+    FROM cliente
+    WHERE idCliente = ${idCliente};
+  `; 
+
+  console.log("Executando a instrução SQL: \n" + instrucao);
+  return database.executar(instrucao);
+}
+
 function obter(fkFarmaceutica) {
   console.log("ACESSEI O ENTREGA MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function obter():", fkFarmaceutica);
 
@@ -115,6 +134,7 @@ function negarEntrega(idEntrega, idCliente){
 
 module.exports = {
   cadastrar,
+  dadosKPI,
   obter,
   renderizarEntrega,
   operacaoInicial,
