@@ -28,7 +28,7 @@ const serial = async (
                 // CREDENCIAIS DO BANCO LOCAL - MYSQL WORKBENCH
                 host: 'localhost',
                 user: 'root',
-                password: 'docker',
+                password: 'Ruaadele210',
                 database: 'dbTempControl'
             }
         ).promise();

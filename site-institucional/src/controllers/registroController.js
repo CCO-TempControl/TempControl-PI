@@ -24,8 +24,6 @@ function obterDados(request, response) {
         console.log(`\nResultados encontrados: ${resultado.length}`);
         console.log(`Resultados: ${JSON.stringify(resultado)}`);
   
-        console.log(resultado);
-  
         response.json(resultado);
       }).catch(function (erro) {
         console.log(erro);
@@ -53,8 +51,6 @@ function obterAlertas(request, response) {
         console.log(`\nResultados encontrados: ${resultado.length}`);
         console.log(`Resultados: ${JSON.stringify(resultado)}`);
   
-        console.log(resultado);
-  
         response.json(resultado);
       }).catch(function (erro) {
         console.log(erro);
@@ -73,15 +69,53 @@ function obterKPI(request, response) {
     var fkEntrega = request.params.fkEntregaServer;
 
     if (fkEntrega == undefined) {
-      response.status(400).send("Fk da Farmacêutica é indefinido");
+      response.status(400).send("Fk da Entrega é indefinido");
     }  else {
       registroModel.obterKPI(fkEntrega).then(function (resultado) {
         console.log(`\nResultados encontrados: ${resultado.length}`);
         console.log(`Resultados: ${JSON.stringify(resultado)}`);
   
-        console.log(resultado);
-  
         response.json(resultado);
+      }).catch(function (erro) {
+        console.log(erro);
+        console.log(
+            "\nHouve um erro ao obter os dados dos sensores! Erro: ",
+            erro.sqlMessage
+        );
+        
+        response.status(500).json(erro.sqlMessage);
+      });
+    }
+
+}
+
+function obterKPIEstrategico(request, response) {
+  var fkCliente = request.params.fkClienteServer;
+
+    if (fkCliente == undefined) {
+      response.status(400).send("Fk da Farmacêutica é indefinido");
+    }  else {
+      registroModel.obterKPIEstrategico(fkCliente).then(function (resultadoKPI) {
+        console.log(`\nResultados encontrados: ${resultadoKPI.length}`);
+        console.log(`Resultados: ${JSON.stringify(resultadoKPI)}`);
+  
+        registroModel.obterTransportadorasAlertas(fkCliente).then(function (resultado) {
+              console.log(`\nResultados encontrados: ${resultado.length}`);
+              console.log(`Resultados: ${JSON.stringify(resultado)}`);
+              let result = {
+                'primeiraParte': resultadoKPI,
+                'segundaParte': resultado
+              };
+              response.json(result);
+        }).catch(function (erro) {
+              console.log(erro);
+              console.log(
+                  "\nHouve um erro ao obter os dados dos sensores! Erro: ",
+                  erro.sqlMessage
+              );
+              
+              response.status(500).json(erro.sqlMessage);
+        });
       }).catch(function (erro) {
         console.log(erro);
         console.log(
@@ -98,5 +132,6 @@ function obterKPI(request, response) {
 module.exports = {
   obterDados,
   obterAlertas,
-  obterKPI
+  obterKPI,
+  obterKPIEstrategico
 }
