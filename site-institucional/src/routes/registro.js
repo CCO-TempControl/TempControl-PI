@@ -23,4 +23,8 @@ router.get('/obterKPIEstrategico/:fkClienteServer', function (request, response)
   registroController.obterKPIEstrategico(request, response);
 });
 
+router.get('/monitorar-entregas/:fkCliente&:tipoCliente', function (request, response) {
+  registroController.monitorarEntregas(request, response);
+});
+
 module.exports = router;

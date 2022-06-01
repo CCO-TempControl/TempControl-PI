@@ -2,11 +2,23 @@ var entregaModel = require('../models/entregaModel');
 var enderecoModel = require('../models/enderecoModel');
 var loteModel = require('../models/loteModel');
 var sensorModel = require('../models/sensorModel');
-var funcoes = require('../../public/assets/js/funcoes');
 
+function dadosKPI(request, response){
+    var idCliente = request.params.idCliente;
 
-function dadosKPI(request, response) {
-    var id = request.params.idCliente
+    if (idCliente == undefined) {
+        response.status(400).send('Id do cliente está indefinido');
+    } else {
+        entregaModel.dadosKPI(idCliente).then(respota => {
+            console.log(respota);
+
+            response.json(respota[0]);
+        }).catch(function (erro) {
+            console.log(erro);
+            console.log("\nHouve um erro ao realizar o cadastro! Erro: ", erro.sqlMessage);
+            response.status(500).json(erro.sqlMessage);
+        })
+    }
 }
 
 function solicitar(request, response) {

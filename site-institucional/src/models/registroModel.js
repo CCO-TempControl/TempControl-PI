@@ -70,10 +70,39 @@ function obterTransportadorasAlertas(fkFarmaceutica) {
 
 }
 
+function monitorarEntregas(fkCliente, tipoCliente) {
+    console.log("ACESSEI O REGISTRO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function monitorarEntregas():", fkCliente, tipoCliente)
+
+    var instrucao = `
+        SELECT 
+            e.idEntrega, 
+            (SELECT dht11temperatura FROM registro INNER JOIN entrega ON idEntrega = fkEntrega ORDER BY horario DESC LIMIT 1) 
+            as 'temperaturaAtual', 
+            (SELECT dht11umidade FROM registro INNER JOIN entrega ON idEntrega = fkEntrega ORDER BY horario DESC LIMIT 1) 
+            as 'umidadeAtual'
+        FROM entrega e 
+        INNER JOIN sensor s ON s.idSensor = e.fkSensor 
+        INNER JOIN registro r ON r.fkEntrega = e.idEntrega 
+        WHERE e.horaSaida IS NOT NULL AND e.horaChegada IS NULL
+    `;
+
+    if (tipoCliente == 'F') {
+        instrucao += ` AND s.fkFarmaceutica = ${fkCliente} `;
+    } else {
+        instrucao += ` AND e.fkTransportadora = ${fkCliente} `;
+    }
+
+    instrucao += ` GROUP BY e.idEntrega;`;
+
+    console.log("Executando a instrução SQL: \n" + instrucao);
+    return database.executar(instrucao);        
+}
+
 module.exports = {
     obterDados,
     obterAlertas,
     obterKPI,
     obterKPIEstrategico,
-    obterTransportadorasAlertas
+    obterTransportadorasAlertas,
+    monitorarEntregas
 }

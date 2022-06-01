@@ -12,7 +12,7 @@
     <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
     <title>DASHBOARD</title>
 </head>
-<body onload="setUp('admin-f');">
+<body onload="setUp('admin-f'); carregarKPIs()">
     <div class="wrapper">
         <div class="sidebar">
             <div class="dropdown">
@@ -78,7 +78,7 @@
 
                 <!-- Arrumar -->
                 <div id="temperatura">
-                    <h1>Pedidos</h1>
+                    <h1>Entregas</h1>
                     <ul id="pedidos">
                         <li class="caminhao-container-titulo">
                             <div class="titulo-tabela-container">Número</div>
@@ -103,6 +103,12 @@
 </body>
 
 <script>
+    var entregas = [];
+
+    setInterval(() => {
+        monitorarEntregas();
+    }, 1000);
+
     function carregarKPIs() {
         fetch(`/entregas/kpi-index/${usuario.fkCliente}`, {
             method: "GET",
@@ -110,7 +116,25 @@
                 "Content-Type": "application/json"
             }
         }).then(resposta => {
-            
+            if (resposta.ok) {
+                resposta.json().then(json => {
+                    console.log(json);
+
+                    kpiSensores.innerHTML = (json.qtdSensorLivre == null) ? 0 : json.qtdSensorLivre;
+                    kpiEntregasProblema.innerHTML = (json.qtdEntregasProblema == null) ? 0 : json.qtdEntregasProblema;
+                    kpiMediaAlertaEntrega.innerHTML = (json.mediaAlertaEntrega == null) ? 0 : json.mediaAlertaEntrega;
+                    kpiUltimoTransporte.innerHTML = (json.qtdAlertasUltimaEntrega == null) ? 0 : json.qtdAlertasUltimaEntrega;
+                });
+            } else {
+                Swal.fire({
+                    title: 'Erro',
+                    text: 'Houve um erro ao carregar os medicamentos',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    showDenyButton: true,
+                    denyButtonText: 'OK'
+                });
+            }
         }).catch(erro => {
             Swal.fire({
                 title: 'Erro',
@@ -122,6 +146,106 @@
             });
             console.log(`ERRO: ${erro}`);
         })
+    }
+
+    function monitorarEntregas() {
+        fetch(`/registro/monitorar-entregas/${usuario.fkCliente}&${'F'}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(resposta => {
+            if (resposta.ok) {
+                resposta.json().then(json => {
+                    console.log(json);
+
+                    if (json.length == 0) {
+                        entregas = json;
+                        pedidos.innerHTML = `
+                            <li class="caminhao-container-titulo">
+                                <div class="titulo-tabela-container">Número</div>
+                                <div class="titulo-tabela-container">Temperatura</div>
+                                <div class="titulo-tabela-container">Umidade</div>
+                            </li>
+                        `;
+                        return;
+                    }
+
+                    var indexJaRenderizado = [];
+
+                    for (var index = 0; index < json.length; index++) {
+                        var item = json[index];
+
+                        for (var i = 0; i < entregas.length; i++) {
+                            var entrega = entregas[i];
+
+                            if (entrega.idEntrega == item.idEntrega) {
+                                indexJaRenderizado.push(index);
+                                entregas[i].temperaturaAtual = item.temperaturaAtual;
+                                entregas[i].umidadeAtual = item.umidadeAtual;
+                                entregas[i].situacaoTemperatura = item.situacaoTemperatura;
+                                entregas[i].situacaoUmidade = item.situacaoUmidade;
+                            }
+                        }
+                    }
+
+                    for (var renderIndex = 0; renderIndex < indexJaRenderizado.length; renderIndex++) {
+                        var indexParaRemover = indexJaRenderizado[renderIndex];
+                        
+                        json.splice(indexJaRenderizado, 1);
+                    }
+
+                    if (json.length > 0) {
+                        renderizarEntregas(json);
+                        entregas.push(...json);                
+                    }
+
+                    atualizarEntregas();             
+                })
+            } else {
+                Swal.fire({
+                    title: 'Erro',
+                    text: 'Houve um erro ao carregar os medicamentos',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    showDenyButton: true,
+                    denyButtonText: 'OK'
+                });
+            }
+        }).catch(erro => {
+            Swal.fire({
+                title: 'Erro',
+                text: 'Houve um erro ao carregar os medicamentos',
+                icon: 'error',
+                showConfirmButton: false,
+                showDenyButton: true,
+                denyButtonText: 'OK'
+            });
+            console.log(`ERRO: ${erro}`);
+        })
+    }
+
+    function renderizarEntregas(lista) {
+        for (var index = 0; index < lista.length; index++) {
+            var item = lista[index];
+            
+            pedidos.innerHTML += `
+                <li id="liEntrega#${item.idEntrega}" class="caminhao-container">
+                    <div class="pedido-num titulo-tabela-container"><i class="fas fa-solid fa-truck"></i>#${item.idEntrega}</div>
+                    <div id="spanTemperaturaAtual#${item.idEntrega}" class="pedido-temp colorStatusTemp titulo-tabela-container">${item.temperaturaAtual}°C</div>
+                    <div id="spanUmidadeAtual#${item.idEntrega}" class="pedido-umi colorStatusUmi titulo-tabela-container">${item.umidadeAtual}%</div>
+                </li>
+            `;
+        }
+    }
+
+    function atualizarEntregas() {
+        for (var index = 0; index < entregas.length; index++) {
+            var entrega = entregas[index];
+            
+            document.getElementById(`spanTemperaturaAtual#${entrega.idEntrega}`).innerHTML = `${item.temperaturaAtual}°C`
+            document.getElementById(`spanUmidadeAtual#${item.idEntrega}`).innerHTML = `${item.umidadeAtual}%`
+        }
     }
 </script>
 

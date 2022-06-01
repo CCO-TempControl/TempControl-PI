@@ -129,9 +129,35 @@ function obterKPIEstrategico(request, response) {
 
 }
 
+function monitorarEntregas(request, response) {
+  var fkCliente = request.params.fkCliente;
+  var tipoCliente = request.params.tipoCliente;
+
+  if (fkCliente == undefined) {
+    response.status(400).send('Id do Cliente está indefinido');
+  } else if (tipoCliente == undefined) {
+    response.status(400).send('Tipo Cliente está indefinido');
+  } else {
+    registroModel.monitorarEntregas(fkCliente, tipoCliente).then(resultado => {
+      console.log(resultado);
+
+      response.json(resultado);
+    }).catch(function (erro) {
+      console.log(erro);
+      console.log(
+          "\nHouve um erro ao obter os dados dos sensores! Erro: ",
+          erro.sqlMessage
+      );
+      
+      response.status(500).json(erro.sqlMessage);
+    });
+  }
+}
+
 module.exports = {
   obterDados,
   obterAlertas,
   obterKPI,
-  obterKPIEstrategico
+  obterKPIEstrategico,
+  monitorarEntregas
 }
