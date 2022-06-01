@@ -5,7 +5,7 @@ var sensorModel = require('../models/sensorModel');
 var funcoes = require('../../public/assets/js/funcoes');
 
 
-function dadosKPI(request, response){
+function dadosKPI(request, response) {
     var id = request.params.idCliente
 }
 
@@ -163,6 +163,30 @@ function listarSolicitacoesTransportadora(request, response) {
             }
         }).catch(function (erro) {
             console.log(erro);
+            console.log("\nHouve um erro ao realizar a busca das solicitações! Erro: ", erro.sqlMessage);
+            response.status(500).json(erro.sqlMessage);
+        });
+    }
+}
+
+function listarEntregasTransportadora(request, response) {
+    var idTransportadora = request.body.idTransportadoraServer;
+    console.log(`idTransportadora: ${idTransportadora}`);
+
+    if (idTransportadora == undefined) {
+        response.status(400).send("idTransportadora está undefined!");
+    } else {
+        entregaModel.listarEntregasTransportadora(idTransportadora).then(function (resultado) {
+            console.log(`\nResultados encontrados: ${resultado.length}`);
+            console.log(`Resultados: ${JSON.stringify(resultado)}`); // transforma JSON em String
+
+            if (resultado.length == 0) {
+                response.status(403).send("idTransportadora inválido");
+            } else {
+                response.send(resultado);
+            }
+        }).catch(function (erro) {
+            console.log(erro);
             console.log("\nHouve um erro ao realizar a busca das entregas! Erro: ", erro.sqlMessage);
             response.status(500).json(erro.sqlMessage);
         });
@@ -198,13 +222,14 @@ function obterDados(request, response) {
 function aprovarEntrega(request, response) {
     const idCliente = request.body.idClienteServer;
     const idEntrega = request.body.idEntregaServer;
+    const idVeiculo = request.body.idVeiculoServer;
 
     if (idCliente == undefined) {
         response.status(400).send("idCliente está undefined!");
     } else if (idEntrega == undefined) {
         response.status(400).send("idEntrega está undefined!");
     } else {
-        entregaModel.aprovarEntrega(idEntrega, idCliente).then(function (resultado) {
+        entregaModel.aprovarEntrega(idEntrega, idCliente, idVeiculo).then(function (resultado) {
             console.log(`\nResultados encontrados: ${resultado.length}`);
             console.log(`Resultados: ${JSON.stringify(resultado)}`); // transforma JSON em String
 
@@ -266,6 +291,40 @@ function renderizarEntrega(request, response) {
     }
 }
 
+function adicionarHorSaida(request, response) {
+    var horarioSaida = request.body.horarioSaidaServer;
+    var idEntrega = request.body.idEntregaServer;
+
+    if (horarioSaida == undefined) {
+        response.status(400).send("horarioSaida está undefined!");
+    } else if(idEntrega == undefined){
+        response.status(400).send("idEntrega está undefined!");
+    } else {
+        console.log("INDO PARA O MODEL");
+        entregaModel.adicionarHorSaida(horarioSaida, idEntrega).then(resultado => {
+            response.json(resultado);
+        });
+    }
+}
+
+function adicionarHorChegada(request, response) {
+    var horarioSaida = request.body.horarioSaidaServer;
+    var horarioChegada = request.body.horarioChegadaServer;
+    var idEntrega = request.body.idEntregaServer;
+
+    if (horarioSaida == undefined) {
+        response.status(400).send("horarioSaida está undefined!");
+    } else if (horarioChegada == undefined) {
+        response.status(400).send("horarioChegada está undefined!");
+    } else if(idEntrega == undefined){
+        response.status(400).send("idEntrega está undefined!");
+    } else {
+        entregaModel.adicionarHorChegada(horarioSaida, horarioChegada, idEntrega).then(resultado => {
+            response.json(resultado);
+        });
+    }
+}
+
 module.exports = {
     solicitar,
     dadosKPI,
@@ -273,8 +332,11 @@ module.exports = {
     operacaoInicial,
     operacaoKPI,
     listarSolicitacoesTransportadora,
+    listarEntregasTransportadora,
     obterDados,
     aprovarEntrega,
     negarEntrega,
-    renderizarEntrega
+    renderizarEntrega,
+    adicionarHorSaida,
+    adicionarHorChegada
 }

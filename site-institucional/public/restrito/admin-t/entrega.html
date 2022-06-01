@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/2eecc47c4e.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/date-fns/1.30.1/date_fns.min.js" integrity="sha512-F+u8eWHrfY8Xw9BLzZ8rG/0wIvs0y+JyRJrXjp3VjtFPylAEEGwKbua5Ip/oiVhaTDaDs4eU2Xtsxjs/9ag2bQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="style.css">
+    <!-- <link rel="stylesheet" href="../style.css"> -->
+    <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
+    <script src="../../assets/js/funcoes.js"></script>
+    <title>DashBoard</title>
+
+    <style>
+        table,
+        td,
+        th {
+            border: 1px solid;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .cartao {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body onload="mostrarEntrega();">
+    <div class="wrapper">
+        <div class="sidebar">
+            <div class="dropdown">
+                <a href="#"><i class="fa-solid fa-circle-user" style="font-size:70px;  color: white;"></i></a>
+                <div class="dropdown-content">
+                    <h4>Olá <span id="spanNome"></span></h4>
+                </div>
+            </div>
+            <ul>
+                <li><a href="./index.html"><i class="fas fa-home"></i>Home</a></li>
+                <li><a href="./solicitacoes.html"><i class="fas fa-solid fa-file-contract"></i>Solicitações</a></li>
+                <li><a href=""><i class="fas fa-regular fa-truck-ramp-box"></i>Entregas</a></li>
+                <li><a href="./veiculos.html"><i class="fas fa-regular fa-truck"></i>Veículos</a></li>
+                <li><a href=""><i class="fas fa-solid fa-pager"></i>Sensores</a></li>
+                <li><a href="./graficos.html"><i class="fas fa-solid fa-chart-gantt"></i></i>Gráficos/Alertas</a></li>
+                <li><a href="./usuarios.html"><i class="fas fa-solid fa-users"></i>Usuários</a></li>
+                <li><a href="../../index.html" onclick="sair()"><i
+                            class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
+            </ul>
+
+        </div>
+        <div class="main_content">
+            <div class="header">
+                <!-- <input type="text" placeholder="Pesquise.."> -->
+                <img src="img/logo_nome_sembg.png">
+            </div>
+            <div class="info">
+                <!-- Login -->
+                <div class="banner-form alt-banner sign">
+                    <div class="container">
+                        <div class="cartao">
+                            <div class="containerInfosEntrega">
+                                <div id="divIdEntrega" class="infosEntrega"><strong>ID da entrega: </strong><span
+                                        id="spnIdEntrega"></span></div><br>
+                                <div id="divNomeCliente" class="infosEntrega"><strong>Nome do Cliente: </strong><span
+                                        id="spnNomeCliente"></span></div><br>
+                                <div id="divOrigem" class="infosEntrega"><strong>Origem: </strong><span
+                                        id="spnOrigem"></span></div>
+                                <div id="divDestino" class="infosEntrega"><strong>Destino: </strong><span
+                                        id="spnDestino"></span></div><br>
+                                <div id="divCarregamento" class="infosEntrega"><strong>Carregamento: </strong><span
+                                        id="spnCarregamento"></span></div><br>
+                                <div id="divTemperatura" class="infosEntrega"><strong>Temperatura: </strong><span
+                                        id="spnTemperatura"></span></div><br>
+                                <div id="divUmidade" class="infosEntrega"><strong>Umidade: </strong><span
+                                        id="spnUmidade"></span></div><br>
+                                <div id="divData" class="infosEntrega"><strong>Data: </strong><span id="spnData"></span>
+                                </div><br>
+                                <div id="divVeiculo" class="infosEntrega"><strong>Veiculo: </strong><span
+                                        id="spnVeiculo"></span></div><br>
+                                <div id="divHorario" class="infosEntrega"><strong>Horario: </strong><input
+                                        type="datetime-local" id="iptHorarioSaida" timeformat="24h"> <input type="datetime-local"
+                                        id="iptHorarioChegada" timeformat="24h"></div><br>
+                                <div id="divBotoes">
+                                    <button onclick="salvar()">Salvar</button>
+                                    <button onclick="cancelar()">Cancelar</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    var dadosSession = obterDadosSession();
+    var fkCliente = dadosSession.fkCliente;
+    var fkAdmin = dadosSession.idUsuario;
+    spanNome.innerHTML = dadosSession.nomeUsuario
+
+    function mostrarEntrega() {
+        const parametros = new URLSearchParams(window.location.search);
+        const idEntregaVar = parametros.get('idEntrega');
+        const idClienteVar = fkCliente;
+
+        fetch(`/entregas/obterDados`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                idEntregaServer: idEntregaVar,
+                idClienteServer: idClienteVar
+            })
+        }).then(resposta => {
+            console.log(resposta);
+
+            resposta.json().then(dadosEntrega => {
+                let dataCompleta = dadosEntrega[0].dataFormatada.split('-');
+                let ano = dataCompleta[0];
+                let mes = dataCompleta[1];
+                let dia = dataCompleta[2];
+                let horario = dataCompleta[3];
+                spnIdEntrega.innerHTML = dadosEntrega[0].idEntrega;
+                spnNomeCliente.innerHTML = dadosEntrega[0].nomeCliente;
+                spnOrigem.innerHTML = `${dadosEntrega[0].endereco}, ${dadosEntrega[0].numero}<br>${dadosEntrega[0].cidade} - ${dadosEntrega[0].uf}`;
+                spnDestino.innerHTML = `${dadosEntrega[1].endereco}, ${dadosEntrega[1].numero}<br>${dadosEntrega[1].cidade} - ${dadosEntrega[1].uf}`;
+                spnCarregamento.innerHTML = `${dadosEntrega[0].qtd} X ${dadosEntrega[0].nome}`;
+                spnTemperatura.innerHTML = `${dadosEntrega[0].tempMin} º C - ${dadosEntrega[0].tempMax} º C`;
+                spnUmidade.innerHTML = `${dadosEntrega[0].umidMin}% - ${dadosEntrega[0].umidMax}%`;
+                spnData.innerHTML = `${dia}/${mes}/${ano} às ${horario}`;
+                spnVeiculo.innerHTML = `${dadosEntrega[0].modelo} Placa ${dadosEntrega[0].placa}`;
+                if(dadosEntrega[0].horaSaida != null) {
+                    iptHorarioSaida.value = dateFns.format(dadosEntrega[0].horaSaida, 'YYYY-MM-DDThh:mm');
+                }
+                if(dadosEntrega[0].horaChegada != null) {
+                    iptHorarioChegada.value = dateFns.format(dadosEntrega[0].horaChegada, 'YYYY-MM-DDThh:mm');
+                }
+            });
+
+        }).catch(erro => {
+            console.error(`Erro na obtenção dos dados para as entregas`)
+        });
+    }
+
+    function salvar() {
+        const idEntregaVar = spnIdEntrega.innerHTML;
+        const idClienteVar = fkCliente;
+        const horarioSaida = document.getElementById("iptHorarioSaida").value == "" ? null : document.getElementById("iptHorarioSaida").value;
+        const horarioChegada = document.getElementById("iptHorarioChegada").value == "" ? null : document.getElementById("iptHorarioChegada").value;
+
+
+        if (horarioSaida == null) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Horário de saída não preenchido',
+                text: 'Preencha ou clique em cancelar'
+            })
+        } else {
+            if (horarioChegada == null) {
+                fetch('/entregas/adicionarHorSaida', {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        horarioSaidaServer: horarioSaida,
+                        idEntregaServer: idEntregaVar
+                    })
+                }).then(resultado => {
+                    if (resultado.status == 200) {
+                    Swal.fire({
+                        title: 'Sucesso',
+                        text: 'Horário de saída atualizado',
+                        icon: 'success',
+                        timer: 1000,
+                        timerProgressBar: true,
+                        confirmButtonColor: '#34e269',
+                        willClose: () => {
+                            window.location.href = "entregas.html"
+                        }
+                    });
+                }
+                })
+            } else {
+                fetch(`/entregas/adicionarHorChegada`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        horarioSaidaServer: horarioSaida,
+                        horarioChegadaServer: horarioChegada,
+                        idEntregaServer: idEntregaVar
+                    })
+                }).then(resultado => {
+                    if (resultado.status == 200) {
+                        Swal.fire({
+                            title: 'Sucesso',
+                            text: 'Horarios salvos',
+                            icon: 'success',
+                            timer: 1000,
+                            timerProgressBar: true,
+                            confirmButtonColor: '#34e269',
+                            willClose: () => {
+                                window.location.href = "entregas.html"
+                            }
+                        });
+                    }
+                })
+            }
+        }
+    }
+
+    function cancelar() {
+        window.location.href = "entregas.html";
+    }
+
+    function sair() {
+        signOut();
+    }
+
+</script>
+
+</html>

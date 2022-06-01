@@ -32,6 +32,10 @@ router.post('/listar-solicitacoes-transportadora', function (request, response) 
   entregaController.listarSolicitacoesTransportadora(request, response);
 });
 
+router.post('/listar-entregas-transportadora', function (request, response) {
+  entregaController.listarEntregasTransportadora(request, response);
+});
+
 router.post('/obterDados', function (request, response) {
   entregaController.obterDados(request, response);
 });
@@ -42,6 +46,14 @@ router.post('/aprovarEntrega', function(request, response){
 
 router.post('/negarEntrega', function(request, response){
   entregaController.negarEntrega(request, response);
+})
+
+router.post('/adicionarHorSaida', function(request, response){
+  entregaController.adicionarHorSaida(request, response);
+})
+
+router.post('/adicionarHorChegada', function(request, response){
+  entregaController.adicionarHorChegada(request, response);
 })
 
 module.exports = router;

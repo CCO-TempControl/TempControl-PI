@@ -8,31 +8,15 @@
     <script src="https://kit.fontawesome.com/2eecc47c4e.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/date-fns/1.30.1/date_fns.min.js" integrity="sha512-F+u8eWHrfY8Xw9BLzZ8rG/0wIvs0y+JyRJrXjp3VjtFPylAEEGwKbua5Ip/oiVhaTDaDs4eU2Xtsxjs/9ag2bQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="style.css">
     <!-- <link rel="stylesheet" href="../style.css"> -->
     <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
     <script src="../../assets/js/funcoes.js"></script>
     <title>DashBoard</title>
-
-    <style>
-        table,
-        td,
-        th {
-            border: 1px solid;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .cartao {
-            width: 100%;
-        }
-    </style>
 </head>
 
-<body onload="mostrarEntrega();">
+<body onload="obterEntregas();">
     <div class="wrapper">
         <div class="sidebar">
             <div class="dropdown">
@@ -42,15 +26,14 @@
                 </div>
             </div>
             <ul>
-                <li><a href="./index.html"><i class="fas fa-home"></i>Home</a></li>
-                <li><a href="./solicitacoes.html"><i class="fas fa-solid fa-file-contract"></i>Solicitações</a></li>
-                <li><a href=""><i class="fas fa-regular fa-truck-ramp-box"></i>Entregas</a></li>
-                <li><a href="./veiculos.html"><i class="fas fa-regular fa-truck"></i>Veículos</a></li>
-                <li><a href=""><i class="fas fa-solid fa-pager"></i>Sensores</a></li>
-                <li><a href="./graficos.html"><i class="fas fa-solid fa-chart-gantt"></i></i>Gráficos/Alertas</a></li>
-                <li><a href="./usuarios.html"><i class="fas fa-solid fa-users"></i>Usuários</a></li>
-                <li><a href="../../index.html" onclick="sair()"><i
-                            class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
+                <a href="./index.html"><li><i class="fas fa-home"></i>Home</li></a>
+                <a href="./solicitacoes.html"><li><i class="fas fa-solid fa-file-contract"></i>Solicitações</li></a>
+                <a href="./entregas.html"><li><i class="fas fa-regular fa-truck-ramp-box"></i>Entregas</li></a>
+                <a href="./veiculos.html"><li><i class="fas fa-regular fa-truck"></i>Veículos</li></a>
+                <a href=""><li><i class="fas fa-solid fa-pager"></i>Sensores</li></a>
+                <a href="./graficos.html"><li><i class="fas fa-solid fa-chart-gantt"></i></i>Gráficos/Alertas</li></a>
+                <a href="./usuarios.html"><li><i class="fas fa-solid fa-users"></i>Usuários</li></a>
+                <a href="../../index.html" onclick="sair()"><li><i class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</li></a>
             </ul>
 
         </div>
@@ -64,29 +47,11 @@
                 <div class="banner-form alt-banner sign">
                     <div class="container">
                         <div class="cartao">
-                            <div class="containerInfosEntrega">
-                                <div id="divIdEntrega" class="infosEntrega"><strong>ID da entrega: </strong><span
-                                        id="spnIdEntrega"></span></div><br>
-                                <div id="divNomeCliente" class="infosEntrega"><strong>Nome do Cliente: </strong><span
-                                        id="spnNomeCliente"></span></div><br>
-                                <div id="divOrigem" class="infosEntrega"><strong>Origem: </strong><span
-                                        id="spnOrigem"></span></div>
-                                <div id="divDestino" class="infosEntrega"><strong>Destino: </strong><span
-                                        id="spnDestino"></span></div><br>
-                                <div id="divCarregamento" class="infosEntrega"><strong>Carregamento: </strong><span
-                                        id="spnCarregamento"></span></div><br>
-                                <div id="divTemperatura" class="infosEntrega"><strong>Temperatura: </strong><span
-                                        id="spnTemperatura"></span></div><br>
-                                <div id="divUmidade" class="infosEntrega"><strong>Umidade: </strong><span
-                                        id="spnUmidade"></span></div><br>
-                                <div id="divData" class="infosEntrega"><strong>Data: </strong><span id="spnData"></span>
-                                </div><br>
-                                <div id="divBotoes">
-                                    <button onclick="aprovar()">Aprovar solicitação</button>
-                                    <button onclick="negar()">Negar solicitacao</button>
-                                </div>
+                            <div class="tabela tabelaSolicitacoes">
+                                <h1>Entregas</h1>
+                                <ul id="lista">
+                                </ul>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -101,116 +66,73 @@
     var fkAdmin = dadosSession.idUsuario;
     spanNome.innerHTML = dadosSession.nomeUsuario
 
-    function mostrarEntrega() {
-        const parametros = new URLSearchParams(window.location.search);
-        const idEntregaVar = parametros.get('idEntrega');
-        const idClienteVar = fkCliente;
+    function obterEntregas() {
+        const idTransportadoraVar = fkCliente;
 
-        fetch(`/entregas/obterDados`, {
+        console.log(`idTransportadora: ${idTransportadoraVar}`);
+        fetch(`/entregas/listar-entregas-transportadora`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                idEntregaServer: idEntregaVar,
-                idClienteServer: idClienteVar
+                idTransportadoraServer: idTransportadoraVar
             })
-        }).then(resposta => {
-            console.log(resposta);
+        }).then(function (response) {
+            if (response.ok) {
+                //esvaziando a lista que está sendo exibida
+                let elementosNaLista = document.getElementsByClassName('tabela-linha');
+                for (let index = 0; index < elementosNaLista.length; index++) {
+                    elementosNaLista[index].remove();
+                }
 
-            resposta.json().then(dadosEntrega => {
-                spnIdEntrega.innerHTML = dadosEntrega[0].idEntrega;
-                spnNomeCliente.innerHTML = dadosEntrega[0].nomeCliente;
-                spnOrigem.innerHTML = `${dadosEntrega[0].endereco}, ${dadosEntrega[0].numero}<br>${dadosEntrega[0].cidade} - ${dadosEntrega[0].uf}`;
-                spnDestino.innerHTML = `${dadosEntrega[1].endereco}, ${dadosEntrega[1].numero}<br>${dadosEntrega[1].cidade} - ${dadosEntrega[1].uf}`;
-                spnCarregamento.innerHTML = `${dadosEntrega[0].qtd} X ${dadosEntrega[0].nome}`;
-                spnTemperatura.innerHTML = `${dadosEntrega[0].tempMin} º C - ${dadosEntrega[0].tempMax} º C`;
-                spnUmidade.innerHTML = `${dadosEntrega[0].umidMin}% - ${dadosEntrega[0].umidMax}%`;
-                spnData.innerHTML = `${dadosEntrega[0].dataEntrega}`;
+                response.json().then(function (solicitacoesEncontradas) {
+                    document.getElementById("lista").innerHTML = `
+                                    <li class="tabela-cabecalho">
+                                        <div>Farmaceutica</div>
+                                        <div>Trajeto</div>
+                                        <div>Carregamento</div>
+                                        <div>Data de Entrega</div>
+                                        <div>Saída - Chegada</div>
+                                    </li>
+                                    `;
+                    for (let index = 0; index < solicitacoesEncontradas.length; index += 2) {
+                        let solicitacao = solicitacoesEncontradas[index];
+
+                        let dataCompleta = solicitacao.dataEntrega.split('-');
+                        let ano = dataCompleta[0];
+                        let mes = dataCompleta[1];
+                        let dia = dataCompleta[2];
+                        let horario = dataCompleta[3];
+                        document.getElementById("lista").innerHTML += `
+                        <li class="tabela-linha" onclick="mostrarEntrega(${solicitacao.idEntrega})">
+                            <div>${solicitacao.nomeCliente}</div>
+                            <div><strong>Origem:</strong> ${solicitacao.endereco}, ${solicitacao.numero} (${solicitacao.cidade} - ${solicitacao.uf})<br>
+                            <strong>Destino:</strong> ${solicitacoesEncontradas[index + 1].endereco}, ${solicitacoesEncontradas[index + 1].numero} (${solicitacoesEncontradas[index + 1].cidade} - ${solicitacoesEncontradas[index + 1].uf})</div>
+                            <div>${solicitacao.qtd} X ${solicitacao.nome}</div>
+                            <div>${dia}/${mes}/${ano} às ${horario}</div>
+                            <div>${solicitacao.horaSaida == null ? "Não definido" : dateFns.format(solicitacao.horaSaida, 'YYYY-MM-DD hh:mm')} - ${solicitacao.horaChegada == null ? "Não definido" : dateFns.format(solicitacao.horaChegada, 'YYYY-MM-DD hh:mm')}</div>
+                        </li>
+                        `;
+                    }
+                    console.log(`Data: ${solicitacoesEncontradas[0].dataEntrega}`);
+                });
+            } else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Vazio',
+                    text: 'Nenhuma solicitação foi encontrada'
+                })
+                console.error('Nenhum dado encontrado ou erro na API');
+            }
+        })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos veículos cadastrados ${error.message}`);
             });
-
-        }).catch(erro => {
-            console.error(`Erro na obtenção dos dados para as entregas`)
-        });
     }
 
-    function aprovar() {
-        const idEntregaVar = spnIdEntrega.innerHTML;
-        const idClienteVar = fkCliente;
-
-        Swal.fire({
-            title: 'Você quer aprovar a solicitação de entrega?',
-            showCancelButton: true,
-            confirmButtonText: 'Aprovar'
-        }).then((result) => {
-            /* Read more about isConfirmed, isDenied below */
-            if (result.isConfirmed) {
-                fetch(`/entregas/aprovarEntrega`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        idEntregaServer: idEntregaVar,
-                        idClienteServer: idClienteVar
-                    })
-                }).then(resposta => {
-                    if (resposta.status == 200) {
-                        Swal.fire({
-                            title: 'Sucesso',
-                            text: 'Solicitação aprovada',
-                            icon: 'success',
-                            timer: 1000,
-                            timerProgressBar: true,
-                            confirmButtonColor: '#34e269',
-                            willClose: () => {
-                                window.location.href = "solicitacoes.html"
-                            }
-                        });
-                    }
-                }).catch(erro => console.log(`Erro ao aprovar entrega: ${erro}`));
-            }
-        })
-    }
-
-    function negar() {
-        const idEntregaVar = spnIdEntrega.innerHTML;
-        const idClienteVar = fkCliente;
-
-        Swal.fire({
-            icon: 'warning',
-            title: 'Você quer negar a solicitação de entrega?',
-            showCancelButton: true,
-            confirmButtonText: 'Confirmar'
-        }).then((result) => {
-            /* Read more about isConfirmed, isDenied below */
-            if (result.isConfirmed) {
-                fetch(`/entregas/negarEntrega`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        idEntregaServer: idEntregaVar,
-                        idClienteServer: idClienteVar
-                    })
-                }).then(resposta => {
-                    if (resposta.status == 200) {
-                        Swal.fire({
-                            title: 'Sucesso',
-                            text: 'Solicitação negada',
-                            icon: 'success',
-                            timer: 1000,
-                            timerProgressBar: true,
-                            confirmButtonColor: '#34e269',
-                            willClose: () => {
-                                window.location.href = "solicitacoes.html"
-                            }
-                        });
-                    }
-                }).catch(erro => console.log(`Erro ao negar entrega: ${erro}`));
-            }
-        })
+    function mostrarEntrega(idEntrega) {
+        window.location.href = `entrega.html?idEntrega=${idEntrega}`;
     }
 
     function sair() {

@@ -93,16 +93,36 @@ function listarSolicitacoesTransportadora(idTransportadora) {
   return database.executar(instrucao);
 }
 
-function obterDados(idEntrega, idCliente){
-  console.log("ACESSEI O ENTREGA MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function obterDados():", idEntrega, idCliente);
+function listarEntregasTransportadora(idTransportadora) {
+  console.log("ACESSEI O ENTREGA MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function listarPorIdTransportadora():", idTransportadora);
 
   var instrucao = `
-  SELECT * FROM entrega 
+  SELECT entrega.idEntrega, entrega.horaSaida, entrega.horaChegada, cliente.nomeCliente, endereco.endereco, endereco.numero, endereco.cidade, endereco.uf, lote.qtd, medicamento.nome, medicamento.tempMin, medicamento.tempMax, medicamento.umidMin, medicamento.umidMax, DATE_FORMAT(entrega.dataEntrega, '%Y-%m-%d-%T') AS 'dataEntrega', entrega.aprovada, veiculo.modelo, veiculo.placa
+        FROM entrega 
 	INNER JOIN sensor ON entrega.fkSensor = sensor.idSensor 
 	INNER JOIN cliente ON sensor.fkFarmaceutica = idCliente 
 	INNER JOIN endereco ON entrega.idEntrega = endereco.fkEntrega 
     INNER JOIN lote ON lote.fkEntrega = entrega.idEntrega 
-    INNER JOIN medicamento ON lote.fkMedicamento = medicamento.idMedicamento
+    INNER JOIN medicamento ON lote.fkMedicamento = medicamento.idMedicamento 
+    INNER JOIN veiculo ON entrega.fkVeiculo = veiculo.idVeiculo 
+    WHERE entrega.aprovada = 'S' AND entrega.fkTransportadora = ${idTransportadora};
+  `;
+
+  console.log("Executando a instrução SQL: \n" + instrucao);
+  return database.executar(instrucao);
+}
+
+function obterDados(idEntrega, idCliente){
+  console.log("ACESSEI O ENTREGA MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function obterDados():", idEntrega, idCliente);
+
+  var instrucao = `
+  SELECT *, DATE_FORMAT(entrega.dataEntrega, '%Y-%m-%d-%T') AS 'dataFormatada' FROM entrega 
+	INNER JOIN sensor ON entrega.fkSensor = sensor.idSensor 
+	INNER JOIN cliente ON sensor.fkFarmaceutica = idCliente 
+	INNER JOIN endereco ON entrega.idEntrega = endereco.fkEntrega 
+    INNER JOIN lote ON lote.fkEntrega = entrega.idEntrega 
+    INNER JOIN medicamento ON lote.fkMedicamento = medicamento.idMedicamento 
+    INNER JOIN veiculo ON entrega.fkVeiculo = veiculo.idVeiculo 
     WHERE entrega.idEntrega = ${idEntrega} AND entrega.fkTransportadora = ${idCliente};
   `;
 
@@ -110,11 +130,11 @@ function obterDados(idEntrega, idCliente){
   return database.executar(instrucao);
 }
 
-function aprovarEntrega(idEntrega, idCliente){
+function aprovarEntrega(idEntrega, idCliente, idVeiculo){
   console.log("ACESSEI O ENTREGA MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function aprovarEntrega():", idEntrega, idCliente);
 
   var instrucao = `
-  UPDATE entrega SET aprovada = 'S' WHERE entrega.idEntrega = ${idEntrega} AND entrega.fkTransportadora = ${idCliente};
+  UPDATE entrega SET aprovada = 'S', fkVeiculo = ${idVeiculo} WHERE entrega.idEntrega = ${idEntrega} AND entrega.fkTransportadora = ${idCliente};
   `;
 
   console.log("Executando a instrução SQL: \n" + instrucao);
@@ -132,6 +152,28 @@ function negarEntrega(idEntrega, idCliente){
   return database.executar(instrucao);
 }
 
+function adicionarHorSaida(horarioSaida, idEntrega){
+  console.log("ACESSEI O ENTREGA MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function editarHorarios():", horarioSaida, idEntrega);
+
+  var instrucao = `
+  UPDATE entrega SET horaSaida = '${horarioSaida}' WHERE entrega.idEntrega = ${idEntrega};
+  `;
+
+  console.log("Executando a instrução SQL: \n" + instrucao);
+  return database.executar(instrucao);
+}
+
+function adicionarHorChegada(horarioSaida, horarioChegada, idEntrega){
+  console.log("ACESSEI O ENTREGA MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function editarHorarios():", horarioSaida, horarioChegada, idEntrega);
+
+  var instrucao = `
+  UPDATE entrega SET horaSaida = '${horarioSaida}', horaChegada = '${horarioChegada}' WHERE entrega.idEntrega = ${idEntrega};
+  `;
+
+  console.log("Executando a instrução SQL: \n" + instrucao);
+  return database.executar(instrucao);
+}
+
 module.exports = {
   cadastrar,
   dadosKPI,
@@ -140,7 +182,10 @@ module.exports = {
   operacaoInicial,
   operacaoKPI,
   listarSolicitacoesTransportadora,
+  listarEntregasTransportadora,
   obterDados,
   aprovarEntrega,
-  negarEntrega
+  negarEntrega,
+  adicionarHorSaida,
+  adicionarHorChegada
 }
