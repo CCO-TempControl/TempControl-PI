@@ -100,7 +100,7 @@
                             </div>
                             <div class="card-information met">
                                 <h3 id="h3TempMinCritico">--°C</h3>
-                                <h3 id="h3UmidMinCritico">--%</h3>
+                                <h3 id="h3UmidMinCritico">20%</h3>
                             </div>
                         </div>
                         <div class="card-admin-f">
@@ -109,7 +109,7 @@
                             </div>
                             <div class="card-information met">
                                 <h3 id="h3TempMinAviso">--°C</h3>
-                                <h3 id="h3UmidMinAviso">--%</h3>
+                                <h3 id="h3UmidMinAviso">20%</h3>
                             </div>
                         </div>
                         <div class="card-admin-f">
@@ -118,7 +118,7 @@
                             </div>
                             <div class="card-information met">
                                 <h3 id="h3TempIdeal">--°C</h3>
-                                <h3 id="h3UmidIdeal">--%</h3>
+                                <h3 id="h3UmidIdeal">20%</h3>
                             </div>
                         </div>
                         <div class="card-admin-f">
@@ -127,7 +127,7 @@
                             </div>
                             <div class="card-information met">
                                 <h3 id="h3TempMaxAviso">--°C</h3>
-                                <h3 id="h3UmidMaxAviso">--%</h3>
+                                <h3 id="h3UmidMaxAviso">20%</h3>
                             </div>
                         </div>
                         <div class="card-admin-f">
@@ -136,7 +136,7 @@
                             </div>
                             <div class="card-information met">
                                 <h3 id="h3TempMaxCritico">--°C</h3>
-                                <h3 id="h3UmidMaxCritico">--%</h3>
+                                <h3 id="h3UmidMaxCritico">20%</h3>
                             </div>
                         </div>
                     </div>
@@ -731,7 +731,7 @@
 
         await deletarGrafico();
         await renderizarGraficosEstrategicos();
-        carregarKPIEstratégico()
+        carregarKPIEstrategico()
 
 
     }
@@ -847,7 +847,7 @@
         });
     }
 
-    function carregarKPIEstratégico() {
+    function carregarKPIEstrategico() {
         fetch(`/registro/obterKPIEstrategico/${usuario.fkCliente}`, {
             cache: 'no-store',
             method: "GET",
@@ -880,11 +880,6 @@
                     umidadeQtdElement.innerHTML =
                         `${primeirasKPI.qtdAlertaUmidade} dos alertas ocorreram por umidade`
 
-                    for (let i = 0; i < outrasKPI.length; i++) {
-                        let nomeTransportadora = outrasKPI[i].nomeCliente;
-                        let qtdAlertas = outrasKPI[i].qtdAlertasTransporadora;
-                        if (qtdAlertas == null) qtdAlertas = 0;
-                    }
                     let menorQtdAlerta = {
                         'nome': '',
                         'qtdAlertas': -1,
@@ -893,13 +888,16 @@
                         'nome': '',
                         'qtdViagens': -1,
                     };
+
                     for (let i = 0; i < outrasKPI.length; i++) {
                         let nomeTransportadora = outrasKPI[i].nomeCliente;
-                        let qtdAlertas = outrasKPI[i].qtdAlertasTransporadora;
-                        let qtdViagens = outrasKPI[i].qtdViagensTransporadora;
+                        let qtdAlertas = outrasKPI[i].qtdAlerta;
+                        if (qtdAlertas == null) qtdAlertas = 0;
+                        
+                        let qtdViagens = outrasKPI[i].qtdEntregas;
                         for (let j = i + 1; j < outrasKPI.length; j++) {
-                            let outraTransportadoraQtdAlertas = outrasKPI[j].qtdAlertasTransporadora;
-                            let outraTransportadoraQtdViagens = outrasKPI[j].qtdViagensTransporadora;
+                            let outraTransportadoraQtdAlertas = outrasKPI[j].qtdAlerta;
+                            let outraTransportadoraQtdViagens = outrasKPI[j].qtdEntregas;
                             if (qtdAlertas > outraTransportadoraQtdAlertas) {
                                 menorQtdAlerta.nome = nomeTransportadora;
                                 menorQtdAlerta.qtdAlertas = qtdAlertas;

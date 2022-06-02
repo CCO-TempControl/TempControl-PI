@@ -62,7 +62,13 @@ function obterTransportadorasAlertas(fkFarmaceutica) {
     console.log("ACESSEI O SENSOR MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function obterTransportadorasAlertas(): ", fkFarmaceutica);
     
     var instrucao = `
-        select nomeCliente, count(*) as 'qtdViagensTransporadora', (select count(*) from registro where (situacaoTemperatura <> 'I' or situacaoUmidade <> 'I') and fkEntrega = e1.idEntrega group by fkEntrega) as 'qtdAlertasTransporadora' from entrega e1 join cliente on fkTransportadora = idCliente join sensor on fkSensor = idSensor and sensor.fkFarmaceutica = ${fkFarmaceutica} group by e1.fkTransportadora;
+        select 
+            nomeCliente,
+            (SELECT COUNT(idEntrega) FROM entrega WHERE aprovada = 'S' AND horaChegada IS NOT NULL AND fkTransportadora = idCliente) as 'qtdEntregas',
+            (SELECT COUNT(idRegistro) FROM registro INNER JOIN entrega ON idEntrega = fkEntrega WHERE idCliente = fkTransportadora AND (situacaoTemperatura <> 'I' OR situacaoUmidade <> 'I')) as 'qtdAlerta'
+        FROM cliente
+        WHERE tipoCliente = 'T'
+        ORDER BY qtdAlerta ASC, qtdEntregas DESC;
     `;
     
     console.log("Executando a instrução SQL: \n" + instrucao);

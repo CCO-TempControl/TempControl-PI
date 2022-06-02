@@ -241,6 +241,6 @@ select
     (SELECT COUNT(idRegistro) FROM registro INNER JOIN entrega ON idEntrega = fkEntrega WHERE idCliente = fkTransportadora AND (situacaoTemperatura <> 'I' OR situacaoUmidade <> 'I')) as 'qtdAlerta'
 FROM cliente
 WHERE tipoCliente = 'T'
-ORDER BY qtdAlerta DESC, qtdEntregas DESC;
+ORDER BY qtdAlerta ASC, qtdEntregas DESC;
 
 
