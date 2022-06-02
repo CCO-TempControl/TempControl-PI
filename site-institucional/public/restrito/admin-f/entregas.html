@@ -42,7 +42,7 @@
       <div class="info">
         <div id="temperatura">
           <div class="options">
-            <button onclick="entregas()" id="btnDeliveries" class="option selected">Entregas</button>
+            <button onclick="exibirEntregas()" id="btnDeliveries" class="option selected">Entregas</button>
             <button onclick="solicitacoes()" id="btnRequests" class="option">Solicitações</button>
           </div>
           <div id="divDeliveries" class="data-table">
@@ -170,7 +170,7 @@
   </div>
 </body>
 <script>
-  function entregas() {
+  function exibirEntregas() {
     btnRequests.classList.remove('selected');
     divRequests.style.display = 'none';
 
@@ -199,17 +199,10 @@
 </script>
 
 <script>
-  var dadosSession = obterDadosSession();
-  var nome = dadosSession.nomeUsuario;
-  var email = dadosSession.emailUsuario;
-  var idCliente = dadosSession.fkCliente;
-  spanNome.innerHTML = dadosSession.nomeUsuario;
-
-
   var entregas = [];
 
     function carregarEntregas() {
-        fetch(`/entregas/renderizarEntrega/${idCliente}`, {
+        fetch(`/entregas/renderizarEntrega/${usuario.fkCliente}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"

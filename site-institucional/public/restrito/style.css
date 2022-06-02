@@ -668,6 +668,16 @@ div.data-table {
     text-align: center;
 }
 
+.card-information.met{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+}
+.card-information.met h3{
+    margin: 20px;
+}
+
 .card-background {
     height: 60%;
     padding: 2px;

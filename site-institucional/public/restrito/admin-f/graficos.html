@@ -98,40 +98,45 @@
                             <div class="card-background" id="critico">
                                 <h2>Crítico</h2>
                             </div>
-                            <div class="card-information">
-                                <h3>2°C</h3>
+                            <div class="card-information met">
+                                <h3 id="h3TempMinCritico">--°C</h3>
+                                <h3 id="h3UmidMinCritico">--%</h3>
                             </div>
                         </div>
                         <div class="card-admin-f">
                             <div class="card-background" id="alerta">
                                 <h2>Alerta</h2>
                             </div>
-                            <div class="card-information">
-                                <h3>4°C</h3>
+                            <div class="card-information met">
+                                <h3 id="h3TempMinAviso">--°C</h3>
+                                <h3 id="h3UmidMinAviso">--%</h3>
                             </div>
                         </div>
                         <div class="card-admin-f">
                             <div class="card-background" id="ideal">
                                 <h2>Ideal</h2>
                             </div>
-                            <div class="card-information">
-                                <h3>5°C</h3>
+                            <div class="card-information met">
+                                <h3 id="h3TempIdeal">--°C</h3>
+                                <h3 id="h3UmidIdeal">--%</h3>
                             </div>
                         </div>
                         <div class="card-admin-f">
                             <div class="card-background" id="alerta">
                                 <h2>Alerta</h2>
                             </div>
-                            <div class="card-information">
-                                <h3>6°C</h3>
+                            <div class="card-information met">
+                                <h3 id="h3TempMaxAviso">--°C</h3>
+                                <h3 id="h3UmidMaxAviso">--%</h3>
                             </div>
                         </div>
                         <div class="card-admin-f">
                             <div class="card-background" id="critico">
                                 <h2>Crítico</h2>
                             </div>
-                            <div class="card-information">
-                                <h3>8°C</h3>
+                            <div class="card-information met">
+                                <h3 id="h3TempMaxCritico">--°C</h3>
+                                <h3 id="h3UmidMaxCritico">--%</h3>
                             </div>
                         </div>
                     </div>
@@ -248,20 +253,6 @@
 
     function renderizarGraficosOperacionais() {
         // Operacional
-        // Label
-        const background = [];
-        let labelHorario = [
-            '09:00',
-            '10:00',
-            '11:00',
-            '12:00',
-            '13:00',
-            '14:00',
-            '15:00',
-            '16:00',
-            '17:00',
-            '18:00'
-        ];
         /* Gráfico 1 */
 
         let dadosGraficoTempAtual = [];
@@ -276,8 +267,7 @@
         };
 
         var graficoTempAtual = new Chart(
-            document.getElementById('temperatura-viagem-atual'),
-            {
+            document.getElementById('temperatura-viagem-atual'), {
                 type: 'line',
                 data: dataGraficoTempAtual,
                 options: {
@@ -298,7 +288,9 @@
                         }
                     },
                     responsive: true,
-                    animation: { duration: 500 },
+                    animation: {
+                        duration: 500
+                    },
                     hoverMode: 'index',
                     stacked: false,
                     plugins: {
@@ -324,8 +316,7 @@
         };
 
         var graficoUmiAtual = new Chart(
-            document.getElementById('umidade-viagem-atual'),
-            {
+            document.getElementById('umidade-viagem-atual'), {
                 type: 'line',
                 data: dataGraficoUmiAtual,
                 options: {
@@ -372,44 +363,6 @@
     }
 
     function renderizarGraficosEstrategicos() {
-        const labelsMeses = [
-            'Abril',
-            'Maio',
-            'Junho',
-            'Julho',
-            'Agosto',
-        ];
-
-        const labelsSemana = [
-            'Segunda',
-            'Terça',
-            'Quarta',
-            'Quinta',
-            'Sexta',
-            'Sábado',
-            'Domingo'
-        ];
-        const labelsDias = [
-            '04/05',
-            '06/05',
-            '07/05',
-            '08/05',
-            '09/05',
-            '10/05'
-        ];
-        const labelsHoras = [
-            '09:00',
-            '10:00',
-            '11:00',
-            '12:00',
-            '13:00',
-            '14:00',
-            '15:00',
-            '16:00',
-            '17:00',
-            '18:00'
-        ];
-
         // estrategico
         const dataAlertaMensal = {
             labels: [],
@@ -421,8 +374,7 @@
             }]
         };
         const alertasMensal = new Chart(
-            document.getElementById('media-alertas-mensal'),
-            {
+            document.getElementById('media-alertas-mensal'), {
                 type: 'line',
                 data: dataAlertaMensal,
                 options: {
@@ -450,7 +402,8 @@
 
         let dadosAlertasSemanal = [10, 15, 5, 25, 20, 30, 45, 100];
         const dataAlertasSemanal = {
-            labels: [], /* labelsSemana */
+            labels: [],
+            /* labelsSemana */
             datasets: [{
                 label: 'Alertas',
                 backgroundColor: 'rgb(72 116 152)',
@@ -459,8 +412,7 @@
             }]
         };
         const alertasSemanal = new Chart(
-            document.getElementById('media-alertas-semanal'),
-            {
+            document.getElementById('media-alertas-semanal'), {
                 type: 'line',
                 data: dataAlertasSemanal,
                 options: {
@@ -487,7 +439,8 @@
         });
 
         const dataAlertasDiarios = {
-            labels: [],/* labelsDias */
+            labels: [],
+            /* labelsDias */
             datasets: [{
                 label: 'Alertas',
                 backgroundColor: 'rgb(72 116 152)',
@@ -496,8 +449,7 @@
             }]
         };
         const alertasDiario = new Chart(
-            document.getElementById('media-alertas-diario'),
-            {
+            document.getElementById('media-alertas-diario'), {
                 type: 'line',
                 data: dataAlertasDiarios,
                 options: {
@@ -524,7 +476,8 @@
         });
 
         const dataAlertasHoras = {
-            labels: [], /* labelsHoras */
+            labels: [],
+            /* labelsHoras */
             datasets: [{
                 label: 'Alertas',
                 backgroundColor: 'rgb(72 116 152)',
@@ -533,8 +486,7 @@
             }]
         };
         const alertasPHora = new Chart(
-            document.getElementById('media-alertas-hora'),
-            {
+            document.getElementById('media-alertas-hora'), {
                 type: 'line',
                 data: dataAlertasHoras,
                 options: {
@@ -572,24 +524,24 @@
         let viagemElement = document.getElementById('selectViagem');
         let fkEntrega = viagemElement.value;
         fetch(`/registro/obterDados/${fkEntrega}&${ordenar}&${limite}`, {
-            cache: 'no-store',
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json"
-            }
-        }).then(function (response) {
-            console.log(response)
-            if (response.ok) {
-                response.json().then(function (resposta) {
-                    console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
-                    resposta.reverse();
+                cache: 'no-store',
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }).then(function (response) {
+                console.log(response)
+                if (response.ok) {
+                    response.json().then(function (resposta) {
+                        console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+                        resposta.reverse();
 
-                    plotarGrafico(resposta, grafico, tipoGrafico, tipoDado);
-                });
-            } else {
-                console.error('Nenhum dado encontrado ou erro na API');
-            }
-        })
+                        plotarGrafico(resposta, grafico, tipoGrafico, tipoDado);
+                    });
+                } else {
+                    console.error('Nenhum dado encontrado ou erro na API');
+                }
+            })
             .catch(function (error) {
                 console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
             });
@@ -615,33 +567,41 @@
         let viagemElement = document.getElementById('selectViagem');
         let fkEntrega = viagemElement.value;
         fetch(`/registro/obterDados/${fkEntrega}&${ordenar}&${limite}`, {
-            cache: 'no-store',
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json"
-            }
-        }).then(function (response) {
-            if (response.ok) {
-                response.json().then(function (novoRegistro) {
+                cache: 'no-store',
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }).then(function (response) {
+                if (response.ok) {
+                    response.json().then(function (novoRegistro) {
 
-                    console.log(`Dados recebidos: ${JSON.stringify(novoRegistro)}`);
-                    console.log(`Dados atuais do gráfico: ${grafico}`);
+                        console.log(`Dados recebidos: ${JSON.stringify(novoRegistro)}`);
+                        console.log(`Dados atuais do gráfico: ${grafico}`);
 
-                    // tirando e colocando valores no gráfico
-                    grafico.data.labels.shift(); // apagar o primeiro
-                    grafico.data.labels.push(new Date(novoRegistro[0].horario).toLocaleTimeString()); // incluir um novo momento
-                    grafico.data.datasets[0].data.shift();  // apagar o primeiro de umidade
-                    grafico.data.datasets[0].data.push(novoRegistro[0][tipoDado]); // incluir uma nova medida de umidade
+                        // tirando e colocando valores no gráfico
+                        grafico.data.labels.shift(); // apagar o primeiro
+                        grafico.data.labels.push(new Date(novoRegistro[0].horario)
+                    .toLocaleTimeString()); // incluir um novo momento
+                        grafico.data.datasets[0].data.shift(); // apagar o primeiro de umidade
+                        grafico.data.datasets[0].data.push(novoRegistro[0][
+                        tipoDado]); // incluir uma nova medida de umidade
 
-                    grafico.update();
+                        grafico.update();
 
-                    proximaAtualizacao[tipoGrafico].push(setTimeout(() => { atualizarGrafico(grafico, tipoGrafico, tipoDado); proximaAtualizacao[tipoGrafico].shift(); }, 2000));
-                });
-            } else {
-                console.error('Nenhum dado encontrado ou erro na API');
-                proximaAtualizacao[tipoGrafico].push(setTimeout(() => { atualizarGrafico(grafico, tipoGrafico, tipoDado); proximaAtualizacao[tipoGrafico].shift(); }, 2000));
-            }
-        })
+                        proximaAtualizacao[tipoGrafico].push(setTimeout(() => {
+                            atualizarGrafico(grafico, tipoGrafico, tipoDado);
+                            proximaAtualizacao[tipoGrafico].shift();
+                        }, 2000));
+                    });
+                } else {
+                    console.error('Nenhum dado encontrado ou erro na API');
+                    proximaAtualizacao[tipoGrafico].push(setTimeout(() => {
+                        atualizarGrafico(grafico, tipoGrafico, tipoDado);
+                        proximaAtualizacao[tipoGrafico].shift();
+                    }, 2000));
+                }
+            })
             .catch(function (error) {
                 console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
             });
@@ -649,7 +609,7 @@
     }
 
     function carregarEntregas() {
-        fetch(`/entregas/obter/${usuario.fkCliente}`, {
+        fetch(`/entregas/operacao/inicial/${usuario.fkCliente}`, {
             cache: 'no-store',
             method: "GET",
             headers: {
@@ -695,24 +655,24 @@
         let viagemElement = document.getElementById('selectViagem');
         let fkEntrega = viagemElement.value;
         fetch(`/registro/obterAlertas/${usuario.fkCliente}&${tipoDado}`, {
-            cache: 'no-store',
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json"
-            }
-        }).then(function (response) {
-            console.log(response)
-            if (response.ok) {
-                response.json().then(function (resposta) {
-                    console.log(`Dados recebidos: `, JSON.stringify(resposta));
-                    resposta.reverse();
+                cache: 'no-store',
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }).then(function (response) {
+                console.log(response)
+                if (response.ok) {
+                    response.json().then(function (resposta) {
+                        console.log(`Dados recebidos: `, JSON.stringify(resposta));
+                        resposta.reverse();
 
-                    plotarGraficoEstrategico(resposta, grafico, tipoGrafico, tipoDado);
-                });
-            } else {
-                console.error('Nenhum dado encontrado ou erro na API');
-            }
-        })
+                        plotarGraficoEstrategico(resposta, grafico, tipoGrafico, tipoDado);
+                    });
+                } else {
+                    console.error('Nenhum dado encontrado ou erro na API');
+                }
+            })
             .catch(function (error) {
                 console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
             });
@@ -746,6 +706,7 @@
         await deletarGrafico();
 
         await renderizarGraficosOperacionais();
+        renderizarMetricas();
         carregarKPI();
     }
 
@@ -775,6 +736,89 @@
 
     }
 
+    function renderizarMetricas() {
+        let viagemElement = document.getElementById('selectViagem');
+        var fkEntrega = viagemElement.value;
+
+        var entrega = entregas.find(i => {
+            if (i.idEntrega == fkEntrega) {
+                return i;
+            }
+        });
+
+        if (!entrega) {
+            h3TempMinCritico.innerHTML = '--°C';
+            h3TempMinAviso.innerHTML = '--°C';
+            h3TempIdeal.innerHTML = '--°C';
+            h3TempMaxAviso.innerHTML = '--°C';
+            h3TempMaxCritico.innerHTML = '--°C';
+
+            h3UmidMinCritico.innerHTML = '--%';
+            h3UmidMinAviso.innerHTML = '--%';
+            h3UmidIdeal.innerHTML = '--%';
+            h3UmidMaxAviso.innerHTML = '--%';
+            h3UmidMaxCritico.innerHTML = '--%';
+        }
+
+        var minTemp = parseFloat(dadosSelect.minTemperatura);
+        var maxTemp = parseFloat(dadosSelect.maxTemperatura);
+
+        var medianaTemp = (minTemp + maxTemp) / 2;
+        var q1Temp = (minTemp + medianaTemp) / 2;
+        var q3Temp = (maxTemp + medianaTemp) / 2;
+
+        var situacaoTemperatura = 'I'
+
+        if (
+            dht11Temperatura <= minTemp ||
+            dht11Temperatura >= maxTemp
+        ) {
+            situacaoTemperatura = 'C';
+
+        } else if (
+            dht11Temperatura <= q1Temp ||
+            dht11Temperatura >= q3Temp
+        ) {
+            situacaoTemperatura = 'A';
+
+        }
+
+        h3TempMinCritico.innerHTML = `${minTemp}°C`;
+        h3TempMinAviso.innerHTML = `${q1Temp}°C`;
+        h3TempIdeal.innerHTML = `${medianaTemp}°C`;
+        h3TempMaxAviso.innerHTML = `${q3Temp}°C`;
+        h3TempMaxCritico.innerHTML = `${maxTemp}°C`;
+
+        var minUmid = parseFloat(dadosSelect.minUmidade);
+        var maxUmid = parseFloat(dadosSelect.maxUmidade);
+
+        var medianaUmid = (minUmid + maxUmid) / 2;
+        var q1Umid = (minUmid + medianaUmid) / 2;
+        var q3Umid = (maxUmid + medianaUmid) / 2;
+
+        var situacaoUmidade = 'I'
+
+        if (
+            dht11Umidade <= minUmid ||
+            dht11Umidade >= maxUmid
+        ) {
+            situacaoUmidade = 'C';
+
+        } else if (
+            dht11Umidade <= q1Umid ||
+            dht11Umidade >= q3Umid
+        ) {
+            situacaoUmidade = 'A';
+
+        }
+
+        h3UmidMinCritico.innerHTML = `${minUmid}%`;
+        h3UmidMinAviso.innerHTML = `${q1Umid}%`;
+        h3UmidIdeal.innerHTML = `${medianaUmid}%`;
+        h3UmidMaxAviso.innerHTML = `${q3Umid}%`;
+        h3UmidMaxCritico.innerHTML = `${maxUmid}%`;
+    }
+
     function carregarKPI() {
         let viagemElement = document.getElementById('selectViagem');
         let fkEntrega = viagemElement.value;
@@ -793,8 +837,10 @@
                     let temperaturaElement = document.getElementById('temperatura-viagem');
                     let umidadeElement = document.getElementById('umidade-viagem');
                     let alertaElement = document.getElementById('alertas-viagem');
-                    temperaturaElement.innerHTML = `${informacoes.temperaturaminima}/${informacoes.temperaturamaxima}°C`;
-                    umidadeElement.innerHTML = `${informacoes.umidademinima}/${informacoes.umidademaxima}%`;
+                    temperaturaElement.innerHTML =
+                        `${informacoes.temperaturaminima}/${informacoes.temperaturamaxima}°C`;
+                    umidadeElement.innerHTML =
+                        `${informacoes.umidademinima}/${informacoes.umidademaxima}%`;
                     alertaElement.innerHTML = `${informacoes.qtdalertas}`;
                 });
             }
@@ -816,17 +862,23 @@
                     let primeirasKPI = resposta.primeiraParte[0];
                     let outrasKPI = resposta.segundaParte;
 
-                    let temperaturaPorcentagemElement = document.getElementById('temperatura-alertas-porcentagem');
-                    temperaturaPorcentagemElement.innerHTML = `${((primeirasKPI.qtdAlertaTemperatura / primeirasKPI.qtdAlertasTotal) * 100).toFixed(2)}%`
+                    let temperaturaPorcentagemElement = document.getElementById(
+                        'temperatura-alertas-porcentagem');
+                    temperaturaPorcentagemElement.innerHTML =
+                        `${((primeirasKPI.qtdAlertaTemperatura / primeirasKPI.qtdAlertasTotal) * 100).toFixed(2)}%`
 
                     let temperaturaQtdElement = document.getElementById('temperatura-quantidade');
-                    temperaturaQtdElement.innerHTML = `${primeirasKPI.qtdAlertaTemperatura} dos alertas ocorreram por temperatura`
+                    temperaturaQtdElement.innerHTML =
+                        `${primeirasKPI.qtdAlertaTemperatura} dos alertas ocorreram por temperatura`
 
-                    let umidadePorcentagemElement = document.getElementById('umidade-alertas-porcentagem');
-                    umidadePorcentagemElement.innerHTML = `${((primeirasKPI.qtdAlertaUmidade / primeirasKPI.qtdAlertasTotal) * 100).toFixed(2)}%`
+                    let umidadePorcentagemElement = document.getElementById(
+                        'umidade-alertas-porcentagem');
+                    umidadePorcentagemElement.innerHTML =
+                        `${((primeirasKPI.qtdAlertaUmidade / primeirasKPI.qtdAlertasTotal) * 100).toFixed(2)}%`
 
                     let umidadeQtdElement = document.getElementById('umidade-quantidade');
-                    umidadeQtdElement.innerHTML = `${primeirasKPI.qtdAlertaUmidade} dos alertas ocorreram por umidade`
+                    umidadeQtdElement.innerHTML =
+                        `${primeirasKPI.qtdAlertaUmidade} dos alertas ocorreram por umidade`
 
                     for (let i = 0; i < outrasKPI.length; i++) {
                         let nomeTransportadora = outrasKPI[i].nomeCliente;
@@ -860,10 +912,13 @@
                         }
                     }
                     document.getElementById('transportadora-confiavel').innerHTML = menorQtdAlerta.nome;
-                    document.getElementById('transportadora-confiavel-alertas').innerHTML = `Emitiu Apenas ${menorQtdAlerta.qtdAlertas} Alertas`;
+                    document.getElementById('transportadora-confiavel-alertas').innerHTML =
+                        `Emitiu Apenas ${menorQtdAlerta.qtdAlertas} Alertas`;
 
-                    document.getElementById('transportadora-mais-utilizada').innerHTML = maisUtilizada.nome;
-                    document.getElementById('transportadora-mais-utilizada-viagens').innerHTML = `Realizou ${maisUtilizada.qtdViagens} Viagens`;
+                    document.getElementById('transportadora-mais-utilizada').innerHTML = maisUtilizada
+                        .nome;
+                    document.getElementById('transportadora-mais-utilizada-viagens').innerHTML =
+                        `Realizou ${maisUtilizada.qtdViagens} Viagens`;
 
                 });
             }
@@ -893,7 +948,9 @@
         };
 
         let elementsChart = document.getElementsByClassName('chart-container');
-        let elementsChartName = ['temperatura-viagem-atual', 'umidade-viagem-atual', 'media-alertas-mensal', 'media-alertas-semanal', 'media-alertas-diario', 'media-alertas-hora']
+        let elementsChartName = ['temperatura-viagem-atual', 'umidade-viagem-atual', 'media-alertas-mensal',
+            'media-alertas-semanal', 'media-alertas-diario', 'media-alertas-hora'
+        ]
         for (let i = 0; i < elementsChartName.length; i++) {
             console.log(document.getElementById(elementsChartName[i]))
             document.getElementById(elementsChartName[i]).remove();

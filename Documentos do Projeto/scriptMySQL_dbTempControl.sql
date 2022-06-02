@@ -235,4 +235,12 @@ INSERT INTO registro (dht11temperatura, dht11umidade, ldrluminosidade, lm35tempe
 
 SELECT * FROM registro;
 
+select 
+	nomeCliente,
+    (SELECT COUNT(idEntrega) FROM entrega WHERE aprovada = 'S' AND horaChegada IS NOT NULL AND fkTransportadora = idCliente) as 'qtdEntregas',
+    (SELECT COUNT(idRegistro) FROM registro INNER JOIN entrega ON idEntrega = fkEntrega WHERE idCliente = fkTransportadora AND (situacaoTemperatura <> 'I' OR situacaoUmidade <> 'I')) as 'qtdAlerta'
+FROM cliente
+WHERE tipoCliente = 'T'
+ORDER BY qtdAlerta DESC, qtdEntregas DESC;
+
 
