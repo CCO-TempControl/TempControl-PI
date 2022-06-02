@@ -24,20 +24,21 @@ function cadastrar(request, response) {
     // Passe os valores como parâmetro e vá para o arquivo transportadoraModel.js
     clienteModel.cadastrar(nome, cnpj, telefone, 'T').then(
       function (resultado) {
-        var idTransportadora = resultado.insertId;
 
-        usuarioModel.cadastrar(idTransportadora, `Admin ${nome}`, email, senha, 'admin-t', null)
+        usuarioModel.cadastrar(cnpj, `Admin ${nome}`, email, senha, 'admin-t', null)
           .catch(function (erro) {
             console.log(erro);
             console.log(
                 "\nHouve um erro ao realizar o cadastro! Erro: ",
                 erro.sqlMessage
             );
-            
-            response.status(500).json(erro.sqlMessage);
-          });
 
-        response.json(resultado);
+            response.status(500).json(erro.sqlMessage);
+          }).then(() => {
+
+            response.json(resultado);
+    
+          }); 
       }
     ).catch(function (erro) {
       console.log(erro);

@@ -27,32 +27,34 @@ function cadastrar(request, response) {
   } else {
     clienteModel.cadastrar(nome, cnpj, telefone, 'F').then(
       function (resultado) {
-        var idFarmaceutica = resultado.insertId;
-
-        usuarioModel.cadastrar(idFarmaceutica, `Admin ${nome}`, email, senha, 'admin-f', null)
+        
+        usuarioModel.cadastrar(cnpj, `Admin ${nome}`, email, senha, 'admin-f', null)
           .catch(function (erro) {
             console.log(erro);
             console.log(
                 "\nHouve um erro ao realizar o cadastro! Erro: ",
                 erro.sqlMessage
             );
-            
-            response.status(500).json(erro.sqlMessage);
-          });
 
-        for (var index = 1; index <= qtdSensor; index++) {
-          sensorModel.inserir(idFarmaceutica).catch(function (erro) {
-            console.log(erro);
-            console.log(
-                "\nHouve um erro ao realizar o cadastro! Erro: ",
-                erro.sqlMessage
-            );
-            
             response.status(500).json(erro.sqlMessage);
-          });
-        }
+          }).then(() => {
+            for (var index = 1; index <= qtdSensor; index++) {
+              sensorModel.inserir(cnpj).catch(function (erro) {
+                console.log(erro);
+                console.log(
+                    "\nHouve um erro ao realizar o cadastro! Erro: ",
+                    erro.sqlMessage
+                );
 
-        response.json(resultado);
+                response.status(500).json(erro.sqlMessage);
+              }).then(() => {
+                response.json(resultado);
+              })
+            }
+    
+          }); 
+
+        
       }
     ).catch(function (erro) {
       console.log(erro);

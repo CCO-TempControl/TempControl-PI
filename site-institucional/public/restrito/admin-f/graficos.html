@@ -268,38 +268,38 @@
 
         var graficoTempAtual = new Chart(
             document.getElementById('temperatura-viagem-atual'), {
-                type: 'line',
-                data: dataGraficoTempAtual,
-                options: {
-                    scales: {
-                        y: {
-                            title: {
-                                color: '#3C9DCF',
-                                display: true,
-                                text: 'Temperatura °C'
-                            }
-                        },
-                        x: {
-                            title: {
-                                color: '#3C9DCF',
-                                display: true,
-                                text: 'Hora'
-                            }
+            type: 'line',
+            data: dataGraficoTempAtual,
+            options: {
+                scales: {
+                    y: {
+                        title: {
+                            color: '#3C9DCF',
+                            display: true,
+                            text: 'Temperatura °C'
                         }
                     },
-                    responsive: true,
-                    animation: {
-                        duration: 500
-                    },
-                    hoverMode: 'index',
-                    stacked: false,
-                    plugins: {
-                        legend: {
-                            display: false
+                    x: {
+                        title: {
+                            color: '#3C9DCF',
+                            display: true,
+                            text: 'Hora'
                         }
+                    }
+                },
+                responsive: true,
+                animation: {
+                    duration: 500
+                },
+                hoverMode: 'index',
+                stacked: false,
+                plugins: {
+                    legend: {
+                        display: false
                     }
                 }
             }
+        }
         );
         graficos.operacional.push(graficoTempAtual);
 
@@ -317,32 +317,32 @@
 
         var graficoUmiAtual = new Chart(
             document.getElementById('umidade-viagem-atual'), {
-                type: 'line',
-                data: dataGraficoUmiAtual,
-                options: {
-                    scales: {
-                        y: {
-                            title: {
-                                color: '#3C9DCF',
-                                display: true,
-                                text: 'Umidade %'
-                            }
-                        },
-                        x: {
-                            title: {
-                                color: '#3C9DCF',
-                                display: true,
-                                text: 'Hora'
-                            }
+            type: 'line',
+            data: dataGraficoUmiAtual,
+            options: {
+                scales: {
+                    y: {
+                        title: {
+                            color: '#3C9DCF',
+                            display: true,
+                            text: 'Umidade %'
                         }
                     },
-                    plugins: {
-                        legend: {
-                            display: false
+                    x: {
+                        title: {
+                            color: '#3C9DCF',
+                            display: true,
+                            text: 'Hora'
                         }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
                     }
                 }
             }
+        }
         );
         graficos.operacional.push(graficoUmiAtual);
 
@@ -375,25 +375,25 @@
         };
         const alertasMensal = new Chart(
             document.getElementById('media-alertas-mensal'), {
-                type: 'line',
-                data: dataAlertaMensal,
-                options: {
-                    scales: {
-                        y: {
-                            title: {
-                                color: '#3C9DCF',
-                                display: true,
-                                text: 'Alertas'
-                            }
+            type: 'line',
+            data: dataAlertaMensal,
+            options: {
+                scales: {
+                    y: {
+                        title: {
+                            color: '#3C9DCF',
+                            display: true,
+                            text: 'Alertas'
                         }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
                     }
                 }
             }
+        }
         );
         graficos.estrategico.push({
             'tipo': 'mes',
@@ -413,25 +413,25 @@
         };
         const alertasSemanal = new Chart(
             document.getElementById('media-alertas-semanal'), {
-                type: 'line',
-                data: dataAlertasSemanal,
-                options: {
-                    scales: {
-                        y: {
-                            title: {
-                                color: '#3C9DCF',
-                                display: true,
-                                text: 'Alertas'
-                            }
+            type: 'line',
+            data: dataAlertasSemanal,
+            options: {
+                scales: {
+                    y: {
+                        title: {
+                            color: '#3C9DCF',
+                            display: true,
+                            text: 'Alertas'
                         }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
                     }
                 }
             }
+        }
         );
         graficos.estrategico.push({
             'tipo': 'nomeDia',
@@ -450,25 +450,25 @@
         };
         const alertasDiario = new Chart(
             document.getElementById('media-alertas-diario'), {
-                type: 'line',
-                data: dataAlertasDiarios,
-                options: {
-                    scales: {
-                        y: {
-                            title: {
-                                color: '#3C9DCF',
-                                display: true,
-                                text: 'Alertas'
-                            }
+            type: 'line',
+            data: dataAlertasDiarios,
+            options: {
+                scales: {
+                    y: {
+                        title: {
+                            color: '#3C9DCF',
+                            display: true,
+                            text: 'Alertas'
                         }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
                     }
                 }
             }
+        }
         );
         graficos.estrategico.push({
             'tipo': 'dia',
@@ -487,25 +487,25 @@
         };
         const alertasPHora = new Chart(
             document.getElementById('media-alertas-hora'), {
-                type: 'line',
-                data: dataAlertasHoras,
-                options: {
-                    scales: {
-                        y: {
-                            title: {
-                                color: '#3C9DCF',
-                                display: true,
-                                text: 'Alertas'
-                            }
+            type: 'line',
+            data: dataAlertasHoras,
+            options: {
+                scales: {
+                    y: {
+                        title: {
+                            color: '#3C9DCF',
+                            display: true,
+                            text: 'Alertas'
                         }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
                     }
                 }
             }
+        }
         );
         graficos.estrategico.push({
             'tipo': 'tempo',
@@ -524,24 +524,24 @@
         let viagemElement = document.getElementById('selectViagem');
         let fkEntrega = viagemElement.value;
         fetch(`/registro/obterDados/${fkEntrega}&${ordenar}&${limite}`, {
-                cache: 'no-store',
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            }).then(function (response) {
-                console.log(response)
-                if (response.ok) {
-                    response.json().then(function (resposta) {
-                        console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
-                        resposta.reverse();
+            cache: 'no-store',
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(function (response) {
+            console.log(response)
+            if (response.ok) {
+                response.json().then(function (resposta) {
+                    console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+                    resposta.reverse();
 
-                        plotarGrafico(resposta, grafico, tipoGrafico, tipoDado);
-                    });
-                } else {
-                    console.error('Nenhum dado encontrado ou erro na API');
-                }
-            })
+                    plotarGrafico(resposta, grafico, tipoGrafico, tipoDado);
+                });
+            } else {
+                console.error('Nenhum dado encontrado ou erro na API');
+            }
+        })
             .catch(function (error) {
                 console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
             });
@@ -555,8 +555,23 @@
             var registro = resposta[i];
             grafico.data.labels.push(new Date(registro.horario).toLocaleTimeString());
             grafico.data.datasets[0].data.push(registro[tipoDado]);
+            if (tipoDado == 'dht11temperatura') {
+                if (registro[tipoDado] < 30) {
+                    grafico.data.datasets[0].backgroundColor = "#FF00FF";
+                    grafico.data.datasets[0].borderColor = "#FF00FF"
+                } else {
 
+                }
+            } else {
+                if (registro[tipoDado] < 80) {
+                    grafico.data.datasets[0].backgroundColor = "#f5deb3";
+                    grafico.data.datasets[0].borderColor = "#f5deb3"
+                } else {
+
+                }
+            }
         }
+
         grafico.update();
         proximaAtualizacao[tipoGrafico].push(setTimeout(() => atualizarGrafico(grafico, tipoGrafico, tipoDado), 2000));
     }
@@ -567,41 +582,56 @@
         let viagemElement = document.getElementById('selectViagem');
         let fkEntrega = viagemElement.value;
         fetch(`/registro/obterDados/${fkEntrega}&${ordenar}&${limite}`, {
-                cache: 'no-store',
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            }).then(function (response) {
-                if (response.ok) {
-                    response.json().then(function (novoRegistro) {
+            cache: 'no-store',
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(function (response) {
+            if (response.ok) {
+                response.json().then(function (novoRegistro) {
 
-                        console.log(`Dados recebidos: ${JSON.stringify(novoRegistro)}`);
-                        console.log(`Dados atuais do gráfico: ${grafico}`);
+                    console.log(`Dados recebidos: ${JSON.stringify(novoRegistro)}`);
+                    console.log(`Dados atuais do gráfico: ${grafico}`);
 
-                        // tirando e colocando valores no gráfico
-                        grafico.data.labels.shift(); // apagar o primeiro
-                        grafico.data.labels.push(new Date(novoRegistro[0].horario)
-                    .toLocaleTimeString()); // incluir um novo momento
-                        grafico.data.datasets[0].data.shift(); // apagar o primeiro de umidade
-                        grafico.data.datasets[0].data.push(novoRegistro[0][
+                    // tirando e colocando valores no gráfico
+                    grafico.data.labels.shift(); // apagar o primeiro
+                    grafico.data.labels.push(new Date(novoRegistro[0].horario)
+                        .toLocaleTimeString()); // incluir um novo momento
+                    grafico.data.datasets[0].data.shift(); // apagar o primeiro de umidade
+                    grafico.data.datasets[0].data.push(novoRegistro[0][
                         tipoDado]); // incluir uma nova medida de umidade
 
-                        grafico.update();
+                    if (tipoDado == 'dht11temperatura') {
+                        if (novoRegistro[0][tipoDado] < 30) {
+                            grafico.data.datasets[0].backgroundColor = "#FF00FF";
+                            grafico.data.datasets[0].borderColor = "#FF00FF"
+                        } else {
 
-                        proximaAtualizacao[tipoGrafico].push(setTimeout(() => {
-                            atualizarGrafico(grafico, tipoGrafico, tipoDado);
-                            proximaAtualizacao[tipoGrafico].shift();
-                        }, 2000));
-                    });
-                } else {
-                    console.error('Nenhum dado encontrado ou erro na API');
+                        }
+                    } else {
+                        if (novoRegistro[0][tipoDado] < 80) {
+                            grafico.data.datasets[0].backgroundColor = "#f5deb3";
+                            grafico.data.datasets[0].borderColor = "#f5deb3"
+                        } else {
+
+                        }
+                    }
+                    grafico.update();
+
                     proximaAtualizacao[tipoGrafico].push(setTimeout(() => {
                         atualizarGrafico(grafico, tipoGrafico, tipoDado);
                         proximaAtualizacao[tipoGrafico].shift();
                     }, 2000));
-                }
-            })
+                });
+            } else {
+                console.error('Nenhum dado encontrado ou erro na API');
+                proximaAtualizacao[tipoGrafico].push(setTimeout(() => {
+                    atualizarGrafico(grafico, tipoGrafico, tipoDado);
+                    proximaAtualizacao[tipoGrafico].shift();
+                }, 2000));
+            }
+        })
             .catch(function (error) {
                 console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
             });
@@ -655,24 +685,24 @@
         let viagemElement = document.getElementById('selectViagem');
         let fkEntrega = viagemElement.value;
         fetch(`/registro/obterAlertas/${usuario.fkCliente}&${tipoDado}`, {
-                cache: 'no-store',
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            }).then(function (response) {
-                console.log(response)
-                if (response.ok) {
-                    response.json().then(function (resposta) {
-                        console.log(`Dados recebidos: `, JSON.stringify(resposta));
-                        resposta.reverse();
+            cache: 'no-store',
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(function (response) {
+            console.log(response)
+            if (response.ok) {
+                response.json().then(function (resposta) {
+                    console.log(`Dados recebidos: `, JSON.stringify(resposta));
+                    resposta.reverse();
 
-                        plotarGraficoEstrategico(resposta, grafico, tipoGrafico, tipoDado);
-                    });
-                } else {
-                    console.error('Nenhum dado encontrado ou erro na API');
-                }
-            })
+                    plotarGraficoEstrategico(resposta, grafico, tipoGrafico, tipoDado);
+                });
+            } else {
+                console.error('Nenhum dado encontrado ou erro na API');
+            }
+        })
             .catch(function (error) {
                 console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
             });
