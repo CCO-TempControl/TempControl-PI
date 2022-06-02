@@ -40,7 +40,7 @@
                 <a href="./solicitacoes.html"><li><i class="fas fa-solid fa-file-contract"></i>Solicitações</li></a>
                 <a href="./entregas.html"><li><i class="fas fa-regular fa-truck-ramp-box"></i>Entregas</li></a>
                 <a href="./veiculos.html"><li><i class="fas fa-regular fa-truck"></i>Veículos</li></a>
-                <a href=""><li><i class="fas fa-solid fa-pager"></i>Sensores</li></a>
+                <a href="./sensores.html"><li><i class="fas fa-solid fa-pager"></i>Sensores</li></a>
                 <a href="./graficos.html"><li><i class="fas fa-solid fa-chart-gantt"></i></i>Gráficos/Alertas</li></a>
                 <a href="./usuarios.html"><li><i class="fas fa-solid fa-users"></i>Usuários</li></a>
                 <a href="../../index.html" onclick="sair()"><li><i class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</li></a>
@@ -93,18 +93,12 @@
                                 </div>
                                 <button onclick="validarCadastro()">Cadastrar</button>
                             </div>
-                            <table id="tabelaUsuarios">
-                                <thead>
-                                    <tr>
-                                        <th>id</th>
-                                        <th>Nome</th>
-                                        <th>Email</th>
-                                        <th>Tipo</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="corpoTabelaUsuarios">
-                                </tbody>
-                            </table>
+                            <div class="tabela">
+                                <h1>Usuários Cadastrados</h1>
+                                <ul id="lista">
+
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -121,30 +115,30 @@
 
     function obterUsuariosCliente() {
         const idClienteVar = fkCliente;
-        var table = document.getElementById("tabelaUsuarios").getElementsByTagName('tbody')[0];
-        table.innerHTML = '';
 
-        fetch(`/usuarios/listarPorCliente/`, {
-            method: "POST",
+        fetch(`/usuarios/listarPorCliente/${idClienteVar}`, {
+            method: "GET",
             headers: {
                 "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                idClienteServer: idClienteVar
-            })
+            }
         }).then(function (response) {
+            alert("chegando no then");
+            let listaUsuarios = document.getElementById('lista');
+            listaUsuarios.innerHTML = `<li class="tabela-cabecalho">
+                                            <div>Nome</div>
+                                            <div>Email</div>
+                                            <div>Tipo</div>
+                                        </li>`;
             if (response.ok) {
                 response.json().then(function (usuariosEncontrados) {
                     usuariosEncontrados.forEach(usuario => {
-                        var linha = table.insertRow(-1);
-                        var celula1 = linha.insertCell(0);
-                        var celula2 = linha.insertCell(1);
-                        var celula3 = linha.insertCell(2);
-                        var celula4 = linha.insertCell(3);
-                        celula1.innerHTML = usuario.idUsuario;
-                        celula2.innerHTML = usuario.nomeUsuario;
-                        celula3.innerHTML = usuario.emailUsuario;
-                        celula4.innerHTML = usuario.tipoUsuario;
+                        document.getElementById("lista").innerHTML += `
+                            <li class="tabela-linha">
+                                <div>${usuario.nomeUsuario}</div>
+                                <div>${usuario.emailUsuario}</div>
+                                <div>${usuario.tipoUsuario}</div>
+                            </li>
+                        `;
                     });
                 });
             } else {

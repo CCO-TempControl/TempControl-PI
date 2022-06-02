@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/2eecc47c4e.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="style.css">
+    <!-- <link rel="stylesheet" href="../style.css"> -->
+    <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
+    <script src="../../assets/js/funcoes.js"></script>
+    <title>DashBoard</title>
+</head>
+
+<body onload="obterSensoresCliente();">
+    <div class="wrapper">
+        <div class="sidebar">
+            <div class="dropdown">
+                <a href="#"><i class="fa-solid fa-circle-user" style="font-size:70px;  color: white;"></i></a>
+                <div class="dropdown-content">
+                    <h4>Olá <span id="spanNome"></span></h4>
+                </div>
+            </div>
+            <ul>
+                <a href="./index.html"><li><i class="fas fa-home"></i>Home</li></a>
+                <a href="./solicitacoes.html"><li><i class="fas fa-solid fa-file-contract"></i>Solicitações</li></a>
+                <a href="./entregas.html"><li><i class="fas fa-regular fa-truck-ramp-box"></i>Entregas</li></a>
+                <a href="./veiculos.html"><li><i class="fas fa-regular fa-truck"></i>Veículos</li></a>
+                <a href="./sensores.html"><li><i class="fas fa-solid fa-pager"></i>Sensores</li></a>
+                <a href="./graficos.html"><li><i class="fas fa-solid fa-chart-gantt"></i></i>Gráficos/Alertas</li></a>
+                <a href="./usuarios.html"><li><i class="fas fa-solid fa-users"></i>Usuários</li></a>
+                <a href="../../index.html" onclick="sair()"><li><i class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</li></a>
+            </ul>
+
+        </div>
+        <div class="main_content">
+            <div class="header">
+                <img src="img/logo_nome_sembg.png">
+            </div>
+            <div class="info">
+                <!-- Login -->
+                <div class="banner-form alt-banner sign">
+                    <div class="container">
+                        <div class="cartao">
+                            <h2>Sensores</h2>
+                            <div class="tabela">
+                                <h1>Senores em posse</h1>
+                                <ul id="lista">
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    var dadosSession = obterDadosSession();
+    var fkCliente = dadosSession.fkCliente;
+    var fkAdmin = dadosSession.idUsuario;
+    spanNome.innerHTML = dadosSession.nomeUsuario
+
+    function obterSensoresCliente() {
+        const idClienteVar = fkCliente;
+
+        fetch(`/sensores/transportadora/${idClienteVar}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(function (resposta) {
+            console.log('Resposta: ', resposta);
+            let listaDeSensores = document.getElementById('lista');
+            listaDeSensores.innerHTML = `
+                                    <li class="tabela-cabecalho">
+                                        <div>id do sensor</div>
+                                        <div>Farmacêutica</div>
+                                        <div>Reservado para entrega:</div>
+                                        <div>Devolver sensor</div>
+                                    </li>`;
+
+            if (resposta.ok) {
+                resposta.json().then(resultadoJson => {
+                    resultadoJson.forEach(sensorJson => {
+                        let liSensor = document.createElement('li');
+                        liSensor.classList.add('tabela-linha');
+                        listaDeSensores.appendChild(liSensor);
+
+                        let divIdSensor = document.createElement('div');
+                        let divFarmaceutica = document.createElement('div');
+                        let divEntrega = document.createElement('div');
+
+                        divIdSensor.textContent = sensorJson.idSensor;
+                        divFarmaceutica.textContent = sensorJson.nomeCliente;
+                        divEntrega.textContent = sensorJson.idEntrega;
+
+                        liSensor.appendChild(divIdSensor);
+                        liSensor.appendChild(divFarmaceutica);
+                        liSensor.appendChild(divEntrega);
+
+                        let btnDevolver = document.createElement('button');
+                        btnDevolver.textContent = "Devolver";
+                        btnDevolver.onclick = function () {
+                            devolver(sensorJson.idSensor);
+                        }
+                        liSensor.appendChild(btnDevolver);
+                    });
+
+
+                });
+
+            } else {
+                Swal.fire({
+                    title: 'Erro',
+                    text: 'Houve um erro ao carregar os sensores',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    showDenyButton: true,
+                    denyButtonText: 'OK'
+                });
+                return;
+            }
+
+        }).catch(function (erro) {
+            Swal.fire({
+                title: 'Erro',
+                text: 'Houve um erro ao carregar os sensores',
+                icon: 'error',
+                showConfirmButton: false,
+                showDenyButton: true,
+                denyButtonText: 'OK'
+            });
+            console.log(`ERRO: ${erro}`);
+
+            return;
+        })
+    }
+
+    function devolver(idSensor) {
+        Swal.fire({
+            title: 'Você quer devolver o sensor?',
+            showCancelButton: true,
+            confirmButtonText: 'Sim'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`/sensores/devolver/${idSensor}`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }).then(resposta => {
+                    if (resposta.status == 200) {
+                        Swal.fire({
+                            title: 'Sucesso',
+                            text: 'Sensor devolvido',
+                            icon: 'success',
+                            timer: 1000,
+                            timerProgressBar: true,
+                            confirmButtonColor: '#34e269',
+                            willClose: () => {
+                                document.location.reload(true);
+                            }
+                        });
+                    }
+                }).catch(erro => console.log(`Erro ao devolver o sensor: ${erro}`));
+            }
+        })
+
+
+    }
+
+    function sair() {
+        signOut();
+    }
+
+</script>
+
+
+
+
+</html>
