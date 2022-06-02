@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/2eecc47c4e.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="../../assets/js/funcoes.js"></script>
     <link rel="stylesheet" href="../style.css">
     <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
@@ -85,7 +86,7 @@
                             <div class="titulo-tabela-container">Temperatura</div>
                             <div class="titulo-tabela-container">Umidade</div>
                         </li>
-                        <li class="caminhao-container">
+                     <!--    <li class="caminhao-container">
                             <div class="pedido-num titulo-tabela-container"><i class="fas fa-solid fa-truck"></i>#1</div>
                             <div class="pedido-temp colorStatusTemp titulo-tabela-container">6ºC</div>
                             <div class="pedido-umi colorStatusUmi titulo-tabela-container">94%</div>
@@ -94,7 +95,7 @@
                             <div class="pedido-num titulo-tabela-container"><i class="fas fa-solid fa-truck"></i>#2</div>
                             <div class="pedido-temp colorStatusTemp titulo-tabela-container">5ºC</div>
                             <div class="pedido-umi colorStatusUmi titulo-tabela-container">85%</div>
-                        </li>
+                        </li> -->
                     </ul>
                 </div>
             </div>
@@ -104,6 +105,7 @@
 
 <script>
     var entregas = [];
+    var item;
 
     setInterval(() => {
         monitorarEntregas();
@@ -158,7 +160,7 @@
             if (resposta.ok) {
                 resposta.json().then(json => {
                     console.log(json);
-
+                  
                     if (json.length == 0) {
                         entregas = json;
                         pedidos.innerHTML = `
@@ -174,12 +176,13 @@
                     var indexJaRenderizado = [];
 
                     for (var index = 0; index < json.length; index++) {
-                        var item = json[index];
+                        item = json[index];
 
                         for (var i = 0; i < entregas.length; i++) {
                             var entrega = entregas[i];
 
                             if (entrega.idEntrega == item.idEntrega) {
+                    
                                 indexJaRenderizado.push(index);
                                 entregas[i].temperaturaAtual = item.temperaturaAtual;
                                 entregas[i].umidadeAtual = item.umidadeAtual;
@@ -230,8 +233,8 @@
             var item = lista[index];
             
             pedidos.innerHTML += `
-                <li id="liEntrega#${item.idEntrega}" class="caminhao-container">
-                    <div class="pedido-num titulo-tabela-container"><i class="fas fa-solid fa-truck"></i>#${item.idEntrega}</div>
+                <li id="liEntrega#${item.idEntrega}" class="caminhao-container" onclick="detalhes()">
+                    <div class="pedido-num titulo-tabela-container" ><i class="fas fa-solid fa-truck"></i>#${item.idEntrega}</div>
                     <div id="spanTemperaturaAtual#${item.idEntrega}" class="pedido-temp colorStatusTemp titulo-tabela-container">${item.temperaturaAtual}°C</div>
                     <div id="spanUmidadeAtual#${item.idEntrega}" class="pedido-umi colorStatusUmi titulo-tabela-container">${item.umidadeAtual}%</div>
                 </li>
@@ -242,10 +245,49 @@
     function atualizarEntregas() {
         for (var index = 0; index < entregas.length; index++) {
             var entrega = entregas[index];
-            
-            document.getElementById(`spanTemperaturaAtual#${entrega.idEntrega}`).innerHTML = `${item.temperaturaAtual}°C`
-            document.getElementById(`spanUmidadeAtual#${item.idEntrega}`).innerHTML = `${item.umidadeAtual}%`
+            let idTemperaturaAtual=document.getElementById(`spanTemperaturaAtual#${entrega.idEntrega}`); 
+            let idUmidadeAtual=document.getElementById(`spanUmidadeAtual#${item.idEntrega}`);
+            idTemperaturaAtual.innerHTML = `${item.temperaturaAtual}°C`
+            idUmidadeAtual.innerHTML = `${item.umidadeAtual}%`
+
+            if(item.temperaturaAtual<2 || item.temperaturaAtual>8){
+                idTemperaturaAtual.classList.remove("alerta");
+                idTemperaturaAtual.classList.remove("ideal");
+                idTemperaturaAtual.className += " critico";
+                
+            }
+            else if(item.temperaturaAtual<3.5 || item.temperaturaAtual>6.5){
+                idTemperaturaAtual.classList.remove("critico");
+                idTemperaturaAtual.classList.remove("ideal");
+                idTemperaturaAtual.className += " alerta";
+            }
+            else{
+                idTemperaturaAtual.classList.remove("critico");
+                idTemperaturaAtual.classList.remove("alerta");
+                idTemperaturaAtual.className += " ideal";
+            }
+        
+            if(item.umidadeAtual<2 || item.umidadeAtual>8){
+                idUmidadeAtual.classList.remove("alerta");
+                idUmidadeAtual.classList.remove("ideal");
+                idUmidadeAtual.className += " critico";
+            }
+            else if(item.umidadeAtual<3.5 || item.umidadeAtual>6.5){
+                idUmidadeAtual.classList.remove("critico");
+                idUmidadeAtual.classList.remove("ideal");
+                idUmidadeAtual.className += " alerta";
+            }
+            else{
+                idUmidadeAtual.classList.remove("critico");
+                idUmidadeAtual.classList.remove("alerta");
+                idUmidadeAtual.className += " ideal";
+            }
+        
         }
+       
+    }
+    function detalhes(){
+        window.location.assign('./graficos.html');
     }
 </script>
 

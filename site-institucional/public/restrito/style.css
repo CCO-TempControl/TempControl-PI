@@ -535,9 +535,25 @@ div.data-table {
     cursor: pointer;
 }
 
+.critico{
+    color: #FF0000;
+    }
+.alerta{
+    color:#eeff00;
+}
+.ideal{
+    color: #00FF00;
+}
+    
+.caminhao-container:hover{
+    border:rgb(54, 162, 235) solid 2px;
+    transition: 0.2s;
+}
+
 .caminhao-container-titulo,
 .caminhao-container {
     height: 55px;
+    cursor: pointer;
     width: 100%;
     display: flex;
     align-items: center;
