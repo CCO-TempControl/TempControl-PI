@@ -1,11 +1,9 @@
 var database = require('../database/config');
 
-function inserir(fkFarmaceutica) {
-  console.log("ACESSEI O SENSOR MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function cadastrar():", fkFarmaceutica);
+function inserir(cnpj) {
+  console.log("ACESSEI O SENSOR MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function cadastrar():", cnpj);
 
-  var instrucao = `
-    INSERT INTO sensor (fkFarmaceutica) VALUES (${fkFarmaceutica});
-  `;
+  var instrucao = `INSERT INTO sensor (fkFarmaceutica) SELECT idCliente FROM cliente WHERE cnpjCliente = '${cnpj}';`;
 
   console.log("Executando a instrução SQL: \n" + instrucao);
   return database.executar(instrucao);
