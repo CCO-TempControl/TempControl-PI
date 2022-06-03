@@ -203,7 +203,8 @@
                         entregas.push(...json);                
                     }
 
-                    atualizarEntregas();             
+                    atualizarEntregas();
+                    removerEntregas();       
                 })
             } else {
                 Swal.fire({
@@ -233,7 +234,7 @@
             var item = lista[index];
             
             pedidos.innerHTML += `
-                <li id="liEntrega#${item.idEntrega}" class="caminhao-container" onclick="detalhes()">
+                <li id="liEntrega#${item.idEntrega}" class="caminhao-container liEntregaRenderizada" onclick="detalhes()">
                     <div class="pedido-num titulo-tabela-container" ><i class="fas fa-solid fa-truck"></i>#${item.idEntrega}</div>
                     <div id="spanTemperaturaAtual#${item.idEntrega}" class="pedido-temp colorStatusTemp titulo-tabela-container">${item.temperaturaAtual}°C</div>
                     <div id="spanUmidadeAtual#${item.idEntrega}" class="pedido-umi colorStatusUmi titulo-tabela-container">${item.umidadeAtual}%</div>
@@ -286,6 +287,27 @@
         }
        
     }
+
+    function removerEntregas() {
+        var entregasRenderizadas = document.getElementsByClassName('liEntregaRenderizada');
+
+        if (entregasRenderizadas.length > 0) {
+            entregasRenderizadas.forEach(element => {
+                var id = Number(element.id.slice(10));
+
+                var emAndamento = entregas.find(entrega => {
+                    if (entrega.idEntrega == id) {
+                        return entrega
+                    }
+                });
+
+                if (!emAndamento) {
+                    element.parentNode.removeChild(element);
+                }
+            });
+        }
+    }
+
     function detalhes(){
         window.location.assign('./graficos.html');
     }
