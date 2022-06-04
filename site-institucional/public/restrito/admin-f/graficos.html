@@ -100,7 +100,7 @@
                             </div>
                             <div class="card-information met">
                                 <h3 id="h3TempMinCritico">--°C</h3>
-                                <h3 id="h3UmidMinCritico">20%</h3>
+                                <h3 id="h3UmidMinCritico">--%</h3>
                             </div>
                         </div>
                         <div class="card-admin-f">
@@ -109,7 +109,7 @@
                             </div>
                             <div class="card-information met">
                                 <h3 id="h3TempMinAviso">--°C</h3>
-                                <h3 id="h3UmidMinAviso">20%</h3>
+                                <h3 id="h3UmidMinAviso">--%</h3>
                             </div>
                         </div>
                         <div class="card-admin-f">
@@ -118,7 +118,7 @@
                             </div>
                             <div class="card-information met">
                                 <h3 id="h3TempIdeal">--°C</h3>
-                                <h3 id="h3UmidIdeal">20%</h3>
+                                <h3 id="h3UmidIdeal">--%</h3>
                             </div>
                         </div>
                         <div class="card-admin-f">
@@ -127,7 +127,7 @@
                             </div>
                             <div class="card-information met">
                                 <h3 id="h3TempMaxAviso">--°C</h3>
-                                <h3 id="h3UmidMaxAviso">20%</h3>
+                                <h3 id="h3UmidMaxAviso">--%</h3>
                             </div>
                         </div>
                         <div class="card-admin-f">
@@ -136,7 +136,7 @@
                             </div>
                             <div class="card-information met">
                                 <h3 id="h3TempMaxCritico">--°C</h3>
-                                <h3 id="h3UmidMaxCritico">20%</h3>
+                                <h3 id="h3UmidMaxCritico">--%</h3>
                             </div>
                         </div>
                     </div>
@@ -665,6 +665,7 @@
                             renderizarOptEntrega(entrega, ocorrencia);
                         }
                         renderizarGraficosOperacionais();
+                        renderizarMetricas();
                         carregarKPI();
                     }
                 });
@@ -745,7 +746,14 @@
         btnEstrategico.classList.remove('selected');
         idEstrategico.style.display = 'none';
         idOperacao.style.display = 'block';
-        selectViagem.value = '1';
+        var opcoes = document.getElementById('selectViagem').children;
+
+        if (opcoes[0] == undefined) {
+            selectViagem.value = '';
+        } else {
+            selectViagem.value = opcoes[0].value;
+        }
+
         await deletarGrafico();
 
         await renderizarGraficosOperacionais();
@@ -757,7 +765,6 @@
         btnOperacao.classList.remove('selected');
         idOperacao.style.display = 'none';
         idEstrategico.style.display = 'block';
-        selectViagem.value = '1';
 
         await deletarGrafico();
         await renderizarGraficosEstrategicos();
@@ -790,28 +797,12 @@
             h3UmidMaxCritico.innerHTML = '--%';
         }
 
-        var minTemp = parseFloat(dadosSelect.minTemperatura);
-        var maxTemp = parseFloat(dadosSelect.maxTemperatura);
+        var minTemp = parseFloat(entrega.minTemperatura);
+        var maxTemp = parseFloat(entrega.maxTemperatura);
 
         var medianaTemp = (minTemp + maxTemp) / 2;
         var q1Temp = (minTemp + medianaTemp) / 2;
         var q3Temp = (maxTemp + medianaTemp) / 2;
-
-        var situacaoTemperatura = 'I'
-
-        if (
-            dht11Temperatura <= minTemp ||
-            dht11Temperatura >= maxTemp
-        ) {
-            situacaoTemperatura = 'C';
-
-        } else if (
-            dht11Temperatura <= q1Temp ||
-            dht11Temperatura >= q3Temp
-        ) {
-            situacaoTemperatura = 'A';
-
-        }
 
         h3TempMinCritico.innerHTML = `${minTemp}°C`;
         h3TempMinAviso.innerHTML = `${q1Temp}°C`;
@@ -819,28 +810,12 @@
         h3TempMaxAviso.innerHTML = `${q3Temp}°C`;
         h3TempMaxCritico.innerHTML = `${maxTemp}°C`;
 
-        var minUmid = parseFloat(dadosSelect.minUmidade);
-        var maxUmid = parseFloat(dadosSelect.maxUmidade);
+        var minUmid = parseFloat(entrega.minUmidade);
+        var maxUmid = parseFloat(entrega.maxUmidade);
 
         var medianaUmid = (minUmid + maxUmid) / 2;
         var q1Umid = (minUmid + medianaUmid) / 2;
         var q3Umid = (maxUmid + medianaUmid) / 2;
-
-        var situacaoUmidade = 'I'
-
-        if (
-            dht11Umidade <= minUmid ||
-            dht11Umidade >= maxUmid
-        ) {
-            situacaoUmidade = 'C';
-
-        } else if (
-            dht11Umidade <= q1Umid ||
-            dht11Umidade >= q3Umid
-        ) {
-            situacaoUmidade = 'A';
-
-        }
 
         h3UmidMinCritico.innerHTML = `${minUmid}%`;
         h3UmidMinAviso.innerHTML = `${q1Umid}%`;
