@@ -11,24 +11,8 @@
     <link rel="stylesheet" href="../style.css">
     <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
     <script src="../../assets/js/funcoes.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/date-fns/1.30.1/date_fns.min.js" integrity="sha512-F+u8eWHrfY8Xw9BLzZ8rG/0wIvs0y+JyRJrXjp3VjtFPylAEEGwKbua5Ip/oiVhaTDaDs4eU2Xtsxjs/9ag2bQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <title>SOLICITAÇÃO</title>
-
-    <style>
-        table,
-        td,
-        th {
-            border: 1px solid;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .cartao {
-            width: 100%;
-        }
-    </style>
 </head>
 
 <body onload="setUp('admin-t'); mostrarEntrega(); listarVeiculos();">
@@ -84,12 +68,11 @@
                                         <option value="-1"> -- Selecione um veículo -- </option>
                                     </select>
                                 </div>
-                                <div id="divBotoes">
-                                    <button onclick="aprovar()">Aprovar solicitação</button>
-                                    <button onclick="negar()">Negar solicitacao</button>
+                                <div class="divBotoesSolicitacoes">
+                                    <button onclick="negar()" id="btnNegarEntrega">Negar solicitacao</button>
+                                    <button onclick="aprovar()" id="btnAprovarEntrega">Aprovar solicitação</button>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -124,7 +107,7 @@
                 spnCarregamento.innerHTML = `${dadosEntrega[0].qtd} X ${dadosEntrega[0].nome}`;
                 spnTemperatura.innerHTML = `${dadosEntrega[0].tempMin} º C - ${dadosEntrega[0].tempMax} º C`;
                 spnUmidade.innerHTML = `${dadosEntrega[0].umidMin}% - ${dadosEntrega[0].umidMax}%`;
-                spnData.innerHTML = `${dadosEntrega[0].dataEntrega}`;
+                spnData.innerHTML = `${dateFns.format(dadosEntrega[0].dataEntrega, 'YYYY-MM-DD hh:mm')}`;
             });
 
         }).catch(erro => {

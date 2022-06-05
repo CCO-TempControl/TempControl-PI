@@ -994,7 +994,7 @@ div.data-table {
 /* class tabela: usada para todas as listagens */
 .tabela {
     padding: 10px;
-    width: 100%;
+    width: 95%;
     height: fit-content;
     box-sizing: border-box;
     margin-top: 50px;
@@ -1105,3 +1105,20 @@ div.data-table {
   }
   
   /* Entregas */
+
+  .containerInfosEntrega {
+      box-sizing: border-box;
+      padding: 15px;
+  }
+
+  .divBotoesSolicitacoes{
+      margin-top: 10px;
+  }
+
+  #btnAprovarEntrega {
+
+  }
+
+  #btnNegarEntrega {
+      background-color: rgb(231, 57, 57);
+  }

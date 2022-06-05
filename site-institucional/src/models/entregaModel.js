@@ -134,13 +134,12 @@ function obterDados(idEntrega, idCliente){
   console.log("ACESSEI O ENTREGA MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function obterDados():", idEntrega, idCliente);
 
   var instrucao = `
-  SELECT *, DATE_FORMAT(entrega.dataEntrega, '%Y-%m-%d-%T') AS 'dataFormatada' FROM entrega 
-	INNER JOIN sensor ON entrega.fkSensor = sensor.idSensor 
-	INNER JOIN cliente ON sensor.fkFarmaceutica = idCliente 
-	INNER JOIN endereco ON entrega.idEntrega = endereco.fkEntrega 
-    INNER JOIN lote ON lote.fkEntrega = entrega.idEntrega 
+    SELECT *, DATE_FORMAT(entrega.dataEntrega, '%Y-%m-%d-%T') AS 'dataFormatada' FROM entrega 
+    INNER JOIN sensor ON entrega.fkSensor = sensor.idSensor
+    INNER JOIN cliente ON sensor.fkFarmaceutica = idCliente
+    INNER JOIN endereco ON entrega.idEntrega = endereco.fkEntrega
+    INNER JOIN lote ON lote.fkEntrega = entrega.idEntrega
     INNER JOIN medicamento ON lote.fkMedicamento = medicamento.idMedicamento 
-    INNER JOIN veiculo ON entrega.fkVeiculo = veiculo.idVeiculo 
     WHERE entrega.idEntrega = ${idEntrega} AND entrega.fkTransportadora = ${idCliente};
   `;
 
