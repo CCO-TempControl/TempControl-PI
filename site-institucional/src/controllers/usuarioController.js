@@ -8,7 +8,6 @@ function cadastrar(request, response) {
   var tipoUsuario = request.body.tipoUsuarioServer;
   var cliente = request.body.clienteServer;
   var admin = request.body.adminServer;
-
   if (nome == undefined) {
     response.status(400).send("Seu nome está undefined!");
   } else if (email == undefined) {
@@ -34,6 +33,41 @@ function cadastrar(request, response) {
     })
   }
 }
+
+
+function cadastrarUsuario(request, response) {
+  var nome = request.body.nomeServer;
+  var email = request.body.emailServer;
+  var senha = request.body.senhaServer;
+  var tipoUsuario = request.body.tipoUsuarioServer;
+  var cliente = request.body.clienteServer;
+  var admin = request.body.adminServer;
+  if (nome == undefined) {
+    response.status(400).send("Seu nome está undefined!");
+  } else if (email == undefined) {
+    response.status(400).send("Seu email está undefined!");
+  } else if (senha == undefined) {
+    response.status(400).send("Sua senha está undefined!");
+  } else if (tipoUsuario == undefined) {
+    response.status(400).send("Seu tipo de usuário está undefined!");
+  } else if (cliente == undefined) {
+    response.status(400).send("Cliente está undefined!");
+  } else if (admin == undefined) {
+    response.status(400).send("Admin está undefined!");
+  } else {
+    senha = sha512(senha);
+    usuarioModel.cadastrarUsuario(nome, email, senha, tipoUsuario,admin,cliente).then(
+      function (resultado) {
+        response.json(resultado);
+      }
+    ).catch(function (erro) {
+      console.log(erro);
+      console.log("\nHouve um erro ao realizar o cadastro! Erro: ", erro.sqlMessage);
+      response.status(500).json(erro.sqlMessage);
+    })
+  }
+}
+
 
 function entrar(request, response) {
   var email = request.body.emailServer;
@@ -155,6 +189,7 @@ function listarPorCliente(request, response) {
 
 module.exports = {
   cadastrar,
+  cadastrarUsuario,
   entrar,
   listarPorCliente,
   alterarSenha,

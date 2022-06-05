@@ -180,7 +180,7 @@
             return;
         }
 
-        fetch("/usuarios/cadastrar", {
+        fetch("/usuarios/cadastrarUsuario", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -198,6 +198,7 @@
 
             if (resposta.ok) {
                 console.log(resposta);
+                console.log(JSON.stringify(resposta));
 
                 divSignInResult.style.display = 'flex';
                 pMensagem.style.color = '#34e269';

@@ -236,16 +236,16 @@
         for (var index = 0; index < entregas.length; index++) {
             var entrega = entregas[index];
             let idTemperaturaAtual = document.getElementById(`spanTemperaturaAtual#${entrega.idEntrega}`);
-            let idUmidadeAtual = document.getElementById(`spanUmidadeAtual#${item.idEntrega}`);
-            idTemperaturaAtual.innerHTML = `${item.temperaturaAtual}°C`
-            idUmidadeAtual.innerHTML = `${item.umidadeAtual}%`
+            let idUmidadeAtual = document.getElementById(`spanUmidadeAtual#${entrega.idEntrega}`);
+            idTemperaturaAtual.innerHTML = `${entrega.temperaturaAtual}°C`
+            idUmidadeAtual.innerHTML = `${entrega.umidadeAtual}%`
 
-            if (item.situacaoTemperatura == 'C') {
+            if (entrega.situacaoTemperatura == 'C') {
                 idTemperaturaAtual.classList.remove("alerta");
                 idTemperaturaAtual.classList.remove("ideal");
                 idTemperaturaAtual.className += " critico";
 
-            } else if (item.situacaoTemperatura == 'A' ){
+            } else if (entrega.situacaoTemperatura == 'A' ){
                 idTemperaturaAtual.classList.remove("critico");
                 idTemperaturaAtual.classList.remove("ideal");
                 idTemperaturaAtual.className += " alerta";
@@ -256,12 +256,12 @@
                 idTemperaturaAtual.className += " ideal";
             } 
 
-            if (item.situacaoUmidade == 'C') {
+            if (entrega.situacaoUmidade == 'C') {
                 idUmidadeAtual.classList.remove("alerta");
                 idUmidadeAtual.classList.remove("ideal");
                 idUmidadeAtual.className += " critico";
 
-            } else if(item.situacaoUmidade == 'A' ) {
+            } else if(entrega.situacaoUmidade == 'A' ) {
                 idUmidadeAtual.classList.remove("critico");
                 idUmidadeAtual.classList.remove("ideal");
                 idUmidadeAtual.className += " alerta";

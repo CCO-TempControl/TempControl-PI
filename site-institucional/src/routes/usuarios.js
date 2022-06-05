@@ -7,6 +7,10 @@ router.post('/cadastrar', function (request, response) {
   usuarioController.cadastrar(request, response);
 });
 
+router.post('/cadastrarUsuario', function (request, response) {
+  usuarioController.cadastrarUsuario(request, response);
+});
+
 router.post('/autenticar', function (request, response) {
   usuarioController.entrar(request, response)
 });
