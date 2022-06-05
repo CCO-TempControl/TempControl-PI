@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://kit.fontawesome.com/2eecc47c4e.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
+  <script src="../../assets/js/funcoes.js"></script>
+  <script src="../../assets/js/validacoes.js"></script>
+
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <title>DADOS PESSOAIS</title>
+</head>
+
+<body onload="setUp('admin-t')">
+
+
+  <div class="wrapper">
+    <div class="sidebar">
+      <div class="dropdown">
+        <a href="#"><i class="fa-solid fa-circle-user" style="font-size:70px;  color: white;"></i></a>
+        <div class="dropdown-content">
+          <h4>Olá <span id="spanNome"></span></h4>
+        </div>
+      </div>
+      <ul>
+        <li><a href="./index.html"><i class="fas fa-home"></i>Home</a></li>
+        <li><a href="./solicitacoes.html"><i class="fas fa-solid fa-file-contract"></i>Solicitações</a></li>
+        <li><a href="./entregas.html"><i class="fas fa-regular fa-truck-ramp-box"></i>Entregas</a></li>
+        <li><a href="./sensores.html"><i class="fas fa-solid fa-pager"></i>Sensores</a></li>
+        <li><a href="./medicamentos.html"><i class="fas fa-solid fa-file-medical"></i>Medicamentos</a></li>
+        <li><a href="./graficos.html"><i class="fas fa-solid fa-chart-gantt"></i></i>Gráficos/Alertas</a></li>
+        <li><a href="./dadosPessoais.html"><i class="fas fa-solid fa-user"></i></i>Dados Pessoais</a></li>
+        <li><a href="./usuarios.html"><i class="fas fa-solid fa-users"></i>Usuários</a></li>
+        <li><a href="../../index.html" onclick="signOut()"><i
+              class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
+      </ul>
+    </div>
+    <div class="main_content">
+      <div class="header">
+        <!-- <input type="text" placeholder="Pesquise.."> -->
+        <img src="img/logo_nome_sembg.png">
+      </div>
+      <div class="info">
+        <div class="fundoDados">
+          <h2 id="Nome Da Empresa">Dados Pessoais</h2>
+          <div class="FcardDados">
+            <div class="emailEmpresa senhaEmpresa">
+              <h3>Nome</h3>
+              <input id="nomeInput" value="">
+            </div>
+          </div>
+          <div class="FcardDados">
+            <div class="senhaEmpresa">
+              <h3>Email</h3>
+              <input id="emailInput" value="">
+            </div>
+          </div>
+
+          <div class="FcardDados">
+            <div class="senhaEmpresa">
+              <button onclick="validarAtualizacao()">Atualizar</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="fundoDados">
+          <h2 id="Nome Da Empresa">Senha</h2>
+          <div class="FcardDados">
+            <div class="senhaEmpresa">
+              <h3>Senha Atual</h3>
+              <input id="senhaInput" type="password" value="">
+              <i class="fas fa-solid fa-eye" id="senhaVisivel1" style="cursor: pointer;"
+                onclick="visualizarSenha()"></i>
+            </div>
+          </div>
+          <div class="FcardDados">
+            <div class="senhaEmpresa">
+              <h3>Nova Senha</h3>
+              <input id="senhaInputNova" type="password" value="">
+              <i class="fas fa-solid fa-eye" id="senhaVisivel2" style="cursor: pointer;"
+                onclick="visualizarSenha()"></i>
+            </div>
+          </div>
+          <div class="FcardDados">
+            <div class="senhaEmpresa">
+              <h3>Confirmar Senha</h3>
+              <input id="senhaInputNovaConfirma" type="password" value="">
+              <i class="fas fa-solid fa-eye" id="senhaVisivel3" style="cursor: pointer;"
+                onclick="visualizarSenha()"></i>
+            </div>
+          </div>
+
+          <div class="FcardDados">
+            <div class="senhaEmpresa">
+              <button onclick="validarAtualizacao2()">Atualizar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+</body>
+
+<script>
+  var dadosSession = obterDadosSession();
+
+  var nome = dadosSession.nomeUsuario;
+  var email = dadosSession.emailUsuario;
+  spanNome.innerHTML = dadosSession.nomeUsuario;
+
+  nomeInput.value = nome;
+  emailInput.value = email;
+</script>
+
+
+<script>
+  function visualizarSenha() {
+    if (senhaInput.type == 'password') {
+      senhaInput.type = 'text';
+      senhaVisivel1.classList.add('fa-eye-slash');
+      senhaVisivel1.classList.remove('fa-eye');
+    } else {
+      senhaInput.type = 'password';
+      senhaVisivel1.classList.add('fa-eye');
+      senhaVisivel1.classList.remove('fa-eye-slash');
+    }
+  }
+
+  function validarAtualizacao() {
+    var idVar = dadosSession.idUsuario
+    var nomeVar = nomeInput.value;
+    var emailVar = emailInput.value;
+    var validacaoEmail = validarEmail(emailVar);
+
+    if (validacaoEmail != 'OK') {
+      Swal.fire({
+        title: 'Erro',
+        text: validacaoEmail,
+        icon: 'error',
+        showConfirmButton: false,
+        showDenyButton: true,
+        denyButtonText: 'OK'
+      });
+      return;
+    }
+
+    fetch(`/usuarios/alterarDados`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        idUsuario: idVar,
+        nomeUsuario: nomeVar,
+        emailUsuario: emailVar,
+      })
+    }).then(function (resposta) {
+      console.log('Resposta: ', resposta);
+
+      if (resposta.ok) {
+        resposta.json().then(json => {
+          console.log(json);
+          sessionStorage.USUARIO = JSON.stringify(json[0]);
+          sessionStorage.NOME_USUARIO = json[0].nomeUsuario;
+          spanNome.innerHTML = json[0].nomeUsuario;
+        });
+
+        Swal.fire({
+          title: 'Sucesso',
+          text: 'Atualizado Com Sucesso',
+          icon: 'success',
+          showConfirmButton: false,
+          showDenyButton: true,
+          denyButtonText: 'OK'
+        });
+      } else {
+        Swal.fire({
+          title: 'Erro',
+          text: 'Houve um erro ao atualizar os dados',
+          icon: 'error',
+          showConfirmButton: false,
+          showDenyButton: true,
+          denyButtonText: 'OK'
+        });
+      }
+    }).catch(function (erro) {
+      Swal.fire({
+        title: 'Erro',
+        text: 'Houve um erro ao atualizar os dados',
+        icon: 'error',
+        showConfirmButton: false,
+        showDenyButton: true,
+        denyButtonText: 'OK'
+      });
+      console.log(`ERRO: ${erro}`);
+    })
+  }
+
+
+
+  function validarAtualizacao2() {
+    var idVar = dadosSession.idUsuario
+    var senhaNovaVar = senhaInputNova.value;
+    var senhaNovaConfirmaVar = senhaInputNovaConfirma.value;
+    var senhaAntigaVar = senhaInput.value;
+
+    if (senhaNovaConfirmaVar == '' || senhaAntigaVar == '' || senhaNovaVar == '') {
+      Swal.fire({
+        title: 'Erro',
+        text: 'Todos os campos são obrigatórios',
+        icon: 'error',
+        showConfirmButton: false,
+        showDenyButton: true,
+        denyButtonText: 'OK'
+      });
+      return;
+    }
+
+    if (senhaNovaVar != senhaNovaConfirmaVar) {
+      Swal.fire({
+        title: 'Erro',
+        text: 'As senhas informadas devem ser iguais',
+        icon: 'error',
+        showConfirmButton: false,
+        showDenyButton: true,
+        denyButtonText: 'OK'
+      });
+      return;
+    }
+
+
+    var validacaoSenha = validarSenha(senhaNovaVar);
+    if (validacaoSenha != 'OK') {
+      Swal.fire({
+        title: 'Erro',
+        text: validacaoSenha,
+        icon: 'error',
+        showConfirmButton: false,
+        showDenyButton: true,
+        denyButtonText: 'OK'
+      });
+      return;
+    }
+
+
+    fetch(`/usuarios/alterarSenha`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        idUsuario: idVar,
+        senhaAntiga: senhaAntigaVar,
+        senhaNova: senhaNovaVar
+      })
+    }).then(function (resposta) {
+      console.log('Resposta: ', resposta);
+
+      if (resposta.ok) {
+        resposta.json().then(json => {
+          console.log(json);
+          Swal.fire({
+            title: 'Sucesso',
+            text: 'Atualizado Com Sucesso',
+            icon: 'success',
+            showConfirmButton: false,
+            showDenyButton: true,
+            denyButtonText: 'OK',
+            timer: 2000,
+            timerProgressBar: true,
+            willClose: () => {
+              signOut();
+            }
+          });
+        });
+      }
+      else {
+        Swal.fire({
+          title: 'Erro',
+          text: 'Houve um erro ao atualizar a senha',
+          icon: 'error',
+          showConfirmButton: false,
+          showDenyButton: true,
+          denyButtonText: 'OK'
+        });
+      }
+    }).catch(function (erro) {
+      Swal.fire({
+        title: 'Erro',
+        text: 'Houve um erro ao atualizar a senha',
+        icon: 'error',
+        showConfirmButton: false,
+        showDenyButton: true,
+        denyButtonText: 'OK'
+      });
+      console.log(`ERRO: ${erro}`);
+    })
+  }
+
+</script>
+
+</html>

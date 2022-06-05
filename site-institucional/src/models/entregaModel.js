@@ -76,7 +76,7 @@ function operacaoInicial(fkFarmaceutica) {
   console.log("ACESSEI O ENTREGA MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function operacaoInicial():", fkFarmaceutica);
 
   var instrucao = `
-    SELECT e.idEntrega, MAX(m.tempMin) as 'minTemperatura', MIN(m.tempMax) as 'maxTemperatura', MAX(m.umidMin) as 'minUmidade', MIN(m.umidMax) as 'maxUmidade' FROM entrega e INNER JOIN lote l ON l.fkEntrega = e.idEntrega INNER JOIN medicamento m ON m.idMedicamento = l.fkMedicamento WHERE m.fkFarmaceutica = ${fkFarmaceutica} AND e.horaSaida IS NOT NULL AND e.horaChegada IS NULL AND e.aprovada = 'S' GROUP BY e.idEntrega;
+    SELECT e.idEntrega, MAX(m.tempMin) as 'minTemperatura', MIN(m.tempMax) as 'maxTemperatura', MAX(m.umidMin) as 'minUmidade', MIN(m.umidMax) as 'maxUmidade' FROM entrega e INNER JOIN lote l ON l.fkEntrega = e.idEntrega INNER JOIN medicamento m ON m.idMedicamento = l.fkMedicamento WHERE (m.fkFarmaceutica = ${fkFarmaceutica} OR e.fkTransportadora = ${fkFarmaceutica}) AND e.horaSaida IS NOT NULL AND e.horaChegada IS NULL AND e.aprovada = 'S' GROUP BY e.idEntrega;
   `;
 
   console.log("Executando a instrução SQL: \n" + instrucao);

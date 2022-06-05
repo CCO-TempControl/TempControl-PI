@@ -4,6 +4,7 @@ function obterDados(request, response) {
     var fkEntrega = request.params.fkEntregaServer;
     var ordenar = request.params.ordenarServer;
     var limite = parseInt(request.params.limiteServer);
+    
 
     if (limite <= 0 || isNaN(limite)) {
         limite = 10;
@@ -41,13 +42,14 @@ function obterDados(request, response) {
 function obterAlertas(request, response) {
     var fkCliente = request.params.fkClienteServer;
     var tipoDado = request.params.tipoDadoServer;
+    var tipoCliente = request.params.tipoCliente;
 
     if (fkCliente == undefined) {
       response.status(400).send("Fk da Farmacêutica é indefinido");
     } else if (tipoDado == undefined) {
       response.status(400).send("Tipo do Dado é indefinido");
     }  else {
-      registroModel.obterAlertas(fkCliente, tipoDado).then(function (resultado) {
+      registroModel.obterAlertas(fkCliente, tipoDado,tipoCliente).then(function (resultado) {
         console.log(`\nResultados encontrados: ${resultado.length}`);
         console.log(`Resultados: ${JSON.stringify(resultado)}`);
   
@@ -154,10 +156,36 @@ function monitorarEntregas(request, response) {
   }
 }
 
+function situacaoRegistro(request, response) {
+  var fkCliente = request.params.fkCliente;
+  var tipoCliente = request.params.tipoCliente;
+
+  if (fkCliente == undefined) {
+    response.status(400).send('Id do Cliente está indefinido');
+  } else if (tipoCliente == undefined) {
+    response.status(400).send('Tipo Cliente está indefinido');
+  } else {
+    registroModel.situacaoRegistro(fkCliente, tipoCliente).then(resultado => {
+      console.log(resultado);
+
+      response.json(resultado[0]);
+    }).catch(function (erro) {
+      console.log(erro);
+      console.log(
+          "\nHouve um erro ao obter os dados dos sensores! Erro: ",
+          erro.sqlMessage
+      );
+      
+      response.status(500).json(erro.sqlMessage);
+    });
+  }
+}
+
 module.exports = {
   obterDados,
   obterAlertas,
   obterKPI,
   obterKPIEstrategico,
+  situacaoRegistro,
   monitorarEntregas
 }

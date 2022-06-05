@@ -517,6 +517,19 @@
         }
     }
 
+
+    //Metricas
+    var minTemp;
+    var maxTemp;
+    var medianaTemp;
+    var q1Temp;
+    var q3Temp;
+    var minUmid;
+    var maxUmid;
+    var medianaUmid;
+    var q1Umid;
+    var q3Umid;
+
     function obterDadosGrafico(grafico, ordenar, limite, tipoGrafico, tipoDado) {
         if (proximaAtualizacao != undefined) {
             clearTimeout(proximaAtualizacao);
@@ -556,18 +569,34 @@
             grafico.data.labels.push(new Date(registro.horario).toLocaleTimeString());
             grafico.data.datasets[0].data.push(registro[tipoDado]);
             if (tipoDado == 'dht11temperatura') {
-                if (registro[tipoDado] < 30) {
-                    grafico.data.datasets[0].backgroundColor = "#FF00FF";
-                    grafico.data.datasets[0].borderColor = "#FF00FF"
-                } else {
-
+                if (registro[tipoDado] < q3Temp || registro[tipoDado] > q1Temp) {
+                    if (registro[tipoDado] < maxTemp || registro[tipoDado] > minTemp) {
+                        grafico.data.datasets[0].backgroundColor = "#F04A5B";
+                        grafico.data.datasets[0].borderColor = "#F04A5B";
+                    }
+                    else {
+                        grafico.data.datasets[0].backgroundColor = "#FFCD56";
+                        grafico.data.datasets[0].borderColor = "#FFCD56";
+                    }
+                }
+                else {
+                    grafico.data.datasets[0].backgroundColor = "#36A2EB";
+                    grafico.data.datasets[0].borderColor = "#36A2EB";
                 }
             } else {
-                if (registro[tipoDado] < 80) {
-                    grafico.data.datasets[0].backgroundColor = "#f5deb3";
-                    grafico.data.datasets[0].borderColor = "#f5deb3"
-                } else {
-
+                if (registro[tipoDado] < q3Temp || registro[tipoDado] > q1Temp) {
+                    if (registro[tipoDado] < maxTemp || registro[tipoDado] > minTemp) {
+                        grafico.data.datasets[0].backgroundColor = "#F04A5B";
+                        grafico.data.datasets[0].borderColor = "#F04A5B";
+                    }
+                    else {
+                        grafico.data.datasets[0].backgroundColor = "#FFCD56";
+                        grafico.data.datasets[0].borderColor = "#FFCD56";
+                    }
+                }
+                else {
+                    grafico.data.datasets[0].backgroundColor = "#36A2EB";
+                    grafico.data.datasets[0].borderColor = "#36A2EB";
                 }
             }
         }
@@ -603,18 +632,34 @@
                         tipoDado]); // incluir uma nova medida de umidade
 
                     if (tipoDado == 'dht11temperatura') {
-                        if (novoRegistro[0][tipoDado] < 30) {
-                            grafico.data.datasets[0].backgroundColor = "#FF00FF";
-                            grafico.data.datasets[0].borderColor = "#FF00FF"
-                        } else {
-
+                        if (novoRegistro[0][tipoDado] < q3Temp || novoRegistro[0][tipoDado] > q1Temp) {
+                            if (novoRegistro[0][tipoDado] < maxTemp || novoRegistro[0][tipoDado] > minTemp) {
+                                grafico.data.datasets[0].backgroundColor = "#F04A5B";
+                                grafico.data.datasets[0].borderColor = "#F04A5B";
+                            }
+                            else {
+                                grafico.data.datasets[0].backgroundColor = "#FFCD56";
+                                grafico.data.datasets[0].borderColor = "#FFCD56";
+                            }
+                        }
+                        else {
+                            grafico.data.datasets[0].backgroundColor = "#36A2EB";
+                            grafico.data.datasets[0].borderColor = "#36A2EB";
                         }
                     } else {
-                        if (novoRegistro[0][tipoDado] < 80) {
-                            grafico.data.datasets[0].backgroundColor = "#f5deb3";
-                            grafico.data.datasets[0].borderColor = "#f5deb3"
-                        } else {
-
+                        if (novoRegistro[0][tipoDado] < q3Umid || novoRegistro[0][tipoDado] > q1Umid) {
+                            if (novoRegistro[0][tipoDado] < maxUmid || novoRegistro[0][tipoDado] > minUmid) {
+                                grafico.data.datasets[0].backgroundColor = "#F04A5B";
+                                grafico.data.datasets[0].borderColor = "#F04A5B";
+                            }
+                            else {
+                                grafico.data.datasets[0].backgroundColor = "#FFCD56";
+                                grafico.data.datasets[0].borderColor = "#FFCD56";
+                            }
+                        }
+                        else {
+                            grafico.data.datasets[0].backgroundColor = "#36A2EB";
+                            grafico.data.datasets[0].borderColor = "#36A2EB";
                         }
                     }
                     grafico.update();
@@ -685,7 +730,7 @@
         }
         let viagemElement = document.getElementById('selectViagem');
         let fkEntrega = viagemElement.value;
-        fetch(`/registro/obterAlertas/${usuario.fkCliente}&${tipoDado}`, {
+        fetch(`/registro/obterAlertas/${usuario.fkCliente}&${tipoDado}&${'F'}`, {
             cache: 'no-store',
             method: "GET",
             headers: {
@@ -797,12 +842,16 @@
             h3UmidMaxCritico.innerHTML = '--%';
         }
 
-        var minTemp = parseFloat(entrega.minTemperatura);
-        var maxTemp = parseFloat(entrega.maxTemperatura);
+        minTemp = parseFloat(entrega.minTemperatura);
+        maxTemp = parseFloat(entrega.maxTemperatura);
 
-        var medianaTemp = (minTemp + maxTemp) / 2;
-        var q1Temp = (minTemp + medianaTemp) / 2;
-        var q3Temp = (maxTemp + medianaTemp) / 2;
+        medianaTemp = (minTemp + maxTemp) / 2;
+        q1Temp = (minTemp + medianaTemp) / 2;
+        q3Temp = (maxTemp + medianaTemp) / 2;
+
+
+        console.log(minTemp);
+        console.log(maxTemp);
 
         h3TempMinCritico.innerHTML = `${minTemp}°C`;
         h3TempMinAviso.innerHTML = `${q1Temp}°C`;
@@ -810,12 +859,12 @@
         h3TempMaxAviso.innerHTML = `${q3Temp}°C`;
         h3TempMaxCritico.innerHTML = `${maxTemp}°C`;
 
-        var minUmid = parseFloat(entrega.minUmidade);
-        var maxUmid = parseFloat(entrega.maxUmidade);
+        minUmid = parseFloat(entrega.minUmidade);
+        maxUmid = parseFloat(entrega.maxUmidade);
 
-        var medianaUmid = (minUmid + maxUmid) / 2;
-        var q1Umid = (minUmid + medianaUmid) / 2;
-        var q3Umid = (maxUmid + medianaUmid) / 2;
+        medianaUmid = (minUmid + maxUmid) / 2;
+        q1Umid = (minUmid + medianaUmid) / 2;
+        q3Umid = (maxUmid + medianaUmid) / 2;
 
         h3UmidMinCritico.innerHTML = `${minUmid}%`;
         h3UmidMinAviso.innerHTML = `${q1Umid}%`;
@@ -885,44 +934,19 @@
                     umidadeQtdElement.innerHTML =
                         `${primeirasKPI.qtdAlertaUmidade} dos alertas ocorreram por umidade`
 
-                    let menorQtdAlerta = {
-                        'nome': '',
-                        'qtdAlertas': -1,
-                    };
-                    let maisUtilizada = {
-                        'nome': '',
-                        'qtdViagens': -1,
-                    };
+                    let maisUtilizada = outrasKPI.reduce((prev, current) => {
+                        return prev.qtdEntregas > current.qtdEntregas ? prev : current;
+                    });
 
-                    for (let i = 0; i < outrasKPI.length; i++) {
-                        let nomeTransportadora = outrasKPI[i].nomeCliente;
-                        let qtdAlertas = outrasKPI[i].qtdAlerta;
-                        if (qtdAlertas == null) qtdAlertas = 0;
-                        
-                        let qtdViagens = outrasKPI[i].qtdEntregas;
-                        for (let j = i + 1; j < outrasKPI.length; j++) {
-                            let outraTransportadoraQtdAlertas = outrasKPI[j].qtdAlerta;
-                            let outraTransportadoraQtdViagens = outrasKPI[j].qtdEntregas;
-                            if (qtdAlertas > outraTransportadoraQtdAlertas) {
-                                menorQtdAlerta.nome = nomeTransportadora;
-                                menorQtdAlerta.qtdAlertas = qtdAlertas;
-                            }
-                            if (qtdViagens > outraTransportadoraQtdViagens) {
-                                maisUtilizada.nome = nomeTransportadora;
-                                maisUtilizada.qtdViagens = qtdViagens;
-                            }
+                    let menorQtdAlerta = outrasKPI.reduce((prev, current) => {
+                        return prev.qtdAlerta > current.qtdAlerta ? prev : current;
+                    });
 
-                        }
-                    }
-                    document.getElementById('transportadora-confiavel').innerHTML = menorQtdAlerta.nome;
-                    document.getElementById('transportadora-confiavel-alertas').innerHTML =
-                        `Emitiu Apenas ${menorQtdAlerta.qtdAlertas} Alertas`;
+                    document.getElementById('transportadora-confiavel').innerHTML = menorQtdAlerta.nomeCliente;
+                    document.getElementById('transportadora-confiavel-alertas').innerHTML = `Emitiu Apenas ${menorQtdAlerta.qtdAlerta} Alertas`;
 
-                    document.getElementById('transportadora-mais-utilizada').innerHTML = maisUtilizada
-                        .nome;
-                    document.getElementById('transportadora-mais-utilizada-viagens').innerHTML =
-                        `Realizou ${maisUtilizada.qtdViagens} Viagens`;
-
+                    document.getElementById('transportadora-mais-utilizada').innerHTML = maisUtilizada.nomeCliente;
+                    document.getElementById('transportadora-mais-utilizada-viagens').innerHTML = `Realizou ${maisUtilizada.qtdEntregas} Viagens`;
                 });
             }
         });

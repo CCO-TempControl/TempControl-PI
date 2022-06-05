@@ -11,6 +11,16 @@ body {
   background-color: #f3f5f9;
 }
 
+.critico{
+  color: #FF0000;
+  }
+.alerta{
+  color:#eeff00;
+}
+.ideal{
+  color: #00FF00;
+}
+
 .wrapper {
   display: flex;
   position: relative;

@@ -5,14 +5,11 @@ var sensorModel = require('../models/sensorModel');
 
 function dadosKPI(request, response){
     var idCliente = request.params.idCliente;
-    var tipoCliente = request.params.tipoCliente;
 
     if (idCliente == undefined) {
         response.status(400).send('Id do cliente está indefinido');
-    } else if (tipoCliente == undefined) {
-        response.status(400).send('Tipo Cliente está indefinido');
     } else {
-        entregaModel.dadosKPI(idCliente, tipoCliente).then(respota => {
+        entregaModel.dadosKPI(idCliente).then(respota => {
             console.log(respota);
 
             response.json(respota[0]);
@@ -336,48 +333,7 @@ function adicionarHorChegada(request, response) {
     } else {
         entregaModel.adicionarHorChegada(horarioSaida, horarioChegada, idEntrega).then(resultado => {
             response.json(resultado);
-
-        }).catch(function (erro) {
-            console.log(erro);
-            console.log("\nHouve um erro ao realizar o cadastro! Erro: ", erro.sqlMessage);
-            response.status(500).json(erro.sqlMessage);
         });
-    }
-}
-
-function estrategicoTKPI(request, response) {
-    var idCliente = request.params.idCliente;
-
-    if (idCliente == undefined) {
-        response.status(400).send("Id do Cliente está indefinido!");
-    } else {
-        var objResposta = {}
-
-        entregaModel.obterMaiorParceira(idCliente).then(maiorParceira => {
-            if (maiorParceira.length > 0) {
-                objResposta.maiorParceira = maiorParceira[0].maiorParceira;
-            } else {
-                objResposta.maiorParceira = '--';
-            }
-
-            entregaModel.obterMaisAfetada(idCliente).then(maisAfetada => {
-                if (maisAfetada.length > 0) {
-                    objResposta.maisAfetada = maisAfetada[0].maisAfetada;
-                } else {
-                    objResposta.maisAfetada = '--';
-                }
-
-                response.json(objResposta);
-            }).catch(function (erro) {
-                console.log(erro);
-                console.log("\nHouve um erro ao realizar o cadastro! Erro: ", erro.sqlMessage);
-                response.status(500).json(erro.sqlMessage);
-            });
-        }).catch(function (erro) {
-            console.log(erro);
-            console.log("\nHouve um erro ao realizar o cadastro! Erro: ", erro.sqlMessage);
-            response.status(500).json(erro.sqlMessage);
-        })
     }
 }
 
@@ -394,6 +350,5 @@ module.exports = {
     negarEntrega,
     renderizarEntrega,
     adicionarHorSaida,
-    adicionarHorChegada,
-    estrategicoTKPI
+    adicionarHorChegada
 }

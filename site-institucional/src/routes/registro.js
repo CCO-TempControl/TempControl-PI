@@ -11,7 +11,7 @@ router.get('/obterDados/:fkEntregaServer&:ordenarServer&:limiteServer', function
   registroController.obterDados(request, response);
 });
 
-router.get('/obterAlertas/:fkClienteServer&:tipoDadoServer', function (request, response) {
+router.get('/obterAlertas/:fkClienteServer&:tipoDadoServer&:tipoCliente', function (request, response) {
   registroController.obterAlertas(request, response);
 });
 
@@ -25,6 +25,10 @@ router.get('/obterKPIEstrategico/:fkClienteServer', function (request, response)
 
 router.get('/monitorar-entregas/:fkCliente&:tipoCliente', function (request, response) {
   registroController.monitorarEntregas(request, response);
+});
+
+router.get('/situacaoRegistro/:fkCliente&:tipoCliente', function (request, response) {
+  registroController.situacaoRegistro(request, response);
 });
 
 module.exports = router;

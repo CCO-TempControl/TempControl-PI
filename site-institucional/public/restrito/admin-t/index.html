@@ -67,7 +67,7 @@
                     </div>
                     <div class="card-admin-f">
                         <div class="card-background">
-                            <h2>Último Entrega Realizado</h2>
+                            <h2>Última Entrega Realizada</h2>
                         </div>
                         <div class="card-information">
                             <h3><span id="kpiUltimoTransporte"></span> Alertas Emitidos</h3> 
@@ -94,6 +94,7 @@
 
 <script>
     var entregas = [];
+    var item;
 
     setInterval(() => {
         monitorarEntregas();
@@ -235,43 +236,71 @@
         for (var index = 0; index < entregas.length; index++) {
             var entrega = entregas[index];
             let idTemperaturaAtual=document.getElementById(`spanTemperaturaAtual#${entrega.idEntrega}`); 
-            let idUmidadeAtual=document.getElementById(`spanUmidadeAtual#${item.idEntrega}`);
-            idTemperaturaAtual.innerHTML = `${item.temperaturaAtual}°C`
-            idUmidadeAtual.innerHTML = `${item.umidadeAtual}%`
+            let idUmidadeAtual=document.getElementById(`spanUmidadeAtual#${entrega.idEntrega}`);
+            idTemperaturaAtual.innerHTML = `${entrega.temperaturaAtual}°C`
+            idUmidadeAtual.innerHTML = `${entrega.umidadeAtual}%`
+           
+            fetch(`/registro/situacaoRegistro/${usuario.fkCliente}&${'T'}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }).then(resposta => {
+                if (resposta.ok) {
+                    resposta.json().then(json => {
+                        if(json.situacaoTemperatura == 'C'){
+                            idTemperaturaAtual.classList.remove("alerta");
+                            idTemperaturaAtual.classList.remove("ideal");
+                            idTemperaturaAtual.className += " critico";
+                        }
+                        else if(json.situacaoTemperatura == 'A' ){
+                            idTemperaturaAtual.classList.remove("critico");
+                            idTemperaturaAtual.classList.remove("ideal");
+                            idTemperaturaAtual.className += " alerta";
+                        }
+                        else{
+                            idTemperaturaAtual.classList.remove("critico");
+                            idTemperaturaAtual.classList.remove("alerta");
+                            idTemperaturaAtual.className += " ideal";
+                        }       
 
-            if(item.temperaturaAtual<2 || item.temperaturaAtual>8){
-                idTemperaturaAtual.classList.remove("alerta");
-                idTemperaturaAtual.classList.remove("ideal");
-                idTemperaturaAtual.className += " critico";
-                
-            }
-            else if(item.temperaturaAtual<3.5 || item.temperaturaAtual>6.5){
-                idTemperaturaAtual.classList.remove("critico");
-                idTemperaturaAtual.classList.remove("ideal");
-                idTemperaturaAtual.className += " alerta";
-            }
-            else{
-                idTemperaturaAtual.classList.remove("critico");
-                idTemperaturaAtual.classList.remove("alerta");
-                idTemperaturaAtual.className += " ideal";
-            }
-        
-            if(item.umidadeAtual<2 || item.umidadeAtual>8){
-                idUmidadeAtual.classList.remove("alerta");
-                idUmidadeAtual.classList.remove("ideal");
-                idUmidadeAtual.className += " critico";
-            }
-            else if(item.umidadeAtual<3.5 || item.umidadeAtual>6.5){
-                idUmidadeAtual.classList.remove("critico");
-                idUmidadeAtual.classList.remove("ideal");
-                idUmidadeAtual.className += " alerta";
-            }
-            else{
-                idUmidadeAtual.classList.remove("critico");
-                idUmidadeAtual.classList.remove("alerta");
-                idUmidadeAtual.className += " ideal";
-            }
-        
+                        if(json.situacaoUmidade == 'C'){
+                            idUmidadeAtual.classList.remove("alerta");
+                            idUmidadeAtual.classList.remove("ideal");
+                            idUmidadeAtual.className += " critico";
+                        }
+                        else if(json.situacaoUmidade == 'A' ){
+                            idUmidadeAtual.classList.remove("critico");
+                            idUmidadeAtual.classList.remove("ideal");
+                            idUmidadeAtual.className += " alerta";
+                        }
+                        else{
+                            idUmidadeAtual.classList.remove("critico");
+                            idUmidadeAtual.classList.remove("alerta");
+                            idUmidadeAtual.className += " ideal";
+                        }   
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Erro',
+                        text: 'Houve um erro ao carregar as entregas',
+                        icon: 'error',
+                        showConfirmButton: false,
+                        showDenyButton: true,
+                        denyButtonText: 'OK'
+                    });
+                }
+            }).catch(erro => {
+                Swal.fire({
+                    title: 'Erro',
+                    text: 'Houve um erro ao carregar as entregas',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    showDenyButton: true,
+                    denyButtonText: 'OK'
+                });
+                console.log(`ERRO: ${erro}`);
+            })
         }
        
     }
@@ -280,9 +309,9 @@
         var entregasRenderizadas = document.getElementsByClassName('liEntregaRenderizada');
 
         if (entregasRenderizadas.length > 0) {
-            entregasRenderizadas.forEach(element => {
+            for (let i = 0; i < entregasRenderizadas.length; i++) {
+                let element = entregasRenderizadas[i];
                 var id = Number(element.id.slice(10));
-
                 var emAndamento = entregas.find(entrega => {
                     if (entrega.idEntrega == id) {
                         return entrega
@@ -292,7 +321,7 @@
                 if (!emAndamento) {
                     element.parentNode.removeChild(element);
                 }
-            });
+            }
         }
     }
 

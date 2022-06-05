@@ -13,6 +13,7 @@
     <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
     <title>DASHBOARD</title>
 </head>
+
 <body onload="setUp('admin-f'); carregarKPIs()">
     <div class="wrapper">
         <div class="sidebar">
@@ -31,8 +32,9 @@
                 <li><a href="./graficos.html"><i class="fas fa-solid fa-chart-gantt"></i></i>Gráficos/Alertas</a></li>
                 <li><a href="./dadosPessoais.html"><i class="fas fa-solid fa-user"></i></i>Dados Pessoais</a></li>
                 <li><a href="./usuarios.html"><i class="fas fa-solid fa-users"></i>Usuários</a></li>
-                <li><a href="../../index.html" onclick="signOut()"><i class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
-            </ul>            
+                <li><a href="../../index.html" onclick="signOut()"><i
+                            class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
+            </ul>
         </div>
         <div class="main_content">
             <div class="header">
@@ -64,16 +66,16 @@
                         <div class="card-information">
                             <h3 id="kpiMediaAlertaEntrega"></h3>
                         </div>
-                        
+
                     </div>
                     <div class="card-admin-f">
                         <div class="card-background">
                             <h2>Último Entrega Realizado</h2>
                         </div>
                         <div class="card-information">
-                            <h3><span id="kpiUltimoTransporte"></span> Alertas Emitidos</h3> 
+                            <h3><span id="kpiUltimoTransporte"></span> Alertas Emitidos</h3>
                         </div>
-                        
+
                     </div>
                 </div>
 
@@ -150,7 +152,7 @@
             if (resposta.ok) {
                 resposta.json().then(json => {
                     console.log(json);
-                  
+
                     if (json.length == 0) {
                         entregas = json;
                         pedidos.innerHTML = `
@@ -172,7 +174,7 @@
                             var entrega = entregas[i];
 
                             if (entrega.idEntrega == item.idEntrega) {
-                    
+
                                 indexJaRenderizado.push(index);
                                 entregas[i].temperaturaAtual = item.temperaturaAtual;
                                 entregas[i].umidadeAtual = item.umidadeAtual;
@@ -184,17 +186,17 @@
 
                     for (var renderIndex = 0; renderIndex < indexJaRenderizado.length; renderIndex++) {
                         var indexParaRemover = indexJaRenderizado[renderIndex];
-                        
+
                         json.splice(indexJaRenderizado, 1);
                     }
 
                     if (json.length > 0) {
                         renderizarEntregas(json);
-                        entregas.push(...json);                
+                        entregas.push(...json);
                     }
 
                     atualizarEntregas();
-                    removerEntregas();       
+                    removerEntregas();
                 })
             } else {
                 Swal.fire({
@@ -222,7 +224,7 @@
     function renderizarEntregas(lista) {
         for (var index = 0; index < lista.length; index++) {
             var item = lista[index];
-            
+
             pedidos.innerHTML += `
                 <li id="liEntrega#${item.idEntrega}" class="caminhao-container liEntregaRenderizada" onclick="detalhes()">
                     <div class="pedido-num titulo-tabela-container" ><i class="fas fa-solid fa-truck"></i>#${item.idEntrega}</div>
@@ -236,46 +238,79 @@
     function atualizarEntregas() {
         for (var index = 0; index < entregas.length; index++) {
             var entrega = entregas[index];
-            let idTemperaturaAtual=document.getElementById(`spanTemperaturaAtual#${entrega.idEntrega}`); 
-            let idUmidadeAtual=document.getElementById(`spanUmidadeAtual#${item.idEntrega}`);
+            let idTemperaturaAtual = document.getElementById(`spanTemperaturaAtual#${entrega.idEntrega}`);
+            let idUmidadeAtual = document.getElementById(`spanUmidadeAtual#${item.idEntrega}`);
             idTemperaturaAtual.innerHTML = `${item.temperaturaAtual}°C`
             idUmidadeAtual.innerHTML = `${item.umidadeAtual}%`
 
-            if(item.temperaturaAtual<2 || item.temperaturaAtual>8){
-                idTemperaturaAtual.classList.remove("alerta");
-                idTemperaturaAtual.classList.remove("ideal");
-                idTemperaturaAtual.className += " critico";
-                
-            }
-            else if(item.temperaturaAtual<3.5 || item.temperaturaAtual>6.5){
-                idTemperaturaAtual.classList.remove("critico");
-                idTemperaturaAtual.classList.remove("ideal");
-                idTemperaturaAtual.className += " alerta";
-            }
-            else{
-                idTemperaturaAtual.classList.remove("critico");
-                idTemperaturaAtual.classList.remove("alerta");
-                idTemperaturaAtual.className += " ideal";
-            }
-        
-            if(item.umidadeAtual<2 || item.umidadeAtual>8){
-                idUmidadeAtual.classList.remove("alerta");
-                idUmidadeAtual.classList.remove("ideal");
-                idUmidadeAtual.className += " critico";
-            }
-            else if(item.umidadeAtual<3.5 || item.umidadeAtual>6.5){
-                idUmidadeAtual.classList.remove("critico");
-                idUmidadeAtual.classList.remove("ideal");
-                idUmidadeAtual.className += " alerta";
-            }
-            else{
-                idUmidadeAtual.classList.remove("critico");
-                idUmidadeAtual.classList.remove("alerta");
-                idUmidadeAtual.className += " ideal";
-            }
-        
+
+
+            fetch(`/registro/situacaoRegistro/${usuario.fkCliente}&${'F'}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }).then(resposta => {
+                if (resposta.ok) {
+                    resposta.json().then(json => {
+                        if(json.situacaoTemperatura == 'C'){
+                            idTemperaturaAtual.classList.remove("alerta");
+                            idTemperaturaAtual.classList.remove("ideal");
+                            idTemperaturaAtual.className += " critico";
+                        }
+                        else if(json.situacaoTemperatura == 'A' ){
+                            idTemperaturaAtual.classList.remove("critico");
+                            idTemperaturaAtual.classList.remove("ideal");
+                            idTemperaturaAtual.className += " alerta";
+                        }
+                        else{
+                            idTemperaturaAtual.classList.remove("critico");
+                            idTemperaturaAtual.classList.remove("alerta");
+                            idTemperaturaAtual.className += " ideal";
+                        }       
+
+                        if(json.situacaoUmidade == 'C'){
+                            idUmidadeAtual.classList.remove("alerta");
+                            idUmidadeAtual.classList.remove("ideal");
+                            idUmidadeAtual.className += " critico";
+                        }
+                        else if(json.situacaoUmidade == 'A' ){
+                            idUmidadeAtual.classList.remove("critico");
+                            idUmidadeAtual.classList.remove("ideal");
+                            idUmidadeAtual.className += " alerta";
+                        }
+                        else{
+                            idUmidadeAtual.classList.remove("critico");
+                            idUmidadeAtual.classList.remove("alerta");
+                            idUmidadeAtual.className += " ideal";
+                        }   
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Erro',
+                        text: 'Houve um erro ao carregar as entregas',
+                        icon: 'error',
+                        showConfirmButton: false,
+                        showDenyButton: true,
+                        denyButtonText: 'OK'
+                    });
+                }
+            }).catch(erro => {
+                Swal.fire({
+                    title: 'Erro',
+                    text: 'Houve um erro ao carregar as entregas',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    showDenyButton: true,
+                    denyButtonText: 'OK'
+                });
+                console.log(`ERRO: ${erro}`);
+            })
+
+
+
         }
-       
+
     }
 
     function removerEntregas() {
@@ -290,7 +325,7 @@
                         return entrega
                     }
                 });
-    
+
                 if (!emAndamento) {
                     element.parentNode.removeChild(element);
                 }
@@ -298,7 +333,7 @@
         }
     }
 
-    function detalhes(){
+    function detalhes() {
         window.location.assign('./graficos.html');
     }
 </script>
