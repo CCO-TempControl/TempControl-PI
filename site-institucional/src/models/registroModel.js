@@ -28,11 +28,11 @@ function obterAlertas(fkCliente, tipoDado,tipoCliente) {
         'quantidadeAlerta', MONTHNAME(horario) as 'mes' FROM registro r1 join entrega e2 on idEntrega = fkEntrega join sensor on idSensor = fkSensor`; 
         
       if (tipoCliente == 'F') {
-        instrucao += ` AND e2.fkFarmaceutica = ${fkCliente} `;
+        instrucao += ` AND fkFarmaceutica = ${fkCliente} `;
     } else {
         instrucao += ` AND e2.fkTransportadora = ${fkCliente} `;
     }
-    instrucao +=` WHERE e2.horaSaida IS NOT NULL AND e2.horaChegada IS NULL GROUP BY MONTHNAME(horario) order by horario desc;`;
+    instrucao +=` GROUP BY MONTHNAME(horario) order by horario desc;`;
     
 
 
@@ -40,18 +40,34 @@ function obterAlertas(fkCliente, tipoDado,tipoCliente) {
         instrucao = `SELECT COUNT(situacaoTemperatura) as 'quantidadeRegistro', (select COUNT(*) from registro r2 join entrega on idEntrega = fkEntrega join sensor on idSensor = fkSensor and (r2.situacaoTemperatura <> 'I' or r2.situacaoUmidade <> 'I')  and r1.idRegistro = r2.idRegistro) as 'quantidadeAlerta', DAYNAME(horario) as 'nomeDia' FROM registro r1 join entrega on fkEntrega = idEntrega join Sensor on fkSensor = idSensor`;
         
         if (tipoCliente == 'F') {
-            instrucao += ` AND entrega.fkFarmaceutica = ${fkCliente} `;
+            instrucao += ` AND fkFarmaceutica = ${fkCliente} `;
         } else {
             instrucao += ` AND entrega.fkTransportadora = ${fkCliente} `;
         }
-        instrucao +=` AND MONTH(horario) = ${new Date().getMonth() + 1 } WHERE entrega.horaSaida IS NOT NULL AND entrega.horaChegada IS NULL GROUP BY DAYNAME(horario);`;
+        instrucao +=` AND MONTH(horario) = ${new Date().getMonth() + 1 } GROUP BY DAYNAME(horario);`;
 
 
     } else if (tipoDado == 'dia') {
-        instrucao = `SELECT COUNT(situacaoTemperatura) as 'quantidadeRegistro', (select COUNT(*) from registro r2 join entrega on idEntrega = fkEntrega join sensor on idSensor = fkSensor and sensor.fkFarmaceutica = ${fkCliente} and (r2.situacaoTemperatura <> 'I' or r2.situacaoUmidade <> 'I')  and r1.idRegistro = r2.idRegistro) as 'quantidadeAlerta', DAY(horario) as 'dia', MONTH(horario) as 'mes' FROM registro r1 join entrega on fkEntrega = idEntrega join Sensor on fkSensor = idSensor and sensor.fkFarmaceutica = ${fkCliente} WHERE entrega.horaSaida IS NOT NULL AND entrega.horaChegada IS NULL GROUP BY DAY(horario) order by horario desc;`;
+        instrucao = `SELECT COUNT(situacaoTemperatura) as 'quantidadeRegistro', (select COUNT(*) from registro r2 join entrega on idEntrega = fkEntrega JOIN sensor on idSensor = fkSensor and (r2.situacaoTemperatura <> 'I' or r2.situacaoUmidade <> 'I')  and r1.idRegistro = r2.idRegistro) as 'quantidadeAlerta', DAY(horario) as 'dia', MONTH(horario) as 'mes' FROM registro r1 JOIN entrega on fkEntrega = idEntrega JOIN Sensor on fkSensor = idSensor`;
+
+        if(tipoCliente == 'F'){
+            instrucao += ` AND sensor.fkFarmaceutica = ${fkCliente} `;
+        }
+        else{
+            instrucao += ` AND entrega.fkTransportadora = ${fkCliente} `;
+        }
+        instrucao +=` GROUP BY DAY(horario) order by horario desc;`;
         
     } else if (tipoDado == 'tempo') {
-        instrucao = `SELECT COUNT(situacaoTemperatura) as 'quantidadeRegistro', (select COUNT(*) from registro r2 join entrega on idEntrega = fkEntrega join sensor on idSensor = fkSensor and sensor.fkFarmaceutica = ${fkCliente} and (r2.situacaoTemperatura <> 'I' or r2.situacaoUmidade <> 'I')  and r1.idRegistro = r2.idRegistro) as 'quantidadeAlerta', HOUR(horario) as 'tempo' FROM registro r1 join entrega on fkEntrega = idEntrega join Sensor on fkSensor = idSensor and sensor.fkFarmaceutica = ${fkCliente} WHERE entrega.horaSaida IS NOT NULL AND entrega.horaChegada IS NULL GROUP BY HOUR(horario) order by horario desc;`;
+        instrucao = `SELECT COUNT(situacaoTemperatura) as 'quantidadeRegistro', (select COUNT(*) from registro r2 JOIN entrega on idEntrega = fkEntrega join sensor on idSensor = fkSensor and (r2.situacaoTemperatura <> 'I' or r2.situacaoUmidade <> 'I')  and r1.idRegistro = r2.idRegistro) as 'quantidadeAlerta', HOUR(horario) as 'tempo' FROM registro r1 join entrega on fkEntrega = idEntrega join Sensor on fkSensor = idSensor `;
+
+        if(tipoCliente == 'F'){
+            instrucao += ` AND sensor.fkFarmaceutica = ${fkCliente} `;
+        }
+        else{
+            instrucao += ` AND entrega.fkTransportadora = ${fkCliente} `;
+        }
+        instrucao +=` GROUP BY HOUR(horario) order by horario desc;`;
 
     }
 
