@@ -49,14 +49,22 @@ function cadastrar(request, response) {
                   );
                   clienteModel.cancelarTransacao();
                   response.status(500).json(erro.sqlMessage);
-                }).then(() => {
-                  response.json(resultado);
                 })
               }
-      
+
+              clienteModel.finalizarTransacao().then(_ => {
+                response.json(resultado);
+              }).catch(function (erro) {
+                console.log(erro);
+                console.log(
+                    "\nHouve um erro ao realizar o cadastro! Erro: ",
+                    erro.sqlMessage
+                );
+                clienteModel.cancelarTransacao();
+    
+                response.status(500).json(erro.sqlMessage);
+              })
             }); 
-  
-          
         }
       ).catch(function (erro) {
         console.log(erro);

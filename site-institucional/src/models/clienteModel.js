@@ -23,7 +23,7 @@ function listar(idCliente, tipoCliente) {
 }
 
 function iniciarTransacao() {
-  console.log("ACESSEI O CLIENTE MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function listar():", idCliente, tipoCliente);
+  console.log("ACESSEI O CLIENTE MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function listar():");
 
   var instrucao = `Start transaction;`;
 
@@ -32,9 +32,18 @@ function iniciarTransacao() {
 }
 
 function cancelarTransacao() {
-  console.log("ACESSEI O CLIENTE MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function listar():", idCliente, tipoCliente);
+  console.log("ACESSEI O CLIENTE MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function listar():");
 
   var instrucao = `rollback;`;
+
+  console.log("Executando a instrução SQL: \n" + instrucao);
+  return database.executar(instrucao);
+}
+
+function finalizarTransacao() {
+  console.log("ACESSEI O CLIENTE MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function listar():");
+
+  var instrucao = `commit;`;
 
   console.log("Executando a instrução SQL: \n" + instrucao);
   return database.executar(instrucao);
@@ -44,5 +53,6 @@ module.exports = {
   cadastrar,
   listar,
   iniciarTransacao,
-  cancelarTransacao
+  cancelarTransacao,
+  finalizarTransacao
 }
