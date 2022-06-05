@@ -108,7 +108,11 @@ function monitorarEntregas(fkCliente, tipoCliente) {
             (SELECT dht11temperatura FROM registro INNER JOIN entrega ON idEntrega = fkEntrega ORDER BY horario DESC LIMIT 1) 
             as 'temperaturaAtual', 
             (SELECT dht11umidade FROM registro INNER JOIN entrega ON idEntrega = fkEntrega ORDER BY horario DESC LIMIT 1) 
-            as 'umidadeAtual'
+            as 'umidadeAtual',
+            (SELECT situacaoTemperatura FROM registro INNER JOIN entrega ON idEntrega = fkEntrega ORDER BY horario DESC LIMIT 1)
+            as 'situacaoTemperatura', 
+            (SELECT situacaoUmidade FROM registro INNER JOIN entrega ON idEntrega = fkEntrega ORDER BY horario DESC LIMIT 1)
+            as 'situacaoUmidade'
         FROM entrega e 
         INNER JOIN sensor s ON s.idSensor = e.fkSensor 
         INNER JOIN registro r ON r.fkEntrega = e.idEntrega 

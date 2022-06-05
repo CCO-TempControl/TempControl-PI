@@ -235,72 +235,42 @@
     function atualizarEntregas() {
         for (var index = 0; index < entregas.length; index++) {
             var entrega = entregas[index];
-            let idTemperaturaAtual=document.getElementById(`spanTemperaturaAtual#${entrega.idEntrega}`); 
-            let idUmidadeAtual=document.getElementById(`spanUmidadeAtual#${entrega.idEntrega}`);
-            idTemperaturaAtual.innerHTML = `${entrega.temperaturaAtual}°C`
-            idUmidadeAtual.innerHTML = `${entrega.umidadeAtual}%`
-           
-            fetch(`/registro/situacaoRegistro/${usuario.fkCliente}&${'T'}`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            }).then(resposta => {
-                if (resposta.ok) {
-                    resposta.json().then(json => {
-                        if(json.situacaoTemperatura == 'C'){
-                            idTemperaturaAtual.classList.remove("alerta");
-                            idTemperaturaAtual.classList.remove("ideal");
-                            idTemperaturaAtual.className += " critico";
-                        }
-                        else if(json.situacaoTemperatura == 'A' ){
-                            idTemperaturaAtual.classList.remove("critico");
-                            idTemperaturaAtual.classList.remove("ideal");
-                            idTemperaturaAtual.className += " alerta";
-                        }
-                        else{
-                            idTemperaturaAtual.classList.remove("critico");
-                            idTemperaturaAtual.classList.remove("alerta");
-                            idTemperaturaAtual.className += " ideal";
-                        }       
+            let idTemperaturaAtual = document.getElementById(`spanTemperaturaAtual#${entrega.idEntrega}`);
+            let idUmidadeAtual = document.getElementById(`spanUmidadeAtual#${item.idEntrega}`);
+            idTemperaturaAtual.innerHTML = `${item.temperaturaAtual}°C`
+            idUmidadeAtual.innerHTML = `${item.umidadeAtual}%`
 
-                        if(json.situacaoUmidade == 'C'){
-                            idUmidadeAtual.classList.remove("alerta");
-                            idUmidadeAtual.classList.remove("ideal");
-                            idUmidadeAtual.className += " critico";
-                        }
-                        else if(json.situacaoUmidade == 'A' ){
-                            idUmidadeAtual.classList.remove("critico");
-                            idUmidadeAtual.classList.remove("ideal");
-                            idUmidadeAtual.className += " alerta";
-                        }
-                        else{
-                            idUmidadeAtual.classList.remove("critico");
-                            idUmidadeAtual.classList.remove("alerta");
-                            idUmidadeAtual.className += " ideal";
-                        }   
-                    });
-                } else {
-                    Swal.fire({
-                        title: 'Erro',
-                        text: 'Houve um erro ao carregar as entregas',
-                        icon: 'error',
-                        showConfirmButton: false,
-                        showDenyButton: true,
-                        denyButtonText: 'OK'
-                    });
-                }
-            }).catch(erro => {
-                Swal.fire({
-                    title: 'Erro',
-                    text: 'Houve um erro ao carregar as entregas',
-                    icon: 'error',
-                    showConfirmButton: false,
-                    showDenyButton: true,
-                    denyButtonText: 'OK'
-                });
-                console.log(`ERRO: ${erro}`);
-            })
+            if (item.situacaoTemperatura == 'C') {
+                idTemperaturaAtual.classList.remove("alerta");
+                idTemperaturaAtual.classList.remove("ideal");
+                idTemperaturaAtual.className += " critico";
+
+            } else if (item.situacaoTemperatura == 'A' ){
+                idTemperaturaAtual.classList.remove("critico");
+                idTemperaturaAtual.classList.remove("ideal");
+                idTemperaturaAtual.className += " alerta";
+
+            } else {
+                idTemperaturaAtual.classList.remove("critico");
+                idTemperaturaAtual.classList.remove("alerta");
+                idTemperaturaAtual.className += " ideal";
+            } 
+
+            if (item.situacaoUmidade == 'C') {
+                idUmidadeAtual.classList.remove("alerta");
+                idUmidadeAtual.classList.remove("ideal");
+                idUmidadeAtual.className += " critico";
+
+            } else if(item.situacaoUmidade == 'A' ) {
+                idUmidadeAtual.classList.remove("critico");
+                idUmidadeAtual.classList.remove("ideal");
+                idUmidadeAtual.className += " alerta";
+
+            } else {
+                idUmidadeAtual.classList.remove("critico");
+                idUmidadeAtual.classList.remove("alerta");
+                idUmidadeAtual.className += " ideal";
+            }
         }
        
     }
