@@ -292,19 +292,19 @@
         var entregasRenderizadas = document.getElementsByClassName('liEntregaRenderizada');
 
         if (entregasRenderizadas.length > 0) {
-            entregasRenderizadas.forEach(element => {
+            for (let i = 0; i < entregasRenderizadas.length; i++) {
+                let element = entregasRenderizadas[i];
                 var id = Number(element.id.slice(10));
-
                 var emAndamento = entregas.find(entrega => {
                     if (entrega.idEntrega == id) {
                         return entrega
                     }
                 });
-
+    
                 if (!emAndamento) {
                     element.parentNode.removeChild(element);
                 }
-            });
+            }
         }
     }
 

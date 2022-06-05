@@ -11,7 +11,7 @@
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
     <link rel="stylesheet" href="../style.css">
-    <title>HOME</title>
+    <title>MEDICAMENTO</title>
 </head>
 
 <body onload="setUp('admin-f'), carregarMedicamentos()">
@@ -32,7 +32,8 @@
                 <li><a href="./graficos.html"><i class="fas fa-solid fa-chart-gantt"></i></i>Gráficos/Alertas</a></li>
                 <li><a href="./dadosPessoais.html"><i class="fas fa-solid fa-user"></i></i>Dados Pessoais</a></li>
                 <li><a href="./usuarios.html"><i class="fas fa-solid fa-users"></i>Usuários</a></li>
-                <li><a href="../../index.html" onclick="signOut()"><i class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
+                <li><a href="../../index.html" onclick="signOut()"><i
+                            class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
             </ul>
         </div>
         <div class="main_content">
@@ -201,6 +202,14 @@
                             <span class="titulo-tabela-container">Operações</span>
                         </li>
                     `;
+                    Swal.fire({
+                        title: 'Sucesso',
+                        text: 'Medicamento adicionado com sucesso',
+                        icon: 'success',
+                        showConfirmButton: true,
+                        showDenyButton: false,
+                        confirmButtonText: 'OK'
+                    });
                     if (listaMedicamentos.length > 0) {
                         for (let i = 0; i < json.length; i++) {
                             let medicamento = json[i]
@@ -236,7 +245,8 @@
     }
 
     function renderizarMedicamento(medicamento) {
-        ulListaMedicamentos.innerHTML += `
+        try {
+            ulListaMedicamentos.innerHTML += `
             <li id="liMedicamento#${medicamento.idMedicamento}" class="medicamento-container">
                 <div class="pedido-span"><span class="pedido-nome titulo-tabela-container" id="nomePedido" style="width: fit-content;">${medicamento.nome}</span></div>
                 <div class="pedido-span"><span class="pedido-validade titulo-tabela-container" id="validadePedido" style="width: fit-content;">${medicamento.validade} dia(s)</span></div>
@@ -248,8 +258,19 @@
                 </span>
             </li>
         `;
+        } catch (e) {
+            Swal.fire({
+                title: 'Erro',
+                text: 'Houve um erro ao mostrar os medicamentos na tela',
+                icon: 'error',
+                showConfirmButton: false,
+                showDenyButton: true,
+                denyButtonText: 'OK'
+            });
+        }
+
     }
-    
+
     function renderizarMedicamentoParaCadastrar() {
         if (document.getElementById("medicamento-container-add-edit") == null) {
             let ultimoElemento = document.getElementsByClassName('medicamento-container-adicionar');
@@ -294,8 +315,20 @@
     }
 
     function apagarMedicamentoDeCadastrar() {
-        let element = document.getElementById("medicamento-container-add-edit");
-        ulListaMedicamentos.removeChild(element);
+        try {
+            let element = document.getElementById("medicamento-container-add-edit");
+            ulListaMedicamentos.removeChild(element);
+        } catch (e) {
+            Swal.fire({
+                title: 'Erro',
+                text: 'Houve um erro ao apagar o medicamento.',
+                icon: 'error',
+                showConfirmButton: false,
+                showDenyButton: true,
+                denyButtonText: 'OK'
+            });
+        }
+
     }
 
     function atualizarMedicamento(idMedicamento, nomeVar, validadeVar, temperaturaMinimaVar, temperaturaMaximaVar, umidadeMinimaVar, umidadeMaximaVar) {
@@ -382,6 +415,14 @@
                             <span class="titulo-tabela-container">Operações</span>
                         </li>
                     `;
+                    Swal.fire({
+                        title: 'Sucesso',
+                        text: 'Medicamento editado com sucesso',
+                        icon: 'success',
+                        showConfirmButton: true,
+                        showDenyButton: false,
+                        confirmButtonText: 'OK'
+                    });
                     if (listaMedicamentos.length > 0) {
                         for (let i = 0; i < json.length; i++) {
                             let medicamento = json[i]
@@ -394,13 +435,13 @@
             } else {
                 Swal.fire({
                     title: 'Erro',
-                    text: 'Houve um erro ao realizar o cadastro!',
+                    text: 'Houve um erro ao realizar o editar!',
                     icon: 'error',
                     showConfirmButton: false,
                     showDenyButton: true,
                     denyButtonText: 'OK'
                 });
-                throw ('Houve um erro ao realizar o cadastro!');
+                throw ('Houve um erro ao realizar o editar!');
             }
         }).catch(function (response) {
             Swal.fire({
@@ -417,13 +458,14 @@
     }
 
     function editarMedicamento(idMedicamento) {
-        let element = document.getElementById(`liMedicamento#${idMedicamento}`);
-        let nome = element.getElementsByClassName("pedido-nome")[0].innerHTML;
-        let validade = (element.getElementsByClassName("pedido-validade")[0].innerHTML).replace('dia(s)', ''); // Retorna 30 Dias
-        let temp = (element.getElementsByClassName("pedido-temp")[0].innerHTML).replaceAll('ºC', '').split('/'); // Retorna 2.0ºC/5.0ºC
-        let umi = (element.getElementsByClassName("pedido-umi")[0].innerHTML).replaceAll('%', '').split('/'); // Retorna 3%/4%
+        try {
+            let element = document.getElementById(`liMedicamento#${idMedicamento}`);
+            let nome = element.getElementsByClassName("pedido-nome")[0].innerHTML;
+            let validade = (element.getElementsByClassName("pedido-validade")[0].innerHTML).replace('dia(s)', ''); // Retorna 30 Dias
+            let temp = (element.getElementsByClassName("pedido-temp")[0].innerHTML).replaceAll('ºC', '').split('/'); // Retorna 2.0ºC/5.0ºC
+            let umi = (element.getElementsByClassName("pedido-umi")[0].innerHTML).replaceAll('%', '').split('/'); // Retorna 3%/4%
 
-        element.innerHTML = `
+            element.innerHTML = `
             <input class="pedido-nome titulo-tabela-container pedido-input-edit" id="nomePedidoEdit">
             <input class="pedido-validade titulo-tabela-container pedido-input-edit" id="validadePedidoEdit" type="number" min="0">
             <div class="pedido-temp-min-max"> 
@@ -439,26 +481,38 @@
                     validadePedidoEdit.value, tempMinPedidoEdit.value, tempMaxPedidoEdit.value, umiMinPedidoEdit.value, umiMaxPedidoEdit.value)"></i>
                 <i class="fas fa-solid fa-xmark"  style="color: #ec2020; cursor: pointer;" onclick="cancelarEdicao(${idMedicamento})"></i>
             </span>`;
-        let elements = element.getElementsByTagName("input");
-        elements[0].value = nome.trim();
-        elements[1].value = Number(validade.trim());
-        elements[2].value = Number(temp[0].trim());
-        elements[3].value = Number(temp[1].trim());
-        elements[4].value = Number(umi[0].trim());
-        elements[5].value = Number(umi[1].trim());
+            let elements = element.getElementsByTagName("input");
+            elements[0].value = nome.trim();
+            elements[1].value = Number(validade.trim());
+            elements[2].value = Number(temp[0].trim());
+            elements[3].value = Number(temp[1].trim());
+            elements[4].value = Number(umi[0].trim());
+            elements[5].value = Number(umi[1].trim());
+        } catch (e) {
+            Swal.fire({
+                title: 'Erro',
+                text: 'Houve um erro ao editar o medicamento.',
+                icon: 'error',
+                showConfirmButton: false,
+                showDenyButton: true,
+                denyButtonText: 'OK'
+            });
+        }
+
     }
 
     function cancelarEdicao(idMedicamento) {
-        let element = document.getElementById(`liMedicamento#${idMedicamento}`);
-        let nome = element.getElementsByClassName("pedido-nome")[0].value;
-        let validade = element.getElementsByClassName("pedido-validade")[0].value;
-        let umidadeETemperatura = element.getElementsByClassName('pedido-input-temp-umi');
-        let tempMin = umidadeETemperatura[0].value;
-        let tempMax = umidadeETemperatura[1].value
-        let umidMin = umidadeETemperatura[2].value
-        let umidMax = umidadeETemperatura[3].value
+        try {
+            let element = document.getElementById(`liMedicamento#${idMedicamento}`);
+            let nome = element.getElementsByClassName("pedido-nome")[0].value;
+            let validade = element.getElementsByClassName("pedido-validade")[0].value;
+            let umidadeETemperatura = element.getElementsByClassName('pedido-input-temp-umi');
+            let tempMin = umidadeETemperatura[0].value;
+            let tempMax = umidadeETemperatura[1].value
+            let umidMin = umidadeETemperatura[2].value
+            let umidMax = umidadeETemperatura[3].value
 
-        element.innerHTML = `
+            element.innerHTML = `
             <span class="pedido-nome titulo-tabela-container" id="nomePedido" style="width: fit-content;">${nome}</span>
             <span class="pedido-validade titulo-tabela-container" id="validadePedido" style="width: fit-content;">${validade} dia(s)</span>
             <span class="pedido-temp titulo-tabela-container" id="tempMinPedido" style="width: fit-content;">${tempMin}ºC/${tempMax}ºC</span>
@@ -467,6 +521,16 @@
                 <i class="fas fa-regular fa-pen-to-square" onclick="editarMedicamento(${idMedicamento})" style="cursor: pointer;"></i>
                 <i class="fas fa-solid fa-trash-can" onclick="deletar(${idMedicamento})" style="color: #ec2020; cursor: pointer;"></i>
             </span>`;
+        } catch (e) {
+            Swal.fire({
+                title: 'Erro',
+                text: 'Houve um erro ao cancelar a edição do medicamento.',
+                icon: 'error',
+                showConfirmButton: false,
+                showDenyButton: true,
+                denyButtonText: 'OK'
+            });
+        }
     }
 
     function deletar(idMedicamento) {
@@ -485,7 +549,33 @@
                 response.json().then((json) => {
                     let element = document.getElementById(`liMedicamento#${idMedicamento}`);
                     element.remove();
+                    Swal.fire({
+                        title: 'Sucesso',
+                        text: 'Medicamento removido com sucesso',
+                        icon: 'success',
+                        showConfirmButton: true,
+                        showDenyButton: false,
+                        confirmButtonText: 'OK'
+                    });
+                }).catch(() => {
+                    Swal.fire({
+                        title: 'Erro',
+                        text: 'Houve um erro ao se comunicar com o servidor.',
+                        icon: 'error',
+                        showConfirmButton: false,
+                        showDenyButton: true,
+                        denyButtonText: 'OK'
+                    });
                 })
+            } else {
+                Swal.fire({
+                    title: 'Erro',
+                    text: 'Houve um erro ao deletar o medicamento.',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    showDenyButton: true,
+                    denyButtonText: 'OK'
+                });
             }
         })
     }
