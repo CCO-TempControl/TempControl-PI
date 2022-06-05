@@ -24,10 +24,13 @@ function renderizarEntrega(idFarmaceutica) {
   return database.executar(instrucao);
 }
 
-function dadosKPI(idCliente) {
-  var instrucao = `
+function dadosKPI(idCliente, tipoCliente = 'F') {
+  var instrucao = '';
+  
+  if (tipoCliente == 'F') {
+    instrucao = `
       SELECT 
-      (SELECT COUNT(idSensor) FROM sensor WHERE fkFarmaceutica =  ${idCliente} AND fkTransportadora IS NULL) 
+        (SELECT COUNT(idSensor) FROM sensor WHERE fkFarmaceutica =  ${idCliente} AND fkTransportadora IS NULL) 
         as 'qtdSensorLivre',
         (SELECT COUNT(DISTINCT idEntrega) FROM entrega e INNER JOIN sensor s ON e.fkSensor = s.idSensor INNER JOIN registro r ON r.fkEntrega = e.idEntrega WHERE (r.situacaoTemperatura <> 'I' OR r.situacaoUmidade <> 'I') AND e.aprovada = 'S' AND s.fkFarmaceutica =  ${idCliente}) 
         as 'qtdEntregasProblema',
@@ -35,9 +38,24 @@ function dadosKPI(idCliente) {
         as 'mediaAlertaEntrega',	
         (SELECT COUNT(r.idRegistro) FROM entrega e INNER JOIN registro r ON e.idEntrega = r.fkEntrega INNER JOIN sensor s ON s.idSensor = e.fkSensor WHERE (r.situacaoTemperatura <> 'I' OR r.situacaoUmidade <> 'I') AND e.horaChegada IS NOT NULL AND s.fkFarmaceutica =  ${idCliente} GROUP BY e.idEntrega ORDER BY e.horaChegada DESC LIMIT 1) 
         as 'qtdAlertasUltimaEntrega'
-    FROM cliente
-    WHERE idCliente = ${idCliente};
-  `; 
+      FROM cliente
+      WHERE idCliente = ${idCliente};
+    `; 
+  } else {
+    instrucao = `
+      SELECT 
+        (SELECT COUNT(idSensor) FROM sensor WHERE fkTransportadora = ${idCliente}) 
+        as 'qtdSensorLivre',
+        (SELECT COUNT(DISTINCT idEntrega) FROM entrega e INNER JOIN registro r ON r.fkEntrega = e.idEntrega WHERE (r.situacaoTemperatura <> 'I' OR r.situacaoUmidade <> 'I') AND e.aprovada = 'S' AND e.fkTransportadora = ${idCliente}) 
+        as 'qtdEntregasProblema',
+        (SELECT ROUND((COUNT(r.idRegistro) / (SELECT COUNT(e.idEntrega) FROM entrega e WHERE e.horaChegada IS NOT NULL)), 2) FROM registro r INNER JOIN entrega e ON r.fkEntrega = e.idEntrega  WHERE (r.situacaoTemperatura <> 'I' OR r.situacaoUmidade <> 'I'))
+        as 'mediaAlertaEntrega',	
+        (SELECT COUNT(r.idRegistro) FROM entrega e INNER JOIN registro r ON e.idEntrega = r.fkEntrega WHERE (r.situacaoTemperatura <> 'I' OR r.situacaoUmidade <> 'I') AND e.horaChegada IS NOT NULL AND e.fkTransportadora = ${idCliente} GROUP BY e.idEntrega ORDER BY e.horaChegada DESC LIMIT 1) 
+        as 'qtdAlertasUltimaEntrega'
+      FROM cliente
+      WHERE idCliente = ${idCliente};
+    `;
+  }
 
   console.log("Executando a instrução SQL: \n" + instrucao);
   return database.executar(instrucao);
@@ -174,6 +192,47 @@ function adicionarHorChegada(horarioSaida, horarioChegada, idEntrega){
   return database.executar(instrucao);
 }
 
+function obterMaiorParceira(idCliente) {
+  console.log("ACESSEI O ENTREGA MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function obterMaiorParceira():", idCliente);
+
+  var instrucao = `
+    SELECT 
+      f.nomeCliente as 'maiorParceira',
+        COUNT(e.idEntrega) as 'qtdEntregas'
+    FROM entrega e
+    INNER JOIN sensor s ON s.idSensor = e.fkSensor
+    INNER JOIN cliente f ON s.fkFarmaceutica = f.idCliente
+    WHERE e.fkTransportadora = ${idCliente}
+    GROUP BY f.nomeCliente
+    ORDER BY qtdEntregas DESC
+    LIMIT 1;
+  `;
+
+  console.log("Executando a instrução SQL: \n" + instrucao);
+  return database.executar(instrucao);
+}
+
+function obterMaisAfetada(idCliente) {
+  console.log("ACESSEI O ENTREGA MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function obterMaiorParceira():", idCliente);
+
+  var instrucao = `
+    SELECT 
+      f.nomeCliente as 'maisAfetada',
+        COUNT(idRegistro) as 'qtdAlerta'
+    FROM entrega e
+    INNER JOIN sensor s ON s.fkTransportadora = e.fkTransportadora
+    INNER JOIN cliente f ON f.idCliente = s.fkFarmaceutica
+    INNER JOIN registro r ON r.fkEntrega = e.idEntrega 
+    WHERE e.fkTransportadora = ${idCliente} AND (r.situacaoTemperatura <> 'I' OR situacaoUmidade <> 'I')
+    GROUP BY maisAfetada
+    ORDER BY qtdAlerta DESC
+    LIMIT 1;
+  `;
+
+  console.log("Executando a instrução SQL: \n" + instrucao);
+  return database.executar(instrucao);
+}
+
 module.exports = {
   cadastrar,
   dadosKPI,
@@ -187,5 +246,7 @@ module.exports = {
   aprovarEntrega,
   negarEntrega,
   adicionarHorSaida,
-  adicionarHorChegada
+  adicionarHorChegada,
+  obterMaiorParceira,
+  obterMaisAfetada
 }

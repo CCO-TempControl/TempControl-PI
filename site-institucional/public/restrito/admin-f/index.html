@@ -86,16 +86,6 @@
                             <div class="titulo-tabela-container">Temperatura</div>
                             <div class="titulo-tabela-container">Umidade</div>
                         </li>
-                     <!--    <li class="caminhao-container">
-                            <div class="pedido-num titulo-tabela-container"><i class="fas fa-solid fa-truck"></i>#1</div>
-                            <div class="pedido-temp colorStatusTemp titulo-tabela-container">6ºC</div>
-                            <div class="pedido-umi colorStatusUmi titulo-tabela-container">94%</div>
-                        </li>
-                        <li class="caminhao-container">
-                            <div class="pedido-num titulo-tabela-container"><i class="fas fa-solid fa-truck"></i>#2</div>
-                            <div class="pedido-temp colorStatusTemp titulo-tabela-container">5ºC</div>
-                            <div class="pedido-umi colorStatusUmi titulo-tabela-container">85%</div>
-                        </li> -->
                     </ul>
                 </div>
             </div>
@@ -112,7 +102,7 @@
     }, 1000);
 
     function carregarKPIs() {
-        fetch(`/entregas/kpi-index/${usuario.fkCliente}`, {
+        fetch(`/entregas/kpi-index/${usuario.fkCliente}&${'F'}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"

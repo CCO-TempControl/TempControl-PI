@@ -7,7 +7,7 @@ router.post('/solicitar', function (request, response) {
   entregaController.solicitar(request, response);
 });
 
-router.get('/kpi-index/:idCliente', function (request, response) {
+router.get('/kpi-index/:idCliente&:tipoCliente', function (request, response) {
   entregaController.dadosKPI(request, response);
 });
 
@@ -55,5 +55,9 @@ router.post('/adicionarHorSaida', function(request, response){
 router.post('/adicionarHorChegada', function(request, response){
   entregaController.adicionarHorChegada(request, response);
 })
+
+router.get('/estrategico-t/:idCliente', function (request, response) {
+  entregaController.estrategicoTKPI(request, response);  
+});
 
 module.exports = router;

@@ -8,12 +8,11 @@
     <script src="https://kit.fontawesome.com/2eecc47c4e.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../../assets/js/funcoes.js"></script>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../style.css">
     <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
-    <title>DashBoard</title>
+    <title>DASHBOARD</title>
 </head>
-
-<body>
+<body onload="setUp('admin-t'); carregarKPIs()">
     <div class="wrapper">
         <div class="sidebar">
             <div class="dropdown">
@@ -23,16 +22,16 @@
                 </div>
             </div>
             <ul>
-                <a href="./index.html"><li><i class="fas fa-home"></i>Home</li></a>
-                <a href="./solicitacoes.html"><li><i class="fas fa-solid fa-file-contract"></i>Solicitações</li></a>
-                <a href="./entregas.html"><li><i class="fas fa-regular fa-truck-ramp-box"></i>Entregas</li></a>
-                <a href="./veiculos.html"><li><i class="fas fa-regular fa-truck"></i>Veículos</li></a>
-                <a href="./sensores.html"><li><i class="fas fa-solid fa-pager"></i>Sensores</li></a>
-                <a href="./graficos.html"><li><i class="fas fa-solid fa-chart-gantt"></i></i>Gráficos/Alertas</li></a>
-                <a href="./usuarios.html"><li><i class="fas fa-solid fa-users"></i>Usuários</li></a>
-                <a href="../../index.html" onclick="sair()"><li><i class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</li></a>
-            </ul>
-            
+                <li><a href="./index.html"><i class="fas fa-home"></i>Home</a></li>
+                <li><a href="./solicitacoes.html"><i class="fas fa-solid fa-file-contract"></i>Solicitações</a></li>
+                <li><a href="./entregas.html"><i class="fas fa-regular fa-truck-ramp-box"></i>Entregas</a></li>
+                <li><a href="./veiculos.html"><i class="fas fa-regular fa-truck"></i>Veículos</a></li>
+                <li><a href="./sensores.html"><i class="fas fa-solid fa-pager"></i>Sensores</a></li>
+                <li><a href="./graficos.html"><i class="fas fa-solid fa-chart-gantt"></i></i>Gráficos/Alertas</a></li>
+                <li><a href="./dadosPessoais.html"><i class="fas fa-solid fa-user"></i></i>Dados Pessoais</a></li>
+                <li><a href="./usuarios.html"><i class="fas fa-solid fa-users"></i>Usuários</a></li>
+                <li><a href="../../index.html" onclick="signOut()"><i class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
+            </ul>            
         </div>
         <div class="main_content">
             <div class="header">
@@ -40,152 +39,265 @@
                 <img src="img/logo_nome_sembg.png">
             </div>
             <div class="info">
-                <div id="cards">
-                    <div class="card">
+                <div id="cards-admin-f">
+                    <div class="card-admin-f">
                         <div class="card-background">
-                            <h2>Sensores Disponiveis</h2>
+                            <h2>Sensores em Posse</h2>
                         </div>
                         <div class="card-information">
-                            <h3>3</h3>
-                            <small>$12.456 foram gasto com sistema</small>
+                            <h3 id="kpiSensores"></h3>
                         </div>
                     </div>
-                    <div class="card">
+                    <div class="card-admin-f">
                         <div class="card-background">
-                            <h2>Viagens Com Problema </h2>
+                            <h2>Entregas Com Problema</h2>
                         </div>
                         <div class="card-information">
-                            <h3>456</h3>
-                            <small>20% de falha na ultima semana</small>
+                            <h3 id="kpiEntregasProblema"></h3>
                         </div>
                     </div>
-                    <div class="card">
+                    <div class="card-admin-f">
                         <div class="card-background">
-                            <h2>Média De Alertas Mensal</h2>
+                            <h2>Média De Alertas Por Entrega</h2>
                         </div>
                         <div class="card-information">
-                            <h3>3.92</h3>
-                            <small>A cada 10 viagens uma da problema</small>
+                            <h3 id="kpiMediaAlertaEntrega"></h3>
                         </div>
                         
                     </div>
-                    <div class="card">
+                    <div class="card-admin-f">
                         <div class="card-background">
-                            <h2>Último Transporte Realizado</h2>
+                            <h2>Último Entrega Realizado</h2>
                         </div>
                         <div class="card-information">
-                            <h3>Realizada Com Sucesso</h3>
-                            <small>0 Alertas Emitidos</small> 
+                            <h3><span id="kpiUltimoTransporte"></span> Alertas Emitidos</h3> 
                         </div>
                         
                     </div>
                 </div>
 
-
+                <!-- Arrumar -->
                 <div id="temperatura">
-                    <h1>Pedidos</h1>
+                    <h1>Entregas</h1>
                     <ul id="pedidos">
-                        <li class="caminhaoContainerTitulo">
-                            <div class="tituloTabelaContainer">Número</div>
-                            <div class="tituloTabelaContainer">Temperatura</div>
-                            <div class="tituloTabelaContainer">Umidade</div>
-                        </li>
-                        <li class="caminhaoContainer">
-                            <div class="pedidoNum tituloTabelaContainer"><i class="fas fa-solid fa-truck"></i>#1</div>
-                            <div class="pedidoTemp colorStatusTemp tituloTabelaContainer">6ºC</div>
-                            <div class="pedidoUmi colorStatusUmi tituloTabelaContainer">94%</div>
-                        </li>
-                        <li class="caminhaoContainer">
-                            <div class="pedidoNum tituloTabelaContainer"><i class="fas fa-solid fa-truck"></i>#2</div>
-                            <div class="pedidoTemp colorStatusTemp tituloTabelaContainer">5ºC</div>
-                            <div class="pedidoUmi colorStatusUmi tituloTabelaContainer">85%</div>
+                        <li class="caminhao-container-titulo">
+                            <div class="titulo-tabela-container">Número</div>
+                            <div class="titulo-tabela-container">Temperatura</div>
+                            <div class="titulo-tabela-container">Umidade</div>
                         </li>
                     </ul>
                 </div>
             </div>
         </div>
     </div>
-    </div>
-    </div>
 </body>
 
 <script>
-    const labels = [
-        'Abril',
-        'Maio',
-        'Junho',
-        'Julho',
-        'Agosto',
-    ];
+    var entregas = [];
 
-    const data1 = {
-        labels: labels,
-        datasets: [{
-            label: 'Alertas',
-            backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgb(255, 99, 132)',
-            data: [0, 10, 5, 2, 20, 30, 45],
-        }]
-    };
+    setInterval(() => {
+        monitorarEntregas();
+    }, 1000);
 
-    const data2 = {
-        labels: [
-            'Critico',
-            'Média',
-            'Atenção'
-        ],
-        datasets: [{
-            label: labels,
-            data: [10, 100, 30],
-            backgroundColor: [
-                'rgb(255, 99, 132)',
-                'rgb(54, 162, 235)',
-                'rgb(255, 205, 86)'
-            ],
-            hoverOffset: 4
-        }]
-    };
+    function carregarKPIs() {
+        fetch(`/entregas/kpi-index/${usuario.fkCliente}&${'T'}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(resposta => {
+            if (resposta.ok) {
+                resposta.json().then(json => {
+                    console.log(json);
 
-    const config1 = {
-        type: 'bar',
-        data: data1,
-        options: {}
-    };
-    const config2 = {
-        type: 'doughnut',
-        data: data2,
-        options: {}
-    };
+                    kpiSensores.innerHTML = (json.qtdSensorLivre == null) ? 0 : json.qtdSensorLivre;
+                    kpiEntregasProblema.innerHTML = (json.qtdEntregasProblema == null) ? 0 : json.qtdEntregasProblema;
+                    kpiMediaAlertaEntrega.innerHTML = (json.mediaAlertaEntrega == null) ? 0 : json.mediaAlertaEntrega;
+                    kpiUltimoTransporte.innerHTML = (json.qtdAlertasUltimaEntrega == null) ? 0 : json.qtdAlertasUltimaEntrega;
+                });
+            } else {
+                Swal.fire({
+                    title: 'Erro',
+                    text: 'Houve um erro ao carregar os medicamentos',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    showDenyButton: true,
+                    denyButtonText: 'OK'
+                });
+            }
+        }).catch(erro => {
+            Swal.fire({
+                title: 'Erro',
+                text: 'Houve um erro ao carregar os medicamentos',
+                icon: 'error',
+                showConfirmButton: false,
+                showDenyButton: true,
+                denyButtonText: 'OK'
+            });
+            console.log(`ERRO: ${erro}`);
+        })
+    }
 
-    const myChart1 = new Chart(
-        document.getElementById('myChart1'),
-        config1
-    );
-    const myChart2 = new Chart(
-        document.getElementById('myChart2'),
-        config2
-    );
-    const myChart3 = new Chart(
-        document.getElementById('myChart3'),
-        config1
-    );
-    const myChart4 = new Chart(
-        document.getElementById('myChart4'),
-        config1
-    );
-</script>
+    function monitorarEntregas() {
+        fetch(`/registro/monitorar-entregas/${usuario.fkCliente}&${'T'}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(resposta => {
+            if (resposta.ok) {
+                resposta.json().then(json => {
+                    console.log(json);
+                  
+                    if (json.length == 0) {
+                        entregas = json;
+                        pedidos.innerHTML = `
+                            <li class="caminhao-container-titulo">
+                                <div class="titulo-tabela-container">Número</div>
+                                <div class="titulo-tabela-container">Temperatura</div>
+                                <div class="titulo-tabela-container">Umidade</div>
+                            </li>
+                        `;
+                        return;
+                    }
 
-<script>
-    var dadosSession = obterDadosSession();
-    var nome=  dadosSession.nomeUsuario;
-    var email= dadosSession.emailUsuario;
-    spanNome.innerHTML = dadosSession.nomeUsuario;
+                    var indexJaRenderizado = [];
 
-    nomeSmall.innerHTML = nome;
-    emailSmall.innerHTML = email;
+                    for (var index = 0; index < json.length; index++) {
+                        var item = json[index];
 
-    function sair() {
-      signOut();
+                        for (var i = 0; i < entregas.length; i++) {
+                            var entrega = entregas[i];
+
+                            if (entrega.idEntrega == item.idEntrega) {
+                    
+                                indexJaRenderizado.push(index);
+                                entregas[i].temperaturaAtual = item.temperaturaAtual;
+                                entregas[i].umidadeAtual = item.umidadeAtual;
+                                entregas[i].situacaoTemperatura = item.situacaoTemperatura;
+                                entregas[i].situacaoUmidade = item.situacaoUmidade;
+                            }
+                        }
+                    }
+
+                    for (var renderIndex = 0; renderIndex < indexJaRenderizado.length; renderIndex++) {
+                        var indexParaRemover = indexJaRenderizado[renderIndex];
+                        
+                        json.splice(indexJaRenderizado, 1);
+                    }
+
+                    if (json.length > 0) {
+                        renderizarEntregas(json);
+                        entregas.push(...json);                
+                    }
+
+                    atualizarEntregas();
+                    removerEntregas();       
+                })
+            } else {
+                Swal.fire({
+                    title: 'Erro',
+                    text: 'Houve um erro ao carregar os medicamentos',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    showDenyButton: true,
+                    denyButtonText: 'OK'
+                });
+            }
+        }).catch(erro => {
+            Swal.fire({
+                title: 'Erro',
+                text: 'Houve um erro ao carregar os medicamentos',
+                icon: 'error',
+                showConfirmButton: false,
+                showDenyButton: true,
+                denyButtonText: 'OK'
+            });
+            console.log(`ERRO: ${erro}`);
+        })
+    }
+
+    function renderizarEntregas(lista) {
+        for (var index = 0; index < lista.length; index++) {
+            var item = lista[index];
+            
+            pedidos.innerHTML += `
+                <li id="liEntrega#${item.idEntrega}" class="caminhao-container liEntregaRenderizada" onclick="detalhes()">
+                    <div class="pedido-num titulo-tabela-container" ><i class="fas fa-solid fa-truck"></i>#${item.idEntrega}</div>
+                    <div id="spanTemperaturaAtual#${item.idEntrega}" class="pedido-temp colorStatusTemp titulo-tabela-container">${item.temperaturaAtual}°C</div>
+                    <div id="spanUmidadeAtual#${item.idEntrega}" class="pedido-umi colorStatusUmi titulo-tabela-container">${item.umidadeAtual}%</div>
+                </li>
+            `;
+        }
+    }
+
+    function atualizarEntregas() {
+        for (var index = 0; index < entregas.length; index++) {
+            var entrega = entregas[index];
+            let idTemperaturaAtual=document.getElementById(`spanTemperaturaAtual#${entrega.idEntrega}`); 
+            let idUmidadeAtual=document.getElementById(`spanUmidadeAtual#${item.idEntrega}`);
+            idTemperaturaAtual.innerHTML = `${item.temperaturaAtual}°C`
+            idUmidadeAtual.innerHTML = `${item.umidadeAtual}%`
+
+            if(item.temperaturaAtual<2 || item.temperaturaAtual>8){
+                idTemperaturaAtual.classList.remove("alerta");
+                idTemperaturaAtual.classList.remove("ideal");
+                idTemperaturaAtual.className += " critico";
+                
+            }
+            else if(item.temperaturaAtual<3.5 || item.temperaturaAtual>6.5){
+                idTemperaturaAtual.classList.remove("critico");
+                idTemperaturaAtual.classList.remove("ideal");
+                idTemperaturaAtual.className += " alerta";
+            }
+            else{
+                idTemperaturaAtual.classList.remove("critico");
+                idTemperaturaAtual.classList.remove("alerta");
+                idTemperaturaAtual.className += " ideal";
+            }
+        
+            if(item.umidadeAtual<2 || item.umidadeAtual>8){
+                idUmidadeAtual.classList.remove("alerta");
+                idUmidadeAtual.classList.remove("ideal");
+                idUmidadeAtual.className += " critico";
+            }
+            else if(item.umidadeAtual<3.5 || item.umidadeAtual>6.5){
+                idUmidadeAtual.classList.remove("critico");
+                idUmidadeAtual.classList.remove("ideal");
+                idUmidadeAtual.className += " alerta";
+            }
+            else{
+                idUmidadeAtual.classList.remove("critico");
+                idUmidadeAtual.classList.remove("alerta");
+                idUmidadeAtual.className += " ideal";
+            }
+        
+        }
+       
+    }
+
+    function removerEntregas() {
+        var entregasRenderizadas = document.getElementsByClassName('liEntregaRenderizada');
+
+        if (entregasRenderizadas.length > 0) {
+            entregasRenderizadas.forEach(element => {
+                var id = Number(element.id.slice(10));
+
+                var emAndamento = entregas.find(entrega => {
+                    if (entrega.idEntrega == id) {
+                        return entrega
+                    }
+                });
+
+                if (!emAndamento) {
+                    element.parentNode.removeChild(element);
+                }
+            });
+        }
+    }
+
+    function detalhes(){
+        window.location.assign('./graficos.html');
     }
 </script>
 
