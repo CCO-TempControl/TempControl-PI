@@ -12,7 +12,7 @@
     <!-- <link rel="stylesheet" href="../style.css"> -->
     <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
     <script src="../../assets/js/funcoes.js"></script>
-    <title>DashBoard</title>
+    <title>SOLICITAÇÃO</title>
 
     <style>
         table,
@@ -32,7 +32,7 @@
     </style>
 </head>
 
-<body onload="mostrarEntrega(); listarVeiculos();">
+<body onload="setUp('admin-t'); mostrarEntrega(); listarVeiculos();">
     <div class="wrapper">
         <div class="sidebar">
             <div class="dropdown">
@@ -44,15 +44,14 @@
             <ul>
                 <li><a href="./index.html"><i class="fas fa-home"></i>Home</a></li>
                 <li><a href="./solicitacoes.html"><i class="fas fa-solid fa-file-contract"></i>Solicitações</a></li>
-                <li><a href=""><i class="fas fa-regular fa-truck-ramp-box"></i>Entregas</a></li>
+                <li><a href="./entregas.html"><i class="fas fa-regular fa-truck-ramp-box"></i>Entregas</a></li>
                 <li><a href="./veiculos.html"><i class="fas fa-regular fa-truck"></i>Veículos</a></li>
-                <li><a href=""><i class="fas fa-solid fa-pager"></i>Sensores</a></li>
+                <li><a href="./sensores.html"><i class="fas fa-solid fa-pager"></i>Sensores</a></li>
                 <li><a href="./graficos.html"><i class="fas fa-solid fa-chart-gantt"></i></i>Gráficos/Alertas</a></li>
+                <li><a href="./dadosPessoais.html"><i class="fas fa-solid fa-user"></i></i>Dados Pessoais</a></li>
                 <li><a href="./usuarios.html"><i class="fas fa-solid fa-users"></i>Usuários</a></li>
-                <li><a href="../../index.html" onclick="sair()"><i
-                            class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
+                <li><a href="../../index.html" onclick="signOut()"><i class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
             </ul>
-
         </div>
         <div class="main_content">
             <div class="header">
@@ -101,15 +100,10 @@
 </body>
 
 <script>
-    var dadosSession = obterDadosSession();
-    var fkCliente = dadosSession.fkCliente;
-    var fkAdmin = dadosSession.idUsuario;
-    spanNome.innerHTML = dadosSession.nomeUsuario
-
     function mostrarEntrega() {
         const parametros = new URLSearchParams(window.location.search);
         const idEntregaVar = parametros.get('idEntrega');
-        const idClienteVar = fkCliente;
+        const idClienteVar = usuario.fkCliente;
 
         fetch(`/entregas/obterDados`, {
             method: "POST",
@@ -140,7 +134,7 @@
     }
 
     function listarVeiculos() {
-        const idClienteVar = fkCliente;
+        const idClienteVar = usuario.fkCliente;
 
         fetch(`/veiculos/listarPorCliente/`, {
             method: "POST",
@@ -191,7 +185,7 @@
 
     function aprovar() {
         const idEntregaVar = spnIdEntrega.innerHTML;
-        const idClienteVar = fkCliente;
+        const idClienteVar = usuario.fkCliente;
         const idVeiculoVar = document.getElementById("sltVeiculos").value;
 
         if (idVeiculoVar == -1) {
@@ -240,7 +234,7 @@
 
     function negar() {
         const idEntregaVar = spnIdEntrega.innerHTML;
-        const idClienteVar = fkCliente;
+        const idClienteVar = usuario.fkCliente;
 
         Swal.fire({
             icon: 'warning',
@@ -277,11 +271,6 @@
             }
         })
     }
-
-    function sair() {
-        signOut();
-    }
-
 </script>
 
 </html>
