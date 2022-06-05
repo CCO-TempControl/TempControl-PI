@@ -93,11 +93,12 @@ function obterKPI(request, response) {
 
 function obterKPIEstrategico(request, response) {
   var fkCliente = request.params.fkClienteServer;
+  var tipoCliente = request.params.tipoCliente;
 
     if (fkCliente == undefined) {
       response.status(400).send("Fk da Farmacêutica é indefinido");
     }  else {
-      registroModel.obterKPIEstrategico(fkCliente).then(function (resultadoKPI) {
+      registroModel.obterKPIEstrategico(fkCliente,tipoCliente).then(function (resultadoKPI) {
         console.log(`\nResultados encontrados: ${resultadoKPI.length}`);
         console.log(`Resultados: ${JSON.stringify(resultadoKPI)}`);
   

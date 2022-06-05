@@ -902,7 +902,7 @@
     }
 
     function carregarKPIEstrategico() {
-        fetch(`/registro/obterKPIEstrategico/${usuario.fkCliente}`, {
+        fetch(`/registro/obterKPIEstrategico/${usuario.fkCliente}&${'F'}`, {
             cache: 'no-store',
             method: "GET",
             headers: {

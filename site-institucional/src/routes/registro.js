@@ -19,7 +19,7 @@ router.get('/obterKPI/:fkEntregaServer', function (request, response) {
   registroController.obterKPI(request, response);
 });
 
-router.get('/obterKPIEstrategico/:fkClienteServer', function (request, response) {
+router.get('/obterKPIEstrategico/:fkClienteServer&:tipoCliente', function (request, response) {
   registroController.obterKPIEstrategico(request, response);
 });
 

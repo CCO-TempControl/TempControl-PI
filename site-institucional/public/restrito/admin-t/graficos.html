@@ -901,7 +901,7 @@
     }
 
     function carregarKPIEstrategico() {
-        fetch(`/registro/obterKPIEstrategico/${usuario.fkCliente}`, {
+        fetch(`/registro/obterKPIEstrategico/${usuario.fkCliente}&${'T'}`, {
             cache: 'no-store',
             method: "GET",
             headers: {
@@ -914,6 +914,7 @@
                     console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
                     let primeirasKPI = resposta.primeiraParte[0];
                     let outrasKPI = resposta.segundaParte;
+
 
                     let temperaturaPorcentagemElement = document.getElementById(
                         'temperatura-alertas-porcentagem');

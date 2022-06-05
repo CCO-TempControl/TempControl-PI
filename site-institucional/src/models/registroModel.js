@@ -86,12 +86,19 @@ function obterKPI(fkEntrega) {
     return database.executar(instrucao);
 }
 
-function obterKPIEstrategico(fkFarmaceutica) {
+function obterKPIEstrategico(fkFarmaceutica, tipoCliente) {
     console.log("ACESSEI O SENSOR MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function obterKPIEstrategico(): ", fkFarmaceutica);
 
     var instrucao = `
-    select (select count(*) from registro where situacaoTemperatura <> 'I' and fkEntrega = e1.idEntrega) as 'qtdAlertaTemperatura',(select count(*) from registro where situacaoUmidade <> 'I' and fkEntrega = e1.idEntrega) as 'qtdAlertaUmidade', count(*) as 'qtdAlertasTotal' from entrega e1 join registro on (situacaoTemperatura <> 'I' or situacaoUmidade <> 'I') and fkEntrega = idEntrega join sensor on idSensor = fkSensor and sensor.fkFarmaceutica = ${fkFarmaceutica} WHERE e1.horaSaida IS NOT NULL AND e1.horaChegada IS NULL ;
+    select (select count(*) from registro where situacaoTemperatura <> 'I' and fkEntrega = e1.idEntrega) as 'qtdAlertaTemperatura',(select count(*) from registro where situacaoUmidade <> 'I' and fkEntrega = e1.idEntrega) as 'qtdAlertaUmidade', count(*) as 'qtdAlertasTotal' from entrega e1 join registro on (situacaoTemperatura <> 'I' or situacaoUmidade <> 'I') and fkEntrega = idEntrega join sensor on idSensor = fkSensor
     `;
+
+    if(tipoCliente == 'F'){
+        instrucao += ` and sensor.fkFarmaceutica = ${fkFarmaceutica};`;
+    }
+    else{
+        instrucao += ` and e1.fkTransportadora = ${fkFarmaceutica};`;
+    }
     
     console.log("Executando a instrução SQL: \n" + instrucao);
     return database.executar(instrucao);
