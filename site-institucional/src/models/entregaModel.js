@@ -233,6 +233,24 @@ function obterMaisAfetada(idCliente) {
   return database.executar(instrucao);
 }
 
+function listarSolicitacoesFarmaceutica(idCliente) {
+  console.log("ACESSEI O ENTREGA MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function listarSolicitacoesFarmaceutica():", idCliente);
+
+  var instrucao = `
+    SELECT entrega.idEntrega, cliente.nomeCliente, endereco.endereco, endereco.numero, endereco.cidade, endereco.uf, lote.qtd, medicamento.nome, medicamento.tempMin, medicamento.tempMax, medicamento.umidMin, medicamento.umidMax, DATE_FORMAT(entrega.dataEntrega, '%Y-%m-%d-%T') AS 'dataEntrega', entrega.aprovada
+      FROM entrega 
+    INNER JOIN sensor ON entrega.fkSensor = sensor.idSensor 
+    INNER JOIN cliente ON sensor.fkFarmaceutica = idCliente 
+    INNER JOIN endereco ON entrega.idEntrega = endereco.fkEntrega 
+    INNER JOIN lote ON lote.fkEntrega = entrega.idEntrega 
+    INNER JOIN medicamento ON lote.fkMedicamento = medicamento.idMedicamento
+    WHERE entrega.aprovada = 'P' AND sensor.fkFarmaceutica = ${idCliente};
+  `;
+
+  console.log("Executando a instrução SQL: \n" + instrucao);
+  return database.executar(instrucao);
+}
+
 module.exports = {
   cadastrar,
   dadosKPI,
@@ -248,5 +266,6 @@ module.exports = {
   adicionarHorSaida,
   adicionarHorChegada,
   obterMaiorParceira,
-  obterMaisAfetada
+  obterMaisAfetada,
+  listarSolicitacoesFarmaceutica
 }

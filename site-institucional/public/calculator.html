@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SIMULADOR FINANCEIRO - TempControl</title>
   <link rel="stylesheet" href="./assets/css/style.css">
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <link rel="icon" type="image/x-icon" href="./assets/img/Logo.png">
 </head>
 <body>
@@ -195,16 +196,32 @@
     var eixo = Number(txtEixo.value);
 
     if (typeof(dist) != "number") {
-      alert('Distância deve ser um valor númerico');
+      Swal.fire({
+        icon: 'error',
+        title: 'Erro',
+        text: 'Distância deve ser um valor númerico'
+      });
       
     } else if (typeof(eixo) != 'number') {
-      alert('Eixo deve ser um valor númerico');
+      Swal.fire({
+        icon: 'error',
+        title: 'Erro',
+        text: 'Eixo deve ser um valor númerico'
+      });
 
     } else if (dist <= 0) {
-      alert('Distância deve ser um valor maior que zero');
+      Swal.fire({
+        icon: 'error',
+        title: 'Erro',
+        text: 'Distância deve ser um valor maior que zero'
+      });
       
     } else if (eixo <= 0) {
-      alert('Eixo deve ser um valor maior que zero');
+      Swal.fire({
+        icon: 'error',
+        title: 'Erro',
+        text: 'Eixo deve ser um valor maior que zero'
+      });
 
     } else {
       /*
@@ -239,31 +256,67 @@
     var vendaLote = Number(txtVendaLotes.value);
 
     if (typeof(qtdLotes) != 'number') {
-      alert('A quantidade de lotes comprados deve ser um valor númerico');
+      Swal.fire({
+        icon: 'error',
+        title: 'Erro',
+        text: 'A quantidade de lotes comprados deve ser um valor númerico'
+      });
 
     } else if (typeof(perdaLote) != 'number') {
-      alert('A quantidade de lotes perdidos deve ser um valor númerico');
+      Swal.fire({
+        icon: 'error',
+        title: 'Erro',
+        text: 'A quantidade de lotes perdidos deve ser um valor númerico'
+      });
 
     } else if (typeof(valorLote) != 'number') {
-      alert('O valor de compra dos lotes deve ser um valor númerico');
+      Swal.fire({
+        icon: 'error',
+        title: 'Erro',
+        text: 'O valor de compra dos lotes deve ser um valor númerico'
+      });
 
     } else if (typeof(vendaLote) != 'number') {
-      alert('O valor de venda dos lotes deve ser um valor númerico');
+      Swal.fire({
+        icon: 'error',
+        title: 'Erro',
+        text: 'O valor de venda dos lotes deve ser um valor númerico'
+      });
 
     } else if (qtdLotes <= 0) {
-      alert('A quantidade de lotes comprados deve ser um valor maior que zero');
+      Swal.fire({
+        icon: 'error',
+        title: 'Erro',
+        text: 'A quantidade de lotes comprados deve ser um valor maior que zero'
+      });
 
     } else if (perdaLote < 0) {
-      alert('A quantidade de lotes perdidos não pode ser menor que zero');
+      Swal.fire({
+        icon: 'error',
+        title: 'Erro',
+        text: 'A quantidade de lotes perdidos não pode ser menor que zero'
+      });
 
     } else if (qtdLotes < perdaLote) {
-      alert('A quantidade de lotes comprados deve ser um valor maior que ou igual a quantidade de lotes perdidos');
+      Swal.fire({
+        icon: 'error',
+        title: 'Erro',
+        text: 'A quantidade de lotes comprados deve ser um valor maior que ou igual a quantidade de lotes perdidos'
+      });
 
     } else if (valorLote <= 0) {
-      alert('O valor de compra dos lotes deve ser um valor maior que zero');
+      Swal.fire({
+        icon: 'error',
+        title: 'Erro',
+        text: 'O valor de compra dos lotes deve ser um valor maior que zero'
+      });
 
     } else if (vendaLote <= 0) {
-      alert('O valor de venda dos lotes deve ser um valor maior que zero');
+      Swal.fire({
+        icon: 'error',
+        title: 'Erro',
+        text: 'O valor de venda dos lotes deve ser um valor maior que zero'
+      });
 
     } else {
       var lotesParaVenda = qtdLotes - perdaLote;
