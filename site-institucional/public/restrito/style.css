@@ -989,3 +989,119 @@ div.data-table {
 
 /* Fim Formulário */
 /* Fim Laboratório */
+
+/* Começo do ADMIN-T */
+/* class tabela: usada para todas as listagens */
+.tabela {
+    padding: 10px;
+    width: 100%;
+    height: fit-content;
+    box-sizing: border-box;
+    margin-top: 50px;
+    margin-left: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    border-radius: 30px;
+    overflow: hidden;
+  }
+  
+  .tabela h1 {
+    color: #0253c4;
+    font-size: 34px;
+    margin-top: 10px;
+  }
+  
+  .tabela h3 {
+    font-size: 1.5em;
+  }
+  
+  .tabela #lista {
+    list-style-type: none;
+    width: 90%;
+    height: fit-content;
+    margin-top: 35px;
+  }
+  
+  .tabela .lista li {
+    min-height: 55px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 2px;
+    border-radius: 30px;
+  }
+  
+  .tabela .tabela-linha {
+    box-shadow: 0 0 5px grey;
+    margin-top: 15px;
+  }
+  
+  .tabela .tabela-linha,
+  .tabela .tabela-cabecalho {
+    height: fit-content;
+    min-height: 55px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 2px;
+    border-radius: 30px;
+  }
+  
+  .tabela .tabela-cabecalho {
+    font-size: 20px;
+    font-weight: 700;
+  }
+  
+  .tabela #lista div {
+    flex-basis: 100%;
+    display: flex;
+    padding: 1%;
+    justify-content: center;
+  }
+  
+  .tabela .btnExcluir,
+  .tabela .btnEditar {
+    /* width: 20%; */
+    height: 40px;
+    /* background-color: #F04A5B; */
+  }
+  .tabela .btnExcluir{
+    background-image: url("./img/icons8-excluir-blue-ui/icons8-excluir-40.png");
+    background-repeat: no-repeat;
+    /* background-attachment: fixed; */
+    background-position: center center;
+    /* background-size: cover; */
+  }
+  .tabela .btnEditar{
+    background-image: url("./img/icons8-lápis-blue-ui/icons8-lápis-40.png");
+    background-repeat: no-repeat;
+    /* background-attachment: fixed; */
+    background-position: center center;
+    /* background-size: cover; */
+  }
+  
+  .hiddenInput {
+    display: none;
+  }
+  
+  #btnCancelar {
+    background-color: #717171;
+    color: #000000;
+    border: 1px solid black;
+  }
+  
+  /* Solicitações */
+  
+  .tabelaSolicitacoes #lista div {
+    flex-direction: column;
+  }
+  
+  .tabelaSolicitacoes .tabela-linha:hover{
+    cursor: pointer;
+  }
+  
+  /* Entregas */
