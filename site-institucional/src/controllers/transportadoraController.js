@@ -22,33 +22,36 @@ function cadastrar(request, response) {
     response.status(400).send("Sua senha está undefined!");
   } else {
     // Passe os valores como parâmetro e vá para o arquivo transportadoraModel.js
-    clienteModel.cadastrar(nome, cnpj, telefone, 'T').then(
-      function (resultado) {
+    clienteModel.iniciarTransacao().then(() => {
+      clienteModel.cadastrar(nome, cnpj, telefone, 'T').then(
+        function (resultado) {
 
-        usuarioModel.cadastrar(cnpj, `Admin ${nome}`, email, senha, 'admin-t', null)
-          .catch(function (erro) {
-            console.log(erro);
-            console.log(
+          usuarioModel.cadastrar(cnpj, `Admin ${nome}`, email, senha, 'admin-t', null)
+            .catch(function (erro) {
+              console.log(erro);
+              console.log(
                 "\nHouve um erro ao realizar o cadastro! Erro: ",
                 erro.sqlMessage
-            );
+              );
+              clienteModel.cancelarTransacao();
+              response.status(500).json(erro.sqlMessage);
+            }).then(() => {
 
-            response.status(500).json(erro.sqlMessage);
-          }).then(() => {
+              response.json(resultado);
 
-            response.json(resultado);
-    
-          }); 
-      }
-    ).catch(function (erro) {
-      console.log(erro);
-      console.log(
+            });
+        }
+      ).catch(function (erro) {
+        console.log(erro);
+        console.log(
           "\nHouve um erro ao realizar o cadastro! Erro: ",
           erro.sqlMessage
-      );
-      
-      response.status(500).json(erro.sqlMessage);
+        );
+        clienteModel.cancelarTransacao();
+        response.status(500).json(erro.sqlMessage);
+      });
     });
+
   }
 }
 
@@ -70,10 +73,10 @@ function listar(request, response) {
     }).catch(function (erro) {
       console.log(erro);
       console.log(
-          "\nHouve um erro ao realizar o cadastro! Erro: ",
-          erro.sqlMessage
+        "\nHouve um erro ao realizar o cadastro! Erro: ",
+        erro.sqlMessage
       );
-      
+
       response.status(500).json(erro.sqlMessage);
     })
   }

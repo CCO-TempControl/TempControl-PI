@@ -25,46 +25,50 @@ function cadastrar(request, response) {
   } else if (qtdSensor <= 0) {
     response.status(400).send("A quantidade de sensores deve ser maior que 0");
   } else {
-    clienteModel.cadastrar(nome, cnpj, telefone, 'F').then(
-      function (resultado) {
-        
-        usuarioModel.cadastrar(cnpj, `Admin ${nome}`, email, senha, 'admin-f', null)
-          .catch(function (erro) {
-            console.log(erro);
-            console.log(
-                "\nHouve um erro ao realizar o cadastro! Erro: ",
-                erro.sqlMessage
-            );
-
-            response.status(500).json(erro.sqlMessage);
-          }).then(() => {
-            for (var index = 1; index <= qtdSensor; index++) {
-              sensorModel.inserir(cnpj).catch(function (erro) {
-                console.log(erro);
-                console.log(
-                    "\nHouve um erro ao realizar o cadastro! Erro: ",
-                    erro.sqlMessage
-                );
-
-                response.status(500).json(erro.sqlMessage);
-              }).then(() => {
-                response.json(resultado);
-              })
-            }
-    
-          }); 
-
-        
-      }
-    ).catch(function (erro) {
-      console.log(erro);
-      console.log(
-          "\nHouve um erro ao realizar o cadastro! Erro: ",
-          erro.sqlMessage
-      );
+    clienteModel.iniciarTransacao().then( () => {
+      clienteModel.cadastrar(nome, cnpj, telefone, 'F').then(
+        function (resultado) {
+          
+          usuarioModel.cadastrar(cnpj, `Admin ${nome}`, email, senha, 'admin-f', null)
+            .catch(function (erro) {
+              console.log(erro);
+              console.log(
+                  "\nHouve um erro ao realizar o cadastro! Erro: ",
+                  erro.sqlMessage
+              );
+              clienteModel.cancelarTransacao();
+  
+              response.status(500).json(erro.sqlMessage);
+            }).then(() => {
+              for (var index = 1; index <= qtdSensor; index++) {
+                sensorModel.inserir(cnpj).catch(function (erro) {
+                  console.log(erro);
+                  console.log(
+                      "\nHouve um erro ao realizar o cadastro! Erro: ",
+                      erro.sqlMessage
+                  );
+                  clienteModel.cancelarTransacao();
+                  response.status(500).json(erro.sqlMessage);
+                }).then(() => {
+                  response.json(resultado);
+                })
+              }
       
-      response.status(500).json(erro.sqlMessage);
+            }); 
+  
+          
+        }
+      ).catch(function (erro) {
+        console.log(erro);
+        console.log(
+            "\nHouve um erro ao realizar o cadastro! Erro: ",
+            erro.sqlMessage
+        );
+        clienteModel.cancelarTransacao();
+        response.status(500).json(erro.sqlMessage);
+      });
     });
+    
   }
 }
 
