@@ -16,7 +16,7 @@ function obterDados(fkEntrega, ordenar = false, limite = 10) {
 }
 
 function obterAlertas(fkCliente, tipoDado,tipoCliente) {
-    console.log("ACESSEI O SENSOR MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function obterAlertas():", fkCliente, tipoDado);
+    console.log("ACESSEI O SENSOR MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function obterAlertas():", fkCliente, tipoDado, tipoCliente);
 
     var instrucao;
 
@@ -37,18 +37,18 @@ function obterAlertas(fkCliente, tipoDado,tipoCliente) {
 
 
     } else if (tipoDado == 'nomeDia') {
-        instrucao = `SELECT COUNT(situacaoTemperatura) as 'quantidadeRegistro', (select COUNT(*) from registro r2 join entrega on idEntrega = fkEntrega join sensor on idSensor = fkSensor and (r2.situacaoTemperatura <> 'I' or r2.situacaoUmidade <> 'I')  and r1.idRegistro = r2.idRegistro) as 'quantidadeAlerta', DAYNAME(horario) as 'nomeDia' FROM registro r1 join entrega on fkEntrega = idEntrega join Sensor on fkSensor = idSensor`;
+        instrucao = `SELECT COUNT(situacaoTemperatura) as 'quantidadeRegistro', (select count(*) from registro r2 where (r2.situacaoTemperatura <> 'I' or r2.situacaoUmidade <> 'I') and r2.fkEntrega = r1.fkEntrega group by fkEntrega) as 'quantidadeAlerta', DAYNAME(horario) as 'nomeDia' FROM registro r1 join entrega on fkEntrega = idEntrega join Sensor on fkSensor = idSensor`;
         
         if (tipoCliente == 'F') {
             instrucao += ` AND fkFarmaceutica = ${fkCliente} `;
         } else {
             instrucao += ` AND entrega.fkTransportadora = ${fkCliente} `;
         }
-        instrucao +=` AND MONTH(horario) = ${new Date().getMonth() + 1 } GROUP BY DAYNAME(horario);`;
+        instrucao +=` AND MONTH(horario) in (${new Date().getMonth()}, ${new Date().getMonth() + 1 }) GROUP BY DAYNAME(horario);`;
 
 
     } else if (tipoDado == 'dia') {
-        instrucao = `SELECT COUNT(situacaoTemperatura) as 'quantidadeRegistro', (select COUNT(*) from registro r2 join entrega on idEntrega = fkEntrega JOIN sensor on idSensor = fkSensor and (r2.situacaoTemperatura <> 'I' or r2.situacaoUmidade <> 'I')  and r1.idRegistro = r2.idRegistro) as 'quantidadeAlerta', DAY(horario) as 'dia', MONTH(horario) as 'mes' FROM registro r1 JOIN entrega on fkEntrega = idEntrega JOIN Sensor on fkSensor = idSensor`;
+        instrucao = `SELECT COUNT(situacaoTemperatura) as 'quantidadeRegistro', (select count(*) from registro r2 where (r2.situacaoTemperatura <> 'I' or r2.situacaoUmidade <> 'I') and r2.fkEntrega = r1.fkEntrega group by fkEntrega) as 'quantidadeAlerta', DAY(horario) as 'dia', MONTH(horario) as 'mes' FROM registro r1 JOIN entrega on fkEntrega = idEntrega JOIN Sensor on fkSensor = idSensor`;
 
         if(tipoCliente == 'F'){
             instrucao += ` AND sensor.fkFarmaceutica = ${fkCliente} `;
@@ -59,7 +59,7 @@ function obterAlertas(fkCliente, tipoDado,tipoCliente) {
         instrucao +=` GROUP BY DAY(horario) order by horario desc;`;
         
     } else if (tipoDado == 'tempo') {
-        instrucao = `SELECT COUNT(situacaoTemperatura) as 'quantidadeRegistro', (select COUNT(*) from registro r2 JOIN entrega on idEntrega = fkEntrega join sensor on idSensor = fkSensor and (r2.situacaoTemperatura <> 'I' or r2.situacaoUmidade <> 'I')  and r1.idRegistro = r2.idRegistro) as 'quantidadeAlerta', HOUR(horario) as 'tempo' FROM registro r1 join entrega on fkEntrega = idEntrega join Sensor on fkSensor = idSensor `;
+        instrucao = `SELECT COUNT(situacaoTemperatura) as 'quantidadeRegistro', HOUR(horario) as 'tempo' FROM registro r1 join entrega on fkEntrega = idEntrega join Sensor on fkSensor = idSensor `;
 
         if(tipoCliente == 'F'){
             instrucao += ` AND sensor.fkFarmaceutica = ${fkCliente} `;
@@ -70,6 +70,29 @@ function obterAlertas(fkCliente, tipoDado,tipoCliente) {
         instrucao +=` GROUP BY HOUR(horario) order by horario desc;`;
 
     }
+
+    console.log("Executando a instrução SQL: \n" + instrucao);
+    return database.executar(instrucao);
+}
+
+function obterAlertasTempo(fkCliente, tipoCliente) {
+    console.log("ACESSEI O SENSOR MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function obterAlertasTempo():", fkCliente, tipoCliente);
+
+    var instrucao;
+
+    
+
+        instrucao = `select count(*) as 'quantidadeAlerta', Hour(horario) as 'tempo' from registro r2  
+        join entrega on fkEntrega = idEntrega join Sensor on fkSensor = idSensor `;
+
+        if(tipoCliente == 'F'){
+            instrucao += ` AND sensor.fkFarmaceutica = ${fkCliente} `;
+        }
+        else{
+            instrucao += ` AND entrega.fkTransportadora = ${fkCliente} `;
+        }
+        instrucao +=`where (r2.situacaoTemperatura <> 'I' or r2.situacaoUmidade <> 'I') group by HOUR(horario) order by horario desc;`;
+
 
     console.log("Executando a instrução SQL: \n" + instrucao);
     return database.executar(instrucao);
@@ -154,8 +177,6 @@ function monitorarEntregas(fkCliente, tipoCliente) {
     return database.executar(instrucao);        
 }
 
-
-
 function situacaoRegistro(fkCliente, tipoCliente) {
     console.log("ACESSEI O REGISTRO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function situacaoRegistro():", fkCliente, tipoCliente)
 
@@ -182,5 +203,6 @@ module.exports = {
     obterKPIEstrategico,
     obterTransportadorasAlertas,
     monitorarEntregas,
-    situacaoRegistro
+    situacaoRegistro,
+    obterAlertasTempo
 }

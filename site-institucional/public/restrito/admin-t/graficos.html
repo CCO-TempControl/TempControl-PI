@@ -31,7 +31,8 @@
                 <li><a href="./graficos.html"><i class="fas fa-solid fa-chart-gantt"></i></i>Gráficos/Alertas</a></li>
                 <li><a href="./dadosPessoais.html"><i class="fas fa-solid fa-user"></i></i>Dados Pessoais</a></li>
                 <li><a href="./usuarios.html"><i class="fas fa-solid fa-users"></i>Usuários</a></li>
-                <li><a href="../../index.html" onclick="signOut()"><i class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
+                <li><a href="../../index.html" onclick="signOut()"><i
+                            class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
             </ul>
         </div>
         <div class="main_content">
@@ -568,8 +569,8 @@
             grafico.data.labels.push(new Date(registro.horario).toLocaleTimeString());
             grafico.data.datasets[0].data.push(registro[tipoDado]);
             if (tipoDado == 'dht11temperatura') {
-                if (registro[tipoDado] < q3Temp || registro[tipoDado] > q1Temp) {
-                    if (registro[tipoDado] < maxTemp || registro[tipoDado] > minTemp) {
+                if (registro[tipoDado] < q1Temp || registro[tipoDado] > q3Temp) {
+                    if (registro[tipoDado] < minTemp || registro[tipoDado] > maxTemp) {
                         grafico.data.datasets[0].backgroundColor = "#F04A5B";
                         grafico.data.datasets[0].borderColor = "#F04A5B";
                     }
@@ -583,8 +584,8 @@
                     grafico.data.datasets[0].borderColor = "#36A2EB";
                 }
             } else {
-                if (registro[tipoDado] < q3Temp || registro[tipoDado] > q1Temp) {
-                    if (registro[tipoDado] < maxTemp || registro[tipoDado] > minTemp) {
+                if (registro[tipoDado] < q1Umid || registro[tipoDado] > q3Umid) {
+                    if (registro[tipoDado] < minUmid || registro[tipoDado] > maxUmid) {
                         grafico.data.datasets[0].backgroundColor = "#F04A5B";
                         grafico.data.datasets[0].borderColor = "#F04A5B";
                     }
@@ -631,8 +632,8 @@
                         tipoDado]); // incluir uma nova medida de umidade
 
                     if (tipoDado == 'dht11temperatura') {
-                        if (novoRegistro[0][tipoDado] < q3Temp || novoRegistro[0][tipoDado] > q1Temp) {
-                            if (novoRegistro[0][tipoDado] < maxTemp || novoRegistro[0][tipoDado] > minTemp) {
+                        if (novoRegistro[0][tipoDado] < q1Temp || novoRegistro[0][tipoDado] > q3Temp) {
+                            if (novoRegistro[0][tipoDado] < minTemp || novoRegistro[0][tipoDado] > maxTemp) {
                                 grafico.data.datasets[0].backgroundColor = "#F04A5B";
                                 grafico.data.datasets[0].borderColor = "#F04A5B";
                             }
@@ -646,8 +647,8 @@
                             grafico.data.datasets[0].borderColor = "#36A2EB";
                         }
                     } else {
-                        if (novoRegistro[0][tipoDado] < q3Umid || novoRegistro[0][tipoDado] > q1Umid) {
-                            if (novoRegistro[0][tipoDado] < maxUmid || novoRegistro[0][tipoDado] > minUmid) {
+                        if (novoRegistro[0][tipoDado] < q1Umid || novoRegistro[0][tipoDado] > q3Umid) {
+                            if (novoRegistro[0][tipoDado] < minUmid || novoRegistro[0][tipoDado] > maxUmid) {
                                 grafico.data.datasets[0].backgroundColor = "#F04A5B";
                                 grafico.data.datasets[0].borderColor = "#F04A5B";
                             }
@@ -929,10 +930,14 @@
 
                     let umidadeQtdElement = document.getElementById('umidade-quantidade');
                     umidadeQtdElement.innerHTML =
-                        `${resposta.qtdAlertaUmidade} dos alertas ocorreram por umidade`                    
+                        `${resposta.qtdAlertaUmidade} dos alertas ocorreram por umidade`
 
                     document.getElementById('maior-parceira').innerHTML = resposta.maiorParceira;
-                    document.getElementById('farmaceutica-qtd-entregas').innerHTML = `Realizou ${resposta.qtdEntregas} entregas com você`;
+                    let texto;
+                    if (resposta.qtdEntregas == 1) texto = `Realizou ${resposta.qtdEntregas} entrega com você`;
+                    else texto = `Realizou ${resposta.qtdEntregas} entregas com você`;
+
+                    document.getElementById('farmaceutica-qtd-entregas').innerHTML = texto;
 
                     document.getElementById('mais-afetada').innerHTML = resposta.maisAfetada;
                     document.getElementById('farmaceutica-qtd-alertas').innerHTML = `${resposta.qtdAlerta} alertas foram emitidos em entregas para ela`;

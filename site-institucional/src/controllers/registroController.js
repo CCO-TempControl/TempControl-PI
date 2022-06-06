@@ -49,10 +49,19 @@ function obterAlertas(request, response) {
     } else if (tipoDado == undefined) {
       response.status(400).send("Tipo do Dado é indefinido");
     }  else {
-      registroModel.obterAlertas(fkCliente, tipoDado,tipoCliente).then(function (resultado) {
+      registroModel.obterAlertas(fkCliente, tipoDado,tipoCliente).then(async function (resultado) {
         console.log(`\nResultados encontrados: ${resultado.length}`);
         console.log(`Resultados: ${JSON.stringify(resultado)}`);
-  
+        if (tipoDado == 'tempo') {
+          let result = await registroModel.obterAlertasTempo(fkCliente, tipoCliente);
+          for (let i = 0; i < result.length; i++) {
+            for (let j = 0; j < resultado.length; j++) {
+              if (result[i].tempo == resultado[j].tempo) {
+                resultado[j].quantidadeAlerta = resultado[i].quantidadeAlerta;
+              }
+            }
+          }
+        }
         response.json(resultado);
       }).catch(function (erro) {
         console.log(erro);
@@ -64,7 +73,6 @@ function obterAlertas(request, response) {
         response.status(500).json(erro.sqlMessage);
       });
     }
-
 }
 
 function obterKPI(request, response) {
