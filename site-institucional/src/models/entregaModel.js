@@ -140,7 +140,7 @@ function obterDados(idEntrega, idCliente){
     INNER JOIN endereco ON entrega.idEntrega = endereco.fkEntrega
     INNER JOIN lote ON lote.fkEntrega = entrega.idEntrega
     INNER JOIN medicamento ON lote.fkMedicamento = medicamento.idMedicamento
-    INNER JOIN veiculo ON veiculo.idVeiculo = entrega.fkVeiculo 
+    LEFT JOIN veiculo ON veiculo.idVeiculo = entrega.fkVeiculo 
     WHERE entrega.idEntrega = ${idEntrega} AND entrega.fkTransportadora = ${idCliente};
   `;
 
