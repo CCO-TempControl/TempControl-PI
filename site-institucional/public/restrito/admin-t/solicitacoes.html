@@ -96,7 +96,7 @@
                     elementosNaLista[index].remove();
                 }
 
-                response.json().then(function (solicitacoesEncontradas) {
+                response.json().then(function (json) {
                     document.getElementById("lista").innerHTML = `
                                     <li class="tabela-cabecalho">
                                         <div>Farmaceutica</div>
@@ -105,25 +105,100 @@
                                         <div>Data de Entrega</div>
                                     </li>
                                     `;
-                    for (let index = 0; index < solicitacoesEncontradas.length; index += 2) {
-                        let solicitacao = solicitacoesEncontradas[index];
 
-                        let dataCompleta = solicitacao.dataEntrega.split('-');
-                        let ano = dataCompleta[0];
-                        let mes = dataCompleta[1];
-                        let dia = dataCompleta[2];
-                        let horario = dataCompleta[3];
-                        document.getElementById("lista").innerHTML += `
-                        <li class="tabela-linha" onclick="mostrarEntrega(${solicitacao.idEntrega})">
-                            <div>${solicitacao.nomeCliente}</div>
-                            <div><strong>Origem:</strong> ${solicitacao.endereco}, ${solicitacao.numero} (${solicitacao.cidade} - ${solicitacao.uf})<br>
-                            <strong>Destino:</strong> ${solicitacoesEncontradas[index+1].endereco}, ${solicitacoesEncontradas[index+1].numero} (${solicitacoesEncontradas[index+1].cidade} - ${solicitacoesEncontradas[index+1].uf})</div>
-                            <div>${solicitacao.qtd} X ${solicitacao.nome}</div>
-                            <div>${dia}/${mes}/${ano} às ${horario}</div>
-                        </li>
-                        `;
+                    var entregas = [];
+
+                    for (let index = 0; index < json.length; index++) {
+                        var item = json[index];
+
+                        var indexEntregaAtual = entregas.findIndex(e => {
+                            if (e.idEntrega == item.idEntrega) {
+                                return e;
+                            }
+                        });
+                        
+                        if (indexEntregaAtual >= 0) {
+                            if (item.idEndereco == 1 && entregas[indexEntregaAtual].origem == '') {
+                                entregas[indexEntregaAtual].origem = `${item.endereco}, ${item.numero} (${item.cidade} - ${item.uf})`
+                            } else if (item.idEndereco == 2 && entregas[indexEntregaAtual].destino == '') {
+                                entregas[indexEntregaAtual].destino = `${item.endereco}, ${item.numero} (${item.cidade} - ${item.uf})`
+                            }
+
+                            var loteJaCarregado = entregas[indexEntregaAtual].carregamento.find(l => {
+                                if (l.idMedicamento == item.idMedicamento) {
+                                return l;
+                                }
+                            });
+
+                            if (!loteJaCarregado) {
+                                var novoLote = {
+                                    idMedicamento: item.idMedicamento,
+                                    qtd: item.qtd,
+                                    medicamento: item.nome
+                                }
+
+                                entregas[indexEntregaAtual].carregamento.push(lote);
+                            }
+                        } else {
+                            var novaEntrega = {
+                                idEntrega: item.idEntrega,
+                                nomeCliente: item.nomeCliente,
+                                tempMin: item.tempMin,
+                                tempMax: item.tempMax,
+                                umidMin: item.umidMin,
+                                umidMax: item.umidMax,
+                                dataEntrega: item.dataEntrega,
+                                aprovada: item.aprovada == 'N' ? 'Cancelada' : 'Pendente',
+                                origem: '',
+                                destino: '',
+                                carregamento: []                            
+                            }
+
+                            if (item.idEndereco == 1) {
+                                novaEntrega.origem = `${item.endereco}, ${item.numero} (${item.cidade} - ${item.uf})`
+                            } else {
+                                novaEntrega.destino = `${item.endereco}, ${item.numero} (${item.cidade} - ${item.uf})`
+                            }
+
+                            var lote = {
+                                idMedicamento: item.idMedicamento,
+                                qtd: item.qtd,
+                                medicamento: item.nome
+                            }
+
+                            novaEntrega.carregamento.push(lote);
+
+                            entregas.push(novaEntrega);
+                        }
                     }
-                    console.log(`Data: ${solicitacoesEncontradas[0].dataEntrega}`);
+
+                    for (let index = 0; index < entregas.length; index++) {
+                        var entregaAtual = entregas[index];
+                      
+                        var liCarregamento = `<ul>`;
+
+                        entregaAtual.carregamento.forEach(l => {
+                            liCarregamento += `<li>${l.qtd}X ${l.medicamento}</li>`;
+                        })
+
+                        liCarregamento += `</ul>`
+
+                        var liElement = document.createElement('li');
+                        liElement.addEventListener('click', (event) => {
+                            mostrarEntrega(entregaAtual.idEntrega)
+                        });
+                        liElement.classList.add('tabela-linha');
+
+                        liElement.innerHTML = `
+                            <div>${entregaAtual.nomeCliente}</div>
+                            <div><strong>Origem:</strong> <br>${entregaAtual.origem}<br>
+                            <strong>Destino:</strong> <br>${entregaAtual.destino}</div>
+                            <div>${liCarregamento}</div>
+                            <div>${entregaAtual.dataEntrega}</div>
+                        `;
+
+                        document.getElementById("lista").appendChild(liElement);
+                    }
                 });
             } else {
                 Swal.fire({
