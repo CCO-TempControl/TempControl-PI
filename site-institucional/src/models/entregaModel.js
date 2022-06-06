@@ -13,12 +13,12 @@ function cadastrar(dataEntrega, fkSensor, fkTransportadora) {
 
 function renderizarEntrega(idFarmaceutica) {
   var instrucao = `
-  SELECT cliente.nomeCliente, endereco.*,	 MAX(m.tempMin) as 'minTemperatura', MIN(m.tempMax) as 'maxTemperatura', 
+  SELECT cliente.nomeCliente, endereco.*, MAX(m.tempMin) as 'minTemperatura', MIN(m.tempMax) as 'maxTemperatura', 
   MAX(m.umidMin) as 'minUmidade', MIN(m.umidMax) as 'maxUmidade', e.dataEntrega AS 'DataLimite', e.horaChegada AS 'DataEntrega', e.aprovada, medicamento.nome
    FROM entrega e INNER JOIN lote l ON l.fkEntrega = e.idEntrega INNER JOIN
    medicamento m ON m.idMedicamento = l.fkMedicamento INNER JOIN cliente ON idCliente = fkTransportadora INNER JOIN endereco 
-   ON endereco.fkEntrega = idEntrega, medicamento INNER JOIN lote on idMedicamento = fkMedicamento WHERE m.fkFarmaceutica = ${idFarmaceutica} GROUP BY e.idEntrega;
-  `;
+   ON endereco.fkEntrega = idEntrega, medicamento INNER JOIN lote on idMedicamento = fkMedicamento WHERE m.fkFarmaceutica = ${idFarmaceutica} GROUP BY endereco;  
+   `;
 
   console.log("Executando a instrução SQL: \n" + instrucao);
   return database.executar(instrucao);

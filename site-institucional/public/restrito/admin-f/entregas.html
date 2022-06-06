@@ -161,17 +161,37 @@
 
 
     function renderizarEntrega(idFarmaceutica) {
+      if (idFarmaceutica.idEndereco % 2 == 0) {
         ulListaEntregas.innerHTML += `
             <li id="${idFarmaceutica.nomeCliente}" class="medicamento-container">
                 <span class="titulo-tabela-container">${idFarmaceutica.nomeCliente}</span>
-                <span class="titulo-tabela-container">${idFarmaceutica.endereco}, ${idFarmaceutica.bairro}, ${idFarmaceutica.cidade}, ${idFarmaceutica.uf}, ${idFarmaceutica.numero}, ${idFarmaceutica.cep}</span>
+                <span class="titulo-tabela-container">Destino - ${idFarmaceutica.endereco}, ${idFarmaceutica.bairro}, ${idFarmaceutica.cidade}, ${idFarmaceutica.uf}, ${idFarmaceutica.numero}, ${idFarmaceutica.cep}<br>
+                </span>
                 <span class="titulo-tabela-container">${idFarmaceutica.nome}</span>
-                <span class="titulo-tabela-container">${idFarmaceutica.minTemperatura}, ${idFarmaceutica.maxTemperatura}, ${idFarmaceutica.minUmidade}, ${idFarmaceutica.maxUmidade}</span>
+                <span class="titulo-tabela-container">
+                <span class="titulo-tabela-container">Temp${idFarmaceutica.minTemperatura},${idFarmaceutica.maxTemperatura} <br> Umid${idFarmaceutica.minUmidade},${idFarmaceutica.maxUmidade}</span>
+                </span>
                 <span class="titulo-tabela-container">${idFarmaceutica.DataLimite}</span>
                 <span class="titulo-tabela-container">${idFarmaceutica.DataEntrega}</span>
                 <span class="titulo-tabela-container">${idFarmaceutica.aprovada}</span>
             </li>
         `;
+      } else {
+        ulListaEntregas.innerHTML += `
+            <li id="${idFarmaceutica.nomeCliente}" class="medicamento-container">
+                <span class="titulo-tabela-container">${idFarmaceutica.nomeCliente}</span>
+                <span class="titulo-tabela-container">Origem - ${idFarmaceutica.endereco}, ${idFarmaceutica.bairro}, ${idFarmaceutica.cidade}, ${idFarmaceutica.uf}, ${idFarmaceutica.numero}, ${idFarmaceutica.cep}<br>
+                </span>
+                <span class="titulo-tabela-container">${idFarmaceutica.nome}</span>
+                <span class="titulo-tabela-container">
+                <span class="titulo-tabela-container">Temp${idFarmaceutica.minTemperatura},${idFarmaceutica.maxTemperatura} <br> Umid${idFarmaceutica.minUmidade},${idFarmaceutica.maxUmidade}</span>
+                </span>
+                <span class="titulo-tabela-container">${idFarmaceutica.DataLimite}</span>
+                <span class="titulo-tabela-container">${idFarmaceutica.DataEntrega}</span>
+                <span class="titulo-tabela-container">${idFarmaceutica.aprovada}</span>
+            </li>
+        `;
+          }
     }
 </script>
 
