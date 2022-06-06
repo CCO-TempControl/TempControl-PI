@@ -1,4 +1,5 @@
 var entregaModel = require('../models/entregaModel');
+var registroModel = require('../models/registroModel')
 var enderecoModel = require('../models/enderecoModel');
 var loteModel = require('../models/loteModel');
 var sensorModel = require('../models/sensorModel');
@@ -337,6 +338,63 @@ function adicionarHorChegada(request, response) {
     }
 }
 
+function estrategicoTKPI(request, response) {
+    var idCliente = request.params.idCliente;
+
+    if (idCliente == undefined) {
+        response.status(400).send('Id do Cliente não está definido');
+    } else {
+        var objResposta = {
+            qtdAlertaTemperatura: 0,
+            qtdAlertaUmidade: 0,
+            qtdAlertasTotal: 0,
+            maiorParceira: '---',
+            qtdEntregas: 0,
+            maisAfetada: '---',
+            qtdAlerta: 0
+        };
+
+        registroModel.obterKPIEstrategico(idCliente, 'T').then(kpi => {
+            if (kpi.length > 0) {
+                objResposta.qtdAlertaTemperatura = kpi[0].qtdAlertaTemperatura
+                objResposta.qtdAlertaUmidade = kpi[0].qtdAlertaUmidade                
+                objResposta.qtdAlertasTotal = kpi[0].qtdAlertasTotal                
+            }
+
+            entregaModel.obterMaiorParceira(idCliente).then(maiorParceira => {
+                if (maiorParceira.length > 0) {
+                    objResposta.maiorParceira = maiorParceira[0].maiorParceira;
+                    objResposta.qtdEntregas = maiorParceira[0].qtdEntregas;
+                }
+
+                entregaModel.obterMaisAfetada(idCliente).then(maisAfetada => {
+                    if (maisAfetada.length > 0) {
+                        objResposta.maisAfetada = maisAfetada[0].maisAfetada;
+                        objResposta.maisAlerta = maisAfetada[0].maisAlerta;
+                    }
+
+                    response.json(objResposta);
+
+                }).catch(function (erro) {
+                    console.log(erro);
+                    console.log("\nHouve um erro ao realizar o cadastro! Erro: ", erro.sqlMessage);
+                    response.status(500).json(erro.sqlMessage);
+                })
+
+            }).catch(function (erro) {
+                console.log(erro);
+                console.log("\nHouve um erro ao realizar o cadastro! Erro: ", erro.sqlMessage);
+                response.status(500).json(erro.sqlMessage);
+            })
+
+        }).catch(function (erro) {
+            console.log(erro);
+            console.log("\nHouve um erro ao realizar o cadastro! Erro: ", erro.sqlMessage);
+            response.status(500).json(erro.sqlMessage);
+        })
+    }
+}
+
 module.exports = {
     solicitar,
     dadosKPI,
@@ -350,5 +408,6 @@ module.exports = {
     negarEntrega,
     renderizarEntrega,
     adicionarHorSaida,
-    adicionarHorChegada
+    adicionarHorChegada,
+    estrategicoTKPI
 }

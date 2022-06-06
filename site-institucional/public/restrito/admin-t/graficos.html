@@ -167,20 +167,20 @@
                         </div>
                         <div class="card-admin-f">
                             <div class="card-background">
-                                <h2>Transportadora Mais Confiável</h2>
+                                <h2>Maior Parceira</h2>
                             </div>
                             <div class="card-information">
-                                <h3 id="transportadora-confiavel"></h3>
-                                <small id="transportadora-confiavel-alertas"></small>
+                                <h3 id="maior-parceira"></h3>
+                                <small id="farmaceutica-qtd-entregas"></small>
                             </div>
                         </div>
                         <div class="card-admin-f">
                             <div class="card-background">
-                                <h2>Transportadora Mais Utilizada</h2>
+                                <h2>Farmacêutica Mais Afetada</h2>
                             </div>
                             <div class="card-information">
-                                <h3 id="transportadora-mais-utilizada"></h3>
-                                <small id="transportadora-mais-utilizada-viagens"></small>
+                                <h3 id="mais-afetada"></h3>
+                                <small id="farmaceutica-qtd-alertas"></small>
                             </div>
                         </div>
                     </div>
@@ -901,7 +901,7 @@
     }
 
     function carregarKPIEstrategico() {
-        fetch(`/registro/obterKPIEstrategico/${usuario.fkCliente}&${'T'}`, {
+        fetch(`/entregas/estrategico-t/${usuario.fkCliente}`, {
             cache: 'no-store',
             method: "GET",
             headers: {
@@ -912,41 +912,30 @@
             if (response.ok) {
                 response.json().then(function (resposta) {
                     console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
-                    let primeirasKPI = resposta.primeiraParte[0];
-                    let outrasKPI = resposta.segundaParte;
-
 
                     let temperaturaPorcentagemElement = document.getElementById(
                         'temperatura-alertas-porcentagem');
                     temperaturaPorcentagemElement.innerHTML =
-                        `${((primeirasKPI.qtdAlertaTemperatura / primeirasKPI.qtdAlertasTotal) * 100).toFixed(2)}%`
+                        `${((resposta.qtdAlertaTemperatura / resposta.qtdAlertasTotal) * 100).toFixed(2)}%`
 
                     let temperaturaQtdElement = document.getElementById('temperatura-quantidade');
                     temperaturaQtdElement.innerHTML =
-                        `${primeirasKPI.qtdAlertaTemperatura} dos alertas ocorreram por temperatura`
+                        `${resposta.qtdAlertaTemperatura} dos alertas ocorreram por temperatura`
 
                     let umidadePorcentagemElement = document.getElementById(
                         'umidade-alertas-porcentagem');
                     umidadePorcentagemElement.innerHTML =
-                        `${((primeirasKPI.qtdAlertaUmidade / primeirasKPI.qtdAlertasTotal) * 100).toFixed(2)}%`
+                        `${((resposta.qtdAlertaUmidade / resposta.qtdAlertasTotal) * 100).toFixed(2)}%`
 
                     let umidadeQtdElement = document.getElementById('umidade-quantidade');
                     umidadeQtdElement.innerHTML =
-                        `${primeirasKPI.qtdAlertaUmidade} dos alertas ocorreram por umidade`
+                        `${resposta.qtdAlertaUmidade} dos alertas ocorreram por umidade`                    
 
-                    let maisUtilizada = outrasKPI.reduce((prev, current) => {
-                        return prev.qtdEntregas > current.qtdEntregas ? prev : current;
-                    });
+                    document.getElementById('maior-parceira').innerHTML = resposta.maiorParceira;
+                    document.getElementById('farmaceutica-qtd-entregas').innerHTML = `Realizou ${resposta.qtdEntregas} entregas com você`;
 
-                    let menorQtdAlerta = outrasKPI.reduce((prev, current) => {
-                        return prev.qtdAlerta > current.qtdAlerta ? prev : current;
-                    });
-
-                    document.getElementById('transportadora-confiavel').innerHTML = menorQtdAlerta.nomeCliente;
-                    document.getElementById('transportadora-confiavel-alertas').innerHTML = `Emitiu Apenas ${menorQtdAlerta.qtdAlerta} Alertas`;
-
-                    document.getElementById('transportadora-mais-utilizada').innerHTML = maisUtilizada.nomeCliente;
-                    document.getElementById('transportadora-mais-utilizada-viagens').innerHTML = `Realizou ${maisUtilizada.qtdEntregas} Viagens`;
+                    document.getElementById('mais-afetada').innerHTML = resposta.maisAfetada;
+                    document.getElementById('farmaceutica-qtd-alertas').innerHTML = `${resposta.qtdAlerta} alertas foram emitidos em entregas para ela`;
                 });
             }
         });
