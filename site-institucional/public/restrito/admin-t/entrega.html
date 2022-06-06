@@ -8,28 +8,13 @@
     <script src="https://kit.fontawesome.com/2eecc47c4e.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/date-fns/1.30.1/date_fns.min.js" integrity="sha512-F+u8eWHrfY8Xw9BLzZ8rG/0wIvs0y+JyRJrXjp3VjtFPylAEEGwKbua5Ip/oiVhaTDaDs4eU2Xtsxjs/9ag2bQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/date-fns/1.30.1/date_fns.min.js"
+        integrity="sha512-F+u8eWHrfY8Xw9BLzZ8rG/0wIvs0y+JyRJrXjp3VjtFPylAEEGwKbua5Ip/oiVhaTDaDs4eU2Xtsxjs/9ag2bQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="../style.css">
     <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
     <script src="../../assets/js/funcoes.js"></script>
     <title>ENTREGA</title>
-
-    <style>
-        table,
-        td,
-        th {
-            border: 1px solid;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .cartao {
-            width: 100%;
-        }
-    </style>
 </head>
 
 <body onload="setUp('admin-t'); mostrarEntrega();">
@@ -50,7 +35,8 @@
                 <li><a href="./graficos.html"><i class="fas fa-solid fa-chart-gantt"></i></i>Gráficos/Alertas</a></li>
                 <li><a href="./dadosPessoais.html"><i class="fas fa-solid fa-user"></i></i>Dados Pessoais</a></li>
                 <li><a href="./usuarios.html"><i class="fas fa-solid fa-users"></i>Usuários</a></li>
-                <li><a href="../../index.html" onclick="signOut()"><i class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
+                <li><a href="../../index.html" onclick="signOut()"><i
+                            class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
             </ul>
         </div>
         <div class="main_content">
@@ -82,9 +68,13 @@
                                 </div><br>
                                 <div id="divVeiculo" class="infosEntrega"><strong>Veiculo: </strong><span
                                         id="spnVeiculo"></span></div><br>
-                                <div id="divHorario" class="infosEntrega"><strong>Horario: </strong><input
-                                        type="datetime-local" id="iptHorarioSaida" timeformat="24h"> <input type="datetime-local"
-                                        id="iptHorarioChegada" timeformat="24h"></div><br>
+                                <div id="divHorario" class="infosEntrega">
+                                    <strong>Horario: </strong><br>
+                                    <label for="iptHorarioSaida">Hora de Saída:</label>
+                                    <input type="datetime-local" id="iptHorarioSaida" timeformat="24h"><br>
+                                    <label for="iptHorarioChegada">Hora de Chegada:</label>
+                                    <input type="datetime-local" id="iptHorarioChegada" timeformat="24h">
+                                </div><br>
                                 <div id="divBotoes">
                                     <button onclick="salvar()">Salvar</button>
                                     <button onclick="cancelar()">Cancelar</button>
@@ -132,10 +122,10 @@
                 spnUmidade.innerHTML = `${dadosEntrega[0].umidMin}% - ${dadosEntrega[0].umidMax}%`;
                 spnData.innerHTML = `${dia}/${mes}/${ano} às ${horario}`;
                 spnVeiculo.innerHTML = `${dadosEntrega[0].modelo} Placa ${dadosEntrega[0].placa}`;
-                if(dadosEntrega[0].horaSaida != null) {
+                if (dadosEntrega[0].horaSaida != null) {
                     iptHorarioSaida.value = dateFns.format(dadosEntrega[0].horaSaida, 'YYYY-MM-DDThh:mm');
                 }
-                if(dadosEntrega[0].horaChegada != null) {
+                if (dadosEntrega[0].horaChegada != null) {
                     iptHorarioChegada.value = dateFns.format(dadosEntrega[0].horaChegada, 'YYYY-MM-DDThh:mm');
                 }
             });
@@ -171,18 +161,18 @@
                     })
                 }).then(resultado => {
                     if (resultado.status == 200) {
-                    Swal.fire({
-                        title: 'Sucesso',
-                        text: 'Horário de saída atualizado',
-                        icon: 'success',
-                        timer: 1000,
-                        timerProgressBar: true,
-                        confirmButtonColor: '#34e269',
-                        willClose: () => {
-                            window.location.href = "entregas.html"
-                        }
-                    });
-                }
+                        Swal.fire({
+                            title: 'Sucesso',
+                            text: 'Horário de saída atualizado',
+                            icon: 'success',
+                            timer: 1000,
+                            timerProgressBar: true,
+                            confirmButtonColor: '#34e269',
+                            willClose: () => {
+                                window.location.href = "entregas.html"
+                            }
+                        });
+                    }
                 })
             } else {
                 fetch(`/entregas/adicionarHorChegada`, {
