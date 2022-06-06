@@ -97,14 +97,14 @@ function listarSolicitacoesTransportadora(idTransportadora) {
   console.log("ACESSEI O ENTREGA MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function listarPorIdTransportadora():", idTransportadora);
 
   var instrucao = `
-  SELECT entrega.idEntrega, cliente.nomeCliente, endereco.endereco, endereco.numero, endereco.cidade, endereco.uf, lote.qtd, medicamento.nome, medicamento.tempMin, medicamento.tempMax, medicamento.umidMin, medicamento.umidMax, DATE_FORMAT(entrega.dataEntrega, '%Y-%m-%d-%T') AS 'dataEntrega', entrega.aprovada
+  SELECT entrega.idEntrega, cliente.nomeCliente, endereco.endereco, endereco.numero, endereco.cidade, endereco.uf, lote.qtd, medicamento.nome, medicamento.tempMin, medicamento.tempMax, medicamento.umidMin, medicamento.umidMax, DATE_FORMAT(entrega.dataEntrega, '%T %d/%m/%Y') AS 'dataEntrega', entrega.aprovada
         FROM entrega 
 	INNER JOIN sensor ON entrega.fkSensor = sensor.idSensor 
 	INNER JOIN cliente ON sensor.fkFarmaceutica = idCliente 
 	INNER JOIN endereco ON entrega.idEntrega = endereco.fkEntrega 
     INNER JOIN lote ON lote.fkEntrega = entrega.idEntrega 
     INNER JOIN medicamento ON lote.fkMedicamento = medicamento.idMedicamento
-    WHERE entrega.aprovada = 'P' AND entrega.fkTransportadora = ${idTransportadora};
+    WHERE entrega.aprovada = 'P' AND entrega.fkTransportadora = ${idTransportadora} ORDER BY entrega.dataEntrega;
   `;
 
   console.log("Executando a instrução SQL: \n" + instrucao);
@@ -115,7 +115,7 @@ function listarEntregasTransportadora(idTransportadora) {
   console.log("ACESSEI O ENTREGA MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function listarPorIdTransportadora():", idTransportadora);
 
   var instrucao = `
-  SELECT entrega.idEntrega, entrega.horaSaida, entrega.horaChegada, cliente.nomeCliente, endereco.endereco, endereco.numero, endereco.cidade, endereco.uf, lote.qtd, medicamento.nome, medicamento.tempMin, medicamento.tempMax, medicamento.umidMin, medicamento.umidMax, DATE_FORMAT(entrega.dataEntrega, '%Y-%m-%d-%T') AS 'dataEntrega', entrega.aprovada, veiculo.modelo, veiculo.placa
+  SELECT entrega.idEntrega, entrega.horaSaida, entrega.horaChegada, cliente.nomeCliente, endereco.endereco, endereco.numero, endereco.cidade, endereco.uf, lote.qtd, medicamento.nome, medicamento.tempMin, medicamento.tempMax, medicamento.umidMin, medicamento.umidMax, DATE_FORMAT(entrega.dataEntrega, '%T %d/%m/%Y') AS 'dataEntrega', entrega.aprovada, veiculo.modelo, veiculo.placa
         FROM entrega 
 	INNER JOIN sensor ON entrega.fkSensor = sensor.idSensor 
 	INNER JOIN cliente ON sensor.fkFarmaceutica = idCliente 
@@ -123,7 +123,7 @@ function listarEntregasTransportadora(idTransportadora) {
     INNER JOIN lote ON lote.fkEntrega = entrega.idEntrega 
     INNER JOIN medicamento ON lote.fkMedicamento = medicamento.idMedicamento 
     INNER JOIN veiculo ON entrega.fkVeiculo = veiculo.idVeiculo 
-    WHERE entrega.aprovada = 'S' AND entrega.fkTransportadora = ${idTransportadora};
+    WHERE entrega.aprovada = 'S' AND entrega.fkTransportadora = ${idTransportadora} ORDER BY entrega.dataEntrega;
   `;
 
   console.log("Executando a instrução SQL: \n" + instrucao);
@@ -233,18 +233,36 @@ function obterMaisAfetada(idCliente) {
   return database.executar(instrucao);
 }
 
+function listarEntregasFarmaceutica(idCliente) {
+  console.log("ACESSEI O ENTREGA MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function listarPorIdTransportadora():", idCliente);
+
+  var instrucao = `
+    SELECT entrega.idEntrega, entrega.horaSaida, entrega.horaChegada, cliente.nomeCliente, endereco.idEndereco, endereco.endereco, endereco.numero, endereco.cidade, endereco.uf, medicamento.idMedicamento, lote.qtd, medicamento.nome, medicamento.tempMin, medicamento.tempMax, medicamento.umidMin, medicamento.umidMax, DATE_FORMAT(entrega.dataEntrega, '%T %d/%m/%Y') AS 'dataEntrega', entrega.aprovada 
+        FROM entrega 
+	  INNER JOIN sensor ON entrega.fkSensor = sensor.idSensor 
+	  INNER JOIN cliente ON entrega.fkTransportadora = idCliente 
+	  INNER JOIN endereco ON entrega.idEntrega = endereco.fkEntrega 
+    INNER JOIN lote ON lote.fkEntrega = entrega.idEntrega 
+    INNER JOIN medicamento ON lote.fkMedicamento = medicamento.idMedicamento 
+    WHERE entrega.aprovada = 'S' AND sensor.fkFarmaceutica = ${idCliente} ORDER BY entrega.dataEntrega DESC;
+  `;
+
+  console.log("Executando a instrução SQL: \n" + instrucao);
+  return database.executar(instrucao);
+}
+
 function listarSolicitacoesFarmaceutica(idCliente) {
   console.log("ACESSEI O ENTREGA MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function listarSolicitacoesFarmaceutica():", idCliente);
 
   var instrucao = `
-    SELECT entrega.idEntrega, cliente.nomeCliente, endereco.endereco, endereco.numero, endereco.cidade, endereco.uf, lote.qtd, medicamento.nome, medicamento.tempMin, medicamento.tempMax, medicamento.umidMin, medicamento.umidMax, DATE_FORMAT(entrega.dataEntrega, '%Y-%m-%d-%T') AS 'dataEntrega', entrega.aprovada
+  SELECT entrega.idEntrega, cliente.nomeCliente, endereco.idEndereco, endereco.endereco, endereco.numero, endereco.cidade, endereco.uf, medicamento.idMedicamento, lote.qtd, medicamento.nome, medicamento.tempMin, medicamento.tempMax, medicamento.umidMin, medicamento.umidMax, DATE_FORMAT(entrega.dataEntrega, '%T %d/%m/%Y') AS 'dataEntrega', entrega.aprovada
       FROM entrega 
     INNER JOIN sensor ON entrega.fkSensor = sensor.idSensor 
-    INNER JOIN cliente ON sensor.fkFarmaceutica = idCliente 
+    INNER JOIN cliente ON entrega.fkTransportadora = idCliente 
     INNER JOIN endereco ON entrega.idEntrega = endereco.fkEntrega 
     INNER JOIN lote ON lote.fkEntrega = entrega.idEntrega 
     INNER JOIN medicamento ON lote.fkMedicamento = medicamento.idMedicamento
-    WHERE entrega.aprovada = 'P' AND sensor.fkFarmaceutica = ${idCliente};
+    WHERE entrega.aprovada <> 'S' AND sensor.fkFarmaceutica = ${idCliente} ORDER BY entrega.dataEntrega DESC;
   `;
 
   console.log("Executando a instrução SQL: \n" + instrucao);
@@ -267,5 +285,6 @@ module.exports = {
   adicionarHorChegada,
   obterMaiorParceira,
   obterMaisAfetada,
-  listarSolicitacoesFarmaceutica
+  listarSolicitacoesFarmaceutica,
+  listarEntregasFarmaceutica
 }

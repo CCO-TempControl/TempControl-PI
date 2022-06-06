@@ -60,4 +60,12 @@ router.get('/estrategico-t/:idCliente', function (request, response) {
   entregaController.estrategicoTKPI(request, response);  
 });
 
+router.post('/listar-solicitacoes-farmaceutica', function (request, response) {
+  entregaController.listarSolicitacoesFarmaceutica(request, response);
+});
+
+router.post('/listar-entregas-farmaceutica', function (request, response) {
+  entregaController.listarEntregasFarmaceutica(request, response);
+});
+
 module.exports = router;

@@ -395,6 +395,52 @@ function estrategicoTKPI(request, response) {
     }
 }
 
+function listarEntregasFarmaceutica(request, response) {
+    var idFarmaceutica = request.body.idFarmaceuticaServer;
+
+    if (idFarmaceutica == undefined) {
+        response.status(400).send("idFarmaceutica está undefined!");
+    } else {
+        entregaModel.listarEntregasFarmaceutica(idFarmaceutica).then(function (resultado) {
+            console.log(`\nResultados encontrados: ${resultado.length}`);
+            console.log(`Resultados: ${JSON.stringify(resultado)}`); // transforma JSON em String
+
+            if (resultado.length == 0) {
+                response.status(403).send("idTransportadora inválido");
+            } else {
+                response.send(resultado);
+            }
+        }).catch(function (erro) {
+            console.log(erro);
+            console.log("\nHouve um erro ao realizar a busca das entregas! Erro: ", erro.sqlMessage);
+            response.status(500).json(erro.sqlMessage);
+        });
+    }
+}
+
+function listarSolicitacoesFarmaceutica(request, response) {
+    var idFarmaceutica = request.body.idFarmaceuticaServer;
+
+    if (idFarmaceutica == undefined) {
+        response.status(400).send("idFarmaceutica está undefined!");
+    } else {
+        entregaModel.listarSolicitacoesFarmaceutica(idFarmaceutica).then(function (resultado) {
+            console.log(`\nResultados encontrados: ${resultado.length}`);
+            console.log(`Resultados: ${JSON.stringify(resultado)}`); // transforma JSON em String
+
+            if (resultado.length == 0) {
+                response.status(403).send("idTransportadora inválido");
+            } else {
+                response.send(resultado);
+            }
+        }).catch(function (erro) {
+            console.log(erro);
+            console.log("\nHouve um erro ao realizar a busca das entregas! Erro: ", erro.sqlMessage);
+            response.status(500).json(erro.sqlMessage);
+        });
+    }
+}
+
 module.exports = {
     solicitar,
     dadosKPI,
@@ -409,5 +455,7 @@ module.exports = {
     renderizarEntrega,
     adicionarHorSaida,
     adicionarHorChegada,
-    estrategicoTKPI
+    estrategicoTKPI,
+    listarEntregasFarmaceutica,
+    listarSolicitacoesFarmaceutica
 }

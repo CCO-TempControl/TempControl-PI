@@ -11,10 +11,11 @@
   <script src="../../assets/js/funcoes.js"></script>
   <link rel="stylesheet" href="../style.css">
   <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/date-fns/1.30.1/date_fns.min.js" integrity="sha512-F+u8eWHrfY8Xw9BLzZ8rG/0wIvs0y+JyRJrXjp3VjtFPylAEEGwKbua5Ip/oiVhaTDaDs4eU2Xtsxjs/9ag2bQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <title>ENTREGAS</title>
 </head>
 
-<body onload="setUp('admin-f'); carregarEntregas(); ">
+<body onload="setUp('admin-f'); obterEntregas(); obterSolicitacoes()">
   <div class="wrapper">
     <div class="sidebar">
       <div class="dropdown">
@@ -46,33 +47,15 @@
             <button onclick="solicitacoes()" id="btnRequests" class="option">Solicitações</button>
           </div>
           <div id="divDeliveries" class="data-table">
-            <div class="lista-dados">
-              <ul id="ulListaEntregas" class="ul-lista-dados">
-                  <li class="medicamento-container-titulo">
-                    <span class="titulo-tabela-container">Transportadora</span>
-                    <span class="titulo-tabela-container">Trajeto</span>
-                    <span class="titulo-tabela-container">Carregamento</span>
-                    <span class="titulo-tabela-container">Métricas</span>
-                    <span class="titulo-tabela-container">Data Limite</span>                    
-                    <span class="titulo-tabela-container">Data Entrega</span>                    
-                    <span class="titulo-tabela-container">Situação</span>                    
-                  </li>
+            <div class="tabela tabelaSolicitacoes">
+              <ul id="ulListaEntregas"  style="width: 100%;">                
               </ul>
             </div>
           </div>
 
           <div id="divRequests" class="data-table">
-            <div class="lista-dados">
-              <ul id="ulListaSolicitacoes" class="ul-lista-dados">
-                  <li class="medicamento-container-titulo">
-                    <span class="titulo-tabela-container">Transportadora</span>
-                    <span class="titulo-tabela-container">Trajeto</span>
-                    <span class="titulo-tabela-container">Carregamento</span>
-                    <span class="titulo-tabela-container">Métricas</span>
-                    <span class="titulo-tabela-container">Data Limite</span>                    
-                    <span class="titulo-tabela-container">Situação</span>              
-                    <span class="titulo-tabela-container">Cancelar</span>                    
-                  </li>
+            <div class="tabela tabelaSolicitacoes">
+              <ul id="ulListaSolicitacoes" style="width: 100%;">
               </ul>
             </div>
           </div>
@@ -111,87 +94,272 @@
 </script>
 
 <script>
-  var entregas = [];
-
-    function carregarEntregas() {
-        fetch(`/entregas/renderizarEntrega/${usuario.fkCliente}`, {
-            method: "GET",
+  function obterEntregas() {
+        fetch(`/entregas/listar-entregas-farmaceutica`, {
+            method: "POST",
             headers: {
                 "Content-Type": "application/json"
-            }
-        }).then(function (resposta) {
-            console.log('Resposta: ', resposta);
+            },
+            body: JSON.stringify({
+                idFarmaceuticaServer: usuario.fkCliente
+            })
+        }).then(function (response) {
+            if (response.ok) {
+                //esvaziando a lista que está sendo exibida
+                let elementosNaLista = document.getElementsByClassName('tabela-linha');
+                for (let index = 0; index < elementosNaLista.length; index++) {
+                    elementosNaLista[index].remove();
+                }
 
-            if (resposta.ok) {
-                resposta.json().then(json => {
-                    console.log(json);
-                
-                    entregas = json;
-                    if (entregas.length > 0) {
-                        for (let index = 0; index < entregas.length; index++) {
-                            var entrega = entregas[index];
-                            renderizarEntrega(entrega);
+                response.json().then(function (json) {
+                    document.getElementById("ulListaEntregas").innerHTML = `
+                                    <li class="tabela-cabecalho">
+                                        <div>Transportadora</div>
+                                        <div>Trajeto</div>
+                                        <div>Carregamento</div>
+                                        <div>Data de Entrega</div>
+                                        <div>Saída - Chegada</div>
+                                    </li>
+                                    `;
+
+                    var entregas = [];
+
+                    for (let index = 0; index < json.length; index++) {
+                        var item = json[index];
+
+                        var indexEntregaAtual = entregas.findIndex(e => {
+                          if (e.idEntrega == item.idEntrega) {
+                            return e;
+                          }
+                        });
+                        
+                        if (indexEntregaAtual >= 0) {
+                          if (item.idEndereco == 1 && entregas[indexEntregaAtual].origem == '') {
+                            entregas[indexEntregaAtual].origem = `${item.endereco}, ${item.numero} (${item.cidade} - ${item.uf})`
+                          } else if (item.idEndereco == 2 && entregas[indexEntregaAtual].destino == '') {
+                            entregas[indexEntregaAtual].destino = `${item.endereco}, ${item.numero} (${item.cidade} - ${item.uf})`
+                          }
+
+                          var loteJaCarregado = entregas[indexEntregaAtual].carregamento.find(l => {
+                            if (l.idMedicamento == item.idMedicamento) {
+                              return l;
+                            }
+                          });
+
+                          if (!loteJaCarregado) {
+                            var novoLote = {
+                              idMedicamento: item.idMedicamento,
+                              qtd: item.qtd,
+                              medicamento: item.nome
+                            }
+
+                            entregas[indexEntregaAtual].carregamento.push(lote);
+                          }
+                        } else {
+                          var novaEntrega = {
+                            idEntrega: item.idEntrega,
+                            horaSaida: item.horaSaida == null ? 'Não definida' : dateFns.format(item.horaSaida, 'hh:mm DD/MM/YYYY'),
+                            horaChegada: item.horaChegada == null ? 'Não definida' : dateFns.format(item.horaChegada, 'hh:mm DD/MM/YYYY'),
+                            nomeCliente: item.nomeCliente,
+                            tempMin: item.tempMin,
+                            tempMax: item.tempMax,
+                            umidMin: item.umidMin,
+                            umidMax: item.umidMax,
+                            dataEntrega: item.dataEntrega,
+                            origem: '',
+                            destino: '',
+                            carregamento: []                            
+                          }
+
+                          if (item.idEndereco == 1) {
+                            novaEntrega.origem = `${item.endereco}, ${item.numero} (${item.cidade} - ${item.uf})`
+                          } else {
+                            novaEntrega.destino = `${item.endereco}, ${item.numero} (${item.cidade} - ${item.uf})`
+                          }
+
+                          var lote = {
+                            idMedicamento: item.idMedicamento,
+                            qtd: item.qtd,
+                            medicamento: item.nome
+                          }
+
+                          novaEntrega.carregamento.push(lote);
+
+                          entregas.push(novaEntrega);
                         }
                     }
-                });
 
+                    for (let index = 0; index < entregas.length; index++) {
+                      var entregaAtual = entregas[index];
+                      
+                      var liCarregamento = `<ul>`;
+
+                      entregaAtual.carregamento.forEach(l => {
+                        liCarregamento += `<li>${l.qtd}X ${l.medicamento}</li>`;
+                      })
+
+                      liCarregamento += `</ul>`
+
+                      var liElement = document.createElement('li');
+                      liElement.classList.add('tabela-linha');
+
+                      liElement.innerHTML = `
+                        <div>${entregaAtual.nomeCliente}</div>
+                        <div><strong>Origem:</strong> <br>${entregaAtual.origem}<br>
+                        <strong>Destino:</strong> <br>${entregaAtual.destino}</div>
+                        <div>${liCarregamento}</div>
+                        <div>${entregaAtual.dataEntrega}</div>
+                        <div>${entregaAtual.horaSaida} - ${entregaAtual.horaChegada}</div>
+                      `;
+
+                      document.getElementById("ulListaEntregas").appendChild(liElement);
+                    }
+                });
             } else {
                 Swal.fire({
-                    title: 'Erro',
-                    text: 'Houve um erro ao carregar as entregas',
-                    icon: 'error',
-                    showConfirmButton: false,
-                    showDenyButton: true,
-                    denyButtonText: 'OK'
-                });
+                    icon: 'warning',
+                    title: 'Vazio',
+                    text: 'Nenhuma solicitação foi encontrada'
+                })
+                console.error('Nenhum dado encontrado ou erro na API');
             }
-
-        }).catch(function (erro) {
-            Swal.fire({
-                title: 'Erro',
-                text: 'Houve um erro ao carregar as entregas',
-                icon: 'error',
-                showConfirmButton: false,
-                showDenyButton: true,
-                denyButtonText: 'OK'
-            });
-            console.log(`ERRO: ${erro}`);
+        }).catch(function (error) {
+            console.error(`Erro na obtenção dos veículos cadastrados ${error.message}`);
         });
     }
 
+    function obterSolicitacoes() {
+        fetch(`/entregas/listar-solicitacoes-farmaceutica`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                idFarmaceuticaServer: usuario.fkCliente
+            })
+        }).then(function (response) {
+            if (response.ok) {
+                //esvaziando a lista que está sendo exibida
+                let elementosNaLista = document.getElementsByClassName('tabela-linha');
+                for (let index = 0; index < elementosNaLista.length; index++) {
+                    elementosNaLista[index].remove();
+                }
 
-    function renderizarEntrega(idFarmaceutica) {
-      if (idFarmaceutica.idEndereco % 2 == 0) {
-        ulListaEntregas.innerHTML += `
-            <li id="${idFarmaceutica.nomeCliente}" class="medicamento-container">
-                <span class="titulo-tabela-container">${idFarmaceutica.nomeCliente}</span>
-                <span class="titulo-tabela-container">Destino - ${idFarmaceutica.endereco}, ${idFarmaceutica.bairro}, ${idFarmaceutica.cidade}, ${idFarmaceutica.uf}, ${idFarmaceutica.numero}, ${idFarmaceutica.cep}<br>
-                </span>
-                <span class="titulo-tabela-container">${idFarmaceutica.nome}</span>
-                <span class="titulo-tabela-container">
-                <span class="titulo-tabela-container">Temp${idFarmaceutica.minTemperatura},${idFarmaceutica.maxTemperatura} <br> Umid${idFarmaceutica.minUmidade},${idFarmaceutica.maxUmidade}</span>
-                </span>
-                <span class="titulo-tabela-container">${idFarmaceutica.DataLimite}</span>
-                <span class="titulo-tabela-container">${idFarmaceutica.DataEntrega}</span>
-                <span class="titulo-tabela-container">${idFarmaceutica.aprovada}</span>
-            </li>
-        `;
-      } else {
-        ulListaEntregas.innerHTML += `
-            <li id="${idFarmaceutica.nomeCliente}" class="medicamento-container">
-                <span class="titulo-tabela-container">${idFarmaceutica.nomeCliente}</span>
-                <span class="titulo-tabela-container">Origem - ${idFarmaceutica.endereco}, ${idFarmaceutica.bairro}, ${idFarmaceutica.cidade}, ${idFarmaceutica.uf}, ${idFarmaceutica.numero}, ${idFarmaceutica.cep}<br>
-                </span>
-                <span class="titulo-tabela-container">${idFarmaceutica.nome}</span>
-                <span class="titulo-tabela-container">
-                <span class="titulo-tabela-container">Temp${idFarmaceutica.minTemperatura},${idFarmaceutica.maxTemperatura} <br> Umid${idFarmaceutica.minUmidade},${idFarmaceutica.maxUmidade}</span>
-                </span>
-                <span class="titulo-tabela-container">${idFarmaceutica.DataLimite}</span>
-                <span class="titulo-tabela-container">${idFarmaceutica.DataEntrega}</span>
-                <span class="titulo-tabela-container">${idFarmaceutica.aprovada}</span>
-            </li>
-        `;
-          }
+                response.json().then(function (json) {
+                    document.getElementById("ulListaSolicitacoes").innerHTML = `
+                                    <li class="tabela-cabecalho">
+                                        <div>Transportadora</div>
+                                        <div>Trajeto</div>
+                                        <div>Carregamento</div>
+                                        <div>Data de Entrega</div>
+                                        <div>Situação</div>
+                                    </li>
+                                    `;
+
+                    var entregas = [];
+
+                    for (let index = 0; index < json.length; index++) {
+                      var item = json[index];
+
+                        var indexEntregaAtual = entregas.findIndex(e => {
+                          if (e.idEntrega == item.idEntrega) {
+                            return e;
+                          }
+                        });
+                        
+                        if (indexEntregaAtual >= 0) {
+                          if (item.idEndereco == 1 && entregas[indexEntregaAtual].origem == '') {
+                            entregas[indexEntregaAtual].origem = `${item.endereco}, ${item.numero} (${item.cidade} - ${item.uf})`
+                          } else if (item.idEndereco == 2 && entregas[indexEntregaAtual].destino == '') {
+                            entregas[indexEntregaAtual].destino = `${item.endereco}, ${item.numero} (${item.cidade} - ${item.uf})`
+                          }
+
+                          var loteJaCarregado = entregas[indexEntregaAtual].carregamento.find(l => {
+                            if (l.idMedicamento == item.idMedicamento) {
+                              return l;
+                            }
+                          });
+
+                          if (!loteJaCarregado) {
+                            var novoLote = {
+                              idMedicamento: item.idMedicamento,
+                              qtd: item.qtd,
+                              medicamento: item.nome
+                            }
+
+                            entregas[indexEntregaAtual].carregamento.push(lote);
+                          }
+                        } else {
+                          var novaEntrega = {
+                            idEntrega: item.idEntrega,
+                            nomeCliente: item.nomeCliente,
+                            tempMin: item.tempMin,
+                            tempMax: item.tempMax,
+                            umidMin: item.umidMin,
+                            umidMax: item.umidMax,
+                            dataEntrega: item.dataEntrega,
+                            aprovada: item.aprovada == 'N' ? 'Cancelada' : 'Pendente',
+                            origem: '',
+                            destino: '',
+                            carregamento: []                            
+                          }
+
+                          if (item.idEndereco == 1) {
+                            novaEntrega.origem = `${item.endereco}, ${item.numero} (${item.cidade} - ${item.uf})`
+                          } else {
+                            novaEntrega.destino = `${item.endereco}, ${item.numero} (${item.cidade} - ${item.uf})`
+                          }
+
+                          var lote = {
+                            idMedicamento: item.idMedicamento,
+                            qtd: item.qtd,
+                            medicamento: item.nome
+                          }
+
+                          novaEntrega.carregamento.push(lote);
+
+                          entregas.push(novaEntrega);
+                        }
+                    }
+
+                    for (let index = 0; index < entregas.length; index++) {
+                      var entregaAtual = entregas[index];
+                      
+                      var liCarregamento = `<ul>`;
+
+                      entregaAtual.carregamento.forEach(l => {
+                        liCarregamento += `<li>${l.qtd}X ${l.medicamento}</li>`;
+                      })
+
+                      liCarregamento += `</ul>`
+
+                      var liElement = document.createElement('li');
+                      liElement.classList.add('tabela-linha');
+
+                      liElement.innerHTML = `
+                        <div>${entregaAtual.nomeCliente}</div>
+                        <div><strong>Origem:</strong> <br>${entregaAtual.origem}<br>
+                        <strong>Destino:</strong> <br>${entregaAtual.destino}</div>
+                        <div>${liCarregamento}</div>
+                        <div>${entregaAtual.dataEntrega}</div>
+                        <div>${entregaAtual.aprovada}</div>
+                      `;
+
+                      document.getElementById("ulListaSolicitacoes").appendChild(liElement);
+                    }
+                });
+            } else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Vazio',
+                    text: 'Nenhuma solicitação foi encontrada'
+                })
+                console.error('Nenhum dado encontrado ou erro na API');
+            }
+        })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos veículos cadastrados ${error.message}`);
+            });
     }
 </script>
 
