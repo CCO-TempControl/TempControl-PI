@@ -167,11 +167,11 @@
       admin = usuario.admin;
     }
     ulListaUsuario.innerHTML += `
-            <li id="${usuario.idEntrega}" class="medicamento-container">
-                <span class="titulo-tabela-container">${usuario.nomeUsuario}</span>
-                <span class="titulo-tabela-container">${usuario.emailUsuario}</span>
-                <span class="titulo-tabela-container">${usuario.tipoUsuario}</span>
-                <span class="titulo-tabela-container">${admin}</span>
+            <li id="${usuario.idEntrega}" class="medicamento-container" >
+                <span class="titulo-tabela-container" style="width: 100%;height: 100%;">${usuario.nomeUsuario}</span>
+                <span class="titulo-tabela-container" style="width: 100%;height: 100%;">${usuario.emailUsuario}</span>
+                <span class="titulo-tabela-container" style="width: 100%;height: 100%;">${usuario.tipoUsuario}</span>
+                <span class="titulo-tabela-container" style="width: 100%;height: 100%;">${admin}</span>
             </li>
         `;
   }
@@ -188,7 +188,7 @@
 
 
 
-    if (emailVar == "" || senhaVar == "") {
+    if (nomeVar == ""|| emailVar == "" || senhaVar == "") {
       Swal.fire({
         title: 'Erro',
         text: 'Todos os campos são obrigatórios',
@@ -224,7 +224,7 @@
       return;
     }
 
-    fetch("/usuarios/cadastrar", {
+    fetch("/usuarios/cadastrarUsuario", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
