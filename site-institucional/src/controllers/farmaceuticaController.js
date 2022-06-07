@@ -1,6 +1,7 @@
 var clienteModel = require('../models/clienteModel');
 var usuarioModel = require('../models/usuarioModel')
 var sensorModel = require('../models/sensorModel');
+var sha512 = require('js-sha512');
 
 function cadastrar(request, response) {
   var nome = request.body.nomeServer;
@@ -25,6 +26,20 @@ function cadastrar(request, response) {
   } else if (qtdSensor <= 0) {
     response.status(400).send("A quantidade de sensores deve ser maior que 0");
   } else {
+    senha = sha512(senha);
+    if (process.env.AMBIENTE_PROCESSO == "producao") {
+      clienteModel.cadastrar(nome,cnpj,telefone,'F').then(
+        function(resultado){
+          usuarioModel.cadastrar(cnpj, `Admin ${nome}`, email, senha, 'admin-f', null).then(() => {
+            for (var index = 1; index <= qtdSensor; index++) {
+              sensorModel.inserir(cnpj);
+            }
+            response.json(resultado);
+        }
+      )
+    })
+  }
+    else{
     clienteModel.iniciarTransacao().then( () => {
       clienteModel.cadastrar(nome, cnpj, telefone, 'F').then(
         function (resultado) {
@@ -76,7 +91,7 @@ function cadastrar(request, response) {
         response.status(500).json(erro.sqlMessage);
       });
     });
-    
+  }
   }
 }
 
