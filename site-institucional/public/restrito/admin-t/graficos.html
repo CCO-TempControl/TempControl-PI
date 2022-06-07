@@ -757,7 +757,8 @@
 
     function plotarGraficoEstrategico(resposta, grafico, tipoGrafico, tipoDado) {
         console.log('iniciando plotagem do gráfico...');
-        console.log(tipoDado);
+        console.log('Tipo do Gráfico: ', tipoDado);
+        
 
         for (i = 0; i < resposta.length; i++) {
             var registro = resposta[i];
@@ -771,6 +772,7 @@
                 grafico.data.labels.push(registro.tempo);
 
             }
+            if(registro.quantidadeAlerta == undefined) registro.quantidadeAlerta = 0;
             grafico.data.datasets[0].data.push((registro.quantidadeAlerta / registro.quantidadeRegistro) * 100);
         }
         grafico.update();

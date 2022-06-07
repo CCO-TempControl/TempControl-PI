@@ -63,7 +63,7 @@ body {
 }
 
 .wrapper .main_content {
-    width: 100%;
+    width: -webkit-fill-available;
     margin-left: 200px;
 }
 
@@ -82,7 +82,8 @@ body {
     margin-right: 20px;
 }
 
-.wrapper .main_content .info,.wrapper .main_content .info-medicamento {
+.wrapper .main_content .info,
+.wrapper .main_content .info-medicamento {
     margin: 20px;
     color: #717171;
     /* Verificar */
@@ -160,7 +161,9 @@ input[type=text] {
     border-radius: 0;
 }
 
-#btnRoute, #btnShipment, #btnCompany {
+#btnRoute,
+#btnShipment,
+#btnCompany {
     font-size: 20px;
 }
 
@@ -278,6 +281,7 @@ select {
     outline: #0253c4;
     border: 2px solid #0253c4;
 }
+
 /* .form button Vai dar problema quando juntar com o style das páginas iniciais - João */
 .form .button-form {
     margin: 20px 0;
@@ -535,18 +539,20 @@ div.data-table {
     cursor: pointer;
 }
 
-.critico{
+.critico {
     color: #FF0000;
-    }
-.alerta{
-    color:#eeff00;
 }
-.ideal{
+
+.alerta {
+    color: #eeff00;
+}
+
+.ideal {
     color: #00FF00;
 }
-    
-.caminhao-container:hover{
-    border:rgb(54, 162, 235) solid 2px;
+
+.caminhao-container:hover {
+    border: rgb(54, 162, 235) solid 2px;
     transition: 0.2s;
 }
 
@@ -668,13 +674,14 @@ div.data-table {
     text-align: center;
 }
 
-.card-information.met{
+.card-information.met {
     display: flex;
     flex-direction: row;
     align-items: center;
 
 }
-.card-information.met h3{
+
+.card-information.met h3 {
     margin: 20px;
 }
 
@@ -783,15 +790,16 @@ div.data-table {
     background-color: white;
     border-radius: 30px;
     overflow: hidden;
-  
-  }
-  .lista-dados h1 {
+
+}
+
+.lista-dados h1 {
     color: #0253c4;
     font-size: 34px;
     margin: 20px 0 15px;
-  }
+}
 
-  
+
 
 #lista-medicamentos-container {
     padding: 10px;
@@ -844,13 +852,15 @@ div.data-table {
     margin-top: 15px;
     padding: 10px;
 }
+
 .medicamento-container-adicionar {
-    
+
     display: flex;
     align-items: center;
     justify-content: center;
     margin-top: 10px;
 }
+
 .medicamento-container-adicionar .adicionar-medicamento-container {
     padding: 5px;
     height: 50px;
@@ -865,10 +875,12 @@ div.data-table {
     font-size: 40px;
     outline: none;
 }
+
 .medicamento-container-adicionar .adicionar-medicamento-container:hover {
     box-shadow: 0 0 5px #3C9DCF;
     cursor: pointer;
 }
+
 .pedido-nome,
 .pedido-validade,
 .pedido-temp,
@@ -881,14 +893,18 @@ div.data-table {
     justify-content: center;
     align-items: center;
 }
-.pedido-temp-min-max, .pedido-umi-min-max, .pedido-span {
+
+.pedido-temp-min-max,
+.pedido-umi-min-max,
+.pedido-span {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 25%;
     height: 100%;
 }
-.pedido-span span{
+
+.pedido-span span {
     width: 100%;
     word-break: break-all;
     display: flex;
@@ -903,12 +919,14 @@ div.data-table {
     justify-content: center;
     align-items: center;
 }
+
 .pedido-input-edit {
     border-radius: 20px;
     text-align: center;
     font-size: 18px;
     border: 2px solid #3C9DCF;
 }
+
 .pedido-input-edit:focus {
     outline: 0;
 }
@@ -917,7 +935,8 @@ div.data-table {
     margin: 0 12px;
 }
 
-.pedido-validade, .pedido-nome {
+.pedido-validade,
+.pedido-nome {
     margin: 0;
 }
 
@@ -1005,26 +1024,26 @@ div.data-table {
     background-color: white;
     border-radius: 30px;
     overflow: hidden;
-  }
-  
-  .tabela h1 {
+}
+
+.tabela h1 {
     color: #0253c4;
     font-size: 34px;
     margin-top: 10px;
-  }
-  
-  .tabela h3 {
+}
+
+.tabela h3 {
     font-size: 1.5em;
-  }
-  
-  .tabela #lista {
+}
+
+.tabela #lista {
     list-style-type: none;
     width: 90%;
     height: fit-content;
     margin-top: 35px;
-  }
-  
-  .tabela .lista li {
+}
+
+.tabela .lista li {
     min-height: 55px;
     width: 100%;
     display: flex;
@@ -1032,15 +1051,15 @@ div.data-table {
     justify-content: space-around;
     padding: 2px;
     border-radius: 30px;
-  }
-  
-  .tabela .tabela-linha {
+}
+
+.tabela .tabela-linha {
     box-shadow: 0 0 5px grey;
     margin-top: 15px;
-  }
-  
-  .tabela .tabela-linha,
-  .tabela .tabela-cabecalho {
+}
+
+.tabela .tabela-linha,
+.tabela .tabela-cabecalho {
     height: fit-content;
     min-height: 55px;
     width: 100%;
@@ -1049,76 +1068,76 @@ div.data-table {
     justify-content: space-around;
     padding: 2px;
     border-radius: 30px;
-  }
-  
-  .tabela .tabela-cabecalho {
+}
+
+.tabela .tabela-cabecalho {
     font-size: 20px;
     font-weight: 700;
-  }
-  
-  .tabela #lista div {
+}
+
+.tabela #lista div {
     flex-basis: 100%;
     display: flex;
     padding: 1%;
     justify-content: center;
-  }
-  
-  .tabela .btnExcluir,
-  .tabela .btnEditar {
+}
+
+.tabela .btnExcluir,
+.tabela .btnEditar {
     /* width: 20%; */
     height: 40px;
     /* background-color: #F04A5B; */
-  }
-  .tabela .btnExcluir{
+}
+
+.tabela .btnExcluir {
     background-image: url("./img/icons8-excluir-blue-ui/icons8-excluir-40.png");
     background-repeat: no-repeat;
     /* background-attachment: fixed; */
     background-position: center center;
     /* background-size: cover; */
-  }
-  .tabela .btnEditar{
+}
+
+.tabela .btnEditar {
     background-image: url("./img/icons8-lápis-blue-ui/icons8-lápis-40.png");
     background-repeat: no-repeat;
     /* background-attachment: fixed; */
     background-position: center center;
     /* background-size: cover; */
-  }
-  
-  .hiddenInput {
+}
+
+.hiddenInput {
     display: none;
-  }
-  
-  #btnCancelar {
+}
+
+#btnCancelar {
     background-color: #717171;
     color: #000000;
     border: 1px solid black;
-  }
-  
-  /* Solicitações */
-  
-  .tabelaSolicitacoes #lista div {
+}
+
+/* Solicitações */
+
+.tabelaSolicitacoes #lista div {
     flex-direction: column;
-  }
-  
-  .tabelaSolicitacoes .tabela-linha:hover{
+}
+
+.tabelaSolicitacoes .tabela-linha:hover {
     cursor: pointer;
-  }
-  
-  /* Entregas */
+}
 
-  .containerInfosEntrega {
-      box-sizing: border-box;
-      padding: 15px;
-  }
+/* Entregas */
 
-  .divBotoesSolicitacoes{
-      margin-top: 10px;
-  }
+.containerInfosEntrega {
+    box-sizing: border-box;
+    padding: 15px;
+}
 
-  #btnAprovarEntrega {
+.divBotoesSolicitacoes {
+    margin-top: 10px;
+}
 
-  }
+#btnAprovarEntrega {}
 
-  #btnNegarEntrega {
-      background-color: rgb(231, 57, 57);
-  }
+#btnNegarEntrega {
+    background-color: rgb(231, 57, 57);
+}

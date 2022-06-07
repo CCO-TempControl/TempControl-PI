@@ -7,20 +7,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/2eecc47c4e.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/date-fns/1.30.1/date_fns.min.js"
+        integrity="sha512-F+u8eWHrfY8Xw9BLzZ8rG/0wIvs0y+JyRJrXjp3VjtFPylAEEGwKbua5Ip/oiVhaTDaDs4eU2Xtsxjs/9ag2bQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
     <script src="../../assets/js/funcoes.js"></script>
-    <link rel="stylesheet" href="style.css">
-    <title>Entregas</title>
+    <title>ENTREGAS</title>
 </head>
 
-<body>
-
-
+<body onload="setUp('transportador'); obterEntregas();">
     <div class="wrapper">
         <div class="sidebar">
             <div class="dropdown">
                 <a href="#"><i class="fa-solid fa-circle-user" style="font-size:70px;  color: white;"></i></a>
                 <div class="dropdown-content">
-                    <h4>Olá {{nome.usuario}}</h4>
+                    <h4>Olá <span id="spanNome"></span></h4>
                 </div>
             </div>
             <ul>
@@ -29,9 +32,7 @@
                 <li><a href="graficos.html"><i class="fas fa-solid fa-chart-gantt"></i></i>Gráficos</a></li>
                 <li><a href="dadosPessoais.html"><i class="fas fa-solid fa-user"></i></i>Dados Pessoais</a></li>
                 <li><a href="#" onclick="sair()"><i class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a>
-                </li>
             </ul>
-
         </div>
         <div class="main_content">
             <div class="header">
@@ -39,83 +40,173 @@
                 <img src="img/logo_nome_sembg.png">
             </div>
             <div class="info">
-                <div id="cards">
-                    <div class="card">
-                        <div id="teste">
-                            <h2>Entregas Totais</h2>
-                        </div>
-                        <h3>24</h3>
-                        <small>Dia 04/05/2022</small>
-                    </div>
-                    <div class="card">
-                        <div id="teste">
-                            <h2>Entregas Pendentes</h2>
-                        </div>
-                        <h3>8</h3>
-                        <small>4 caminhões carregados</small>
-                    </div>
-                    <div class="card">
-                        <div id="teste">
-                            <h2>Entregas Finalizadas</h2>
-                        </div>
-                        <h3>10</h3>
-                        <small>9 temperatura ideal</small>
-                    </div>
-                    <div class="card">
-                        <div id="teste">
-                            <h2>Entregas em Andamento</h2>
-                        </div>
-                        <h3>6</h3>
-                        <small>5 temperatura ideal</small>
-                    </div>
-                </div>
-
-
-                <div id="banner">
-                    <h1>Entregas</h1>
-                    <ul id="banners">
-                        <li class="bannerContainerTitulo">
-                            <div class="tituloTabelaContainer">Veículo</div>
-                            <div class="tituloTabelaContainer">Status</div>
-                            <div class="tituloTabelaContainer">Temperatura</div>
-                            <div class="tituloTabelaContainer">Umidade</div>
-                            <div class="tituloTabelaContainer">Alertas</div>
-                            <div class="tituloTabelaContainer">Local</div>
-                        </li>
-                        <li class="bannerContainer">
-                            <div class="caminhaoVeiculo tituloTabelaContainer"><i class="fa-solid fa-truck"></i>#1</div>
-                            <div class="entregaModo colorStatusModo tituloTabelaContainer">Pendente</div>
-                            <div class="entregaTemp colorStatusTemp tituloTabelaContainer">--</div>
-                            <div class="entregaUmi colorStatusUmi tituloTabelaContainer">--</div>
-                            <div class="entregaAlert colorStatusAlert tituloTabelaContainer">--</div>
-                            <div class="entregaLocal tituloTabelaContainer"><i class="fa-solid fa-warehouse"></i>Garagem
+                <!-- Login -->
+                <div class="banner-form alt-banner sign">
+                    <div class="container">
+                        <div class="cartao">
+                            <div class="tabela tabelaSolicitacoes">
+                                <h1>Entregas</h1>
+                                <ul id="lista">
+                                </ul>
                             </div>
-                        </li>
-                        <li class="bannerContainer">
-                            <div class="caminhaoVeiculo tituloTabelaContainer"><i class="fa-solid fa-truck"></i>#2</div>
-                            <div class="entregaModo colorStatusModo tituloTabelaContainer">Finalizada</div>
-                            <div class="entregaTemp colorStatusTemp tituloTabelaContainer">3ºC</div>
-                            <div class="entregaUmi colorStatusUmi tituloTabelaContainer">88%</div>
-                            <div class="entregaAlert colorStatusAlert tituloTabelaContainer">0</div>
-                            <div class="entregaLocal tituloTabelaContainer"><i class="fa-solid fa-warehouse"></i>Garagem
-                            </div>
-                        </li>
-                        <li class="bannerContainer">
-                            <div class="caminhaoVeiculo tituloTabelaContainer"><i class="fa-solid fa-truck"></i>#3</div>
-                            <div class="entregaModo colorStatusModo tituloTabelaContainer">em Andamento</div>
-                            <div class="entregaTemp colorStatusTemp tituloTabelaContainer">2,1ºC</div>
-                            <div class="entregaUmi colorStatusUmi tituloTabelaContainer">93%</div>
-                            <div class="entregaAlert colorStatusAlert tituloTabelaContainer">1</div>
-                            <div class="entregaLocal tituloTabelaContainer"><i class="fa-solid fa-road"></i>Estrada
-                            </div>
-                        </li>
-                    </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    </div>
-    </div>
 </body>
+
+<script>
+    var resposta = [];
+    var entregas = [];
+
+    function obterEntregas() {
+        const idTransportadoraVar = usuario.fkCliente;
+
+        console.log(`idTransportadora: ${idTransportadoraVar}`);
+        fetch(`/entregas/listar-entregas-transportadora`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                idTransportadoraServer: idTransportadoraVar
+            })
+        }).then(function (response) {
+            if (response.ok) {
+                //esvaziando a lista que está sendo exibida
+                let elementosNaLista = document.getElementsByClassName('tabela-linha');
+                for (let index = 0; index < elementosNaLista.length; index++) {
+                    elementosNaLista[index].remove();
+                }
+
+                response.json().then(function (json) {
+                    resposta = json
+
+                    document.getElementById("lista").innerHTML = `
+                                    <li class="tabela-cabecalho">
+                                        <div>Farmaceutica</div>
+                                        <div>Trajeto</div>
+                                        <div>Carregamento</div>
+                                        <div>Data de Entrega</div>
+                                        <div>Saída - Chegada</div>
+                                    </li>
+                                    `;
+
+                    entregas = [];
+
+                    for (let index = 0; index < json.length; index++) {
+                        var item = json[index];
+
+                        var indexEntregaAtual = entregas.findIndex(e => {
+                            if (e.idEntrega == item.idEntrega) {
+                                return e;
+                            }
+                        });
+
+                        if (indexEntregaAtual >= 0) {
+                            if (item.idEndereco == 1 && entregas[indexEntregaAtual].origem == '') {
+                                entregas[indexEntregaAtual].origem = `${item.endereco}, ${item.numero} (${item.cidade} - ${item.uf})`
+                            } else if (item.idEndereco == 2 && entregas[indexEntregaAtual].destino == '') {
+                                entregas[indexEntregaAtual].destino = `${item.endereco}, ${item.numero} (${item.cidade} - ${item.uf})`
+                            }
+
+                            var loteJaCarregado = entregas[indexEntregaAtual].carregamento.find(l => {
+                                if (l.idMedicamento == item.idMedicamento) {
+                                    return l;
+                                }
+                            });
+
+                            if (!loteJaCarregado) {
+                                var novoLote = {
+                                    idMedicamento: item.idMedicamento,
+                                    qtd: item.qtd,
+                                    medicamento: item.nome
+                                }
+
+                                entregas[indexEntregaAtual].carregamento.push(lote);
+                            }
+                        } else {
+                            var novaEntrega = {
+                                idEntrega: item.idEntrega,
+                                horaSaida: item.horaSaida == null ? 'Não definida' : dateFns.format(item.horaSaida, 'hh:mm DD/MM/YYYY'),
+                                horaChegada: item.horaChegada == null ? 'Não definida' : dateFns.format(item.horaChegada, 'hh:mm DD/MM/YYYY'),
+                                nomeCliente: item.nomeCliente,
+                                tempMin: item.tempMin,
+                                tempMax: item.tempMax,
+                                umidMin: item.umidMin,
+                                umidMax: item.umidMax,
+                                dataEntrega: item.dataEntrega,
+                                origem: '',
+                                destino: '',
+                                carregamento: []
+                            }
+
+                            if (item.idEndereco == 1) {
+                                novaEntrega.origem = `${item.endereco}, ${item.numero} (${item.cidade} - ${item.uf})`
+                            } else {
+                                novaEntrega.destino = `${item.endereco}, ${item.numero} (${item.cidade} - ${item.uf})`
+                            }
+
+                            var lote = {
+                                idMedicamento: item.idMedicamento,
+                                qtd: item.qtd,
+                                medicamento: item.nome
+                            }
+
+                            novaEntrega.carregamento.push(lote);
+
+                            entregas.push(novaEntrega);
+                        }
+                    }
+
+                    for (let index = 0; index < entregas.length; index++) {
+                        var entregaAtual = entregas[index];
+
+                        var liCarregamento = `<ul>`;
+
+                        entregaAtual.carregamento.forEach(l => {
+                            liCarregamento += `<li>${l.qtd}X ${l.medicamento}</li>`;
+                        })
+
+                        liCarregamento += `</ul>`
+
+                        var liElement = document.createElement('li');
+                        liElement.addEventListener('click', (event) => {
+                            mostrarEntrega(entregaAtual.idEntrega)
+                        });
+                        liElement.classList.add('tabela-linha');
+
+                        liElement.innerHTML = `
+                        <div>${entregaAtual.nomeCliente}</div>
+                        <div><strong>Origem:</strong> <br>${entregaAtual.origem}<br>
+                        <strong>Destino:</strong> <br>${entregaAtual.destino}</div>
+                        <div>${liCarregamento}</div>
+                        <div>${entregaAtual.dataEntrega}</div>
+                        <div>${entregaAtual.horaSaida} - ${entregaAtual.horaChegada}</div>
+                      `;
+
+                        document.getElementById("lista").appendChild(liElement);
+                    }
+                });
+            } else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Vazio',
+                    text: 'Nenhuma solicitação foi encontrada'
+                })
+                console.error('Nenhum dado encontrado ou erro na API');
+            }
+        })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos veículos cadastrados ${error.message}`);
+            });
+    }
+
+    function mostrarEntrega(idEntrega) {
+        window.location.href = `entrega.html?idEntrega=${idEntrega}`;
+    }
+</script>
 
 </html>

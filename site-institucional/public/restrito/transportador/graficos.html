@@ -7,19 +7,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/2eecc47c4e.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="style.css">    
-    <title>DashBoard</title>
+    <script src="../../assets/js/funcoes.js"></script>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
+    <title>GRÁFICOS/ALERTAS</title>
 </head>
 
-<body>
-
-
+<body onload="setUp('transportador'), carregarEntregas()">
     <div class="wrapper">
         <div class="sidebar">
             <div class="dropdown">
                 <a href="#"><i class="fa-solid fa-circle-user" style="font-size:70px;  color: white;"></i></a>
                 <div class="dropdown-content">
-                    <h4>Olá {{nome.usuario}}</h4>
+                    <h4>Olá <span id="spanNome"></span></h4>
                 </div>
             </div>
             <ul>
@@ -27,9 +27,8 @@
                 <li><a href="entregas.html"><i class="fas fa-solid fa-bell"></i></i>Entregas</a></li>
                 <li><a href="graficos.html"><i class="fas fa-solid fa-chart-gantt"></i></i>Gráficos</a></li>
                 <li><a href="dadosPessoais.html"><i class="fas fa-solid fa-user"></i></i>Dados Pessoais</a></li>
-                <li><a href="#" onclick="sair()"><i class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
+                <li><a href="#" onclick="sair()"><i class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a>
             </ul>
-            
         </div>
         <div class="main_content">
             <div class="header">
@@ -37,216 +36,966 @@
                 <img src="img/logo_nome_sembg.png">
             </div>
             <div class="info">
-                <div id="cards">
-                    <div class="card">
-                        <div id="teste">
-                            <h2>Entregas em Andamento</h2>
-                        </div>
-                        <h3>20</h3>
-                        <small>Dia 04/05/2022</small>
-                    </div>
-                    <div class="card">
-                        <div id="teste">
-                            <h2>Temperatura Ideal</h2>
-                        </div>
-                        <h3>14</h3>
-                        <small>70% das viagens</small>
-                    </div>
-                    <div class="card">
-                        <div id="teste">
-                            <h2>Temperatura Alerta</h2>
-                        </div>
-                        <h3>4</h3>
-                        <small>20% das viagens</small>
-                    </div>
-                    <div class="card">
-                        <div id="teste">
-                            <h2>Temperatura Crítica</h2>
-                        </div>
-                        <h3>2</h3>
-                        <small>10% das viagens</small>
-                    </div>
+                <div class="options">
+                    <button id="btnOperacao" class="option selected" onclick="operacao()">Operação</button>
+                    <button id="btnEstrategico" class="option" onclick="estrategico()">Estratégico</button>
                 </div>
-
-                <div id="select">
-                    <select id="sel" onchange="ver()">
-                        <option value="0">Selecione um caminhão</option>
-                        <option value="1">Caminhão 1</option>
-                        <option value="2">Caminhão 2</option>
-                    </select>
-                </div>
-                
-                <div id="grafico1" style="display: none;">
-                    <div class="chart1">
-                        <div class="chart" style="width:40vw;">
-                            <h1>Caminhão 1</h1>
-                            <canvas id="myChart1"></canvas>
+                <div id="idOperacao">
+                    <div class="viagens">
+                        <select id="selectViagem" onchange="troca();">
+                        </select>
+                    </div>
+                    <div id="viagem1" class="viagem">
+                        <div id="cards-admin-f">
+                            <div class="card-admin-f">
+                                <div class="card-background">
+                                    <h2>Temperatura</h2>
+                                </div>
+                                <div class="card-information">
+                                    <h3 id="temperatura-viagem"></h3>
+                                    <small>Menor/Maior Temperatura Alcançada</small>
+                                </div>
+                            </div>
+                            <div class="card-admin-f">
+                                <div class="card-background">
+                                    <h2>Umidade Relativa</h2>
+                                </div>
+                                <div class="card-information">
+                                    <h3 id="umidade-viagem"></h3>
+                                    <small>Menor/Maior Umidade Alcançada</small>
+                                </div>
+                            </div>
+                            <div class="card-admin-f">
+                                <div class="card-background">
+                                    <h2>Alertas Emitidos</h2>
+                                </div>
+                                <div class="card-information">
+                                    <h3 id="alertas-viagem"></h3>
+                                    <small>Na viagem atual 20 alertas emitidos</small>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="chart" style="width:23vw;">
-                            <h2>Alertas</h2>                            
-                            <canvas id="myChart2"></canvas>
+                        <div id="graficos">
+                            <div class="chart-container chart" style="position: relative;">
+                                <h1>Temperatura Da Viagem Atual</h1>
+                                <canvas id="temperatura-viagem-atual"></canvas>
+                            </div>
+                            <div class="chart-container chart" style="position: relative;">
+                                <h1>Umidade Da Viagem Atual</h1>
+                                <canvas id="umidade-viagem-atual"></canvas>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div id="grafico2" style="display: none;">
-                    <div class="chart2">
-                        <div class="chart" style="width:40vw;">
-                            <h1>Caminhão 2</h1>
-                            <canvas id="myChart3"></canvas>
+                    <div class="analytic" id="cards-admin-f">
+                        <div class="card-admin-f">
+                            <div class="card-background" id="critico">
+                                <h2>Crítico</h2>
+                            </div>
+                            <div class="card-information met">
+                                <h3 id="h3TempMinCritico">--°C</h3>
+                                <h3 id="h3UmidMinCritico">--%</h3>
+                            </div>
                         </div>
-
-                        <div class="chart" style="width:23vw;">
-                            <h2>Alertas</h2>                            
-                            <canvas id="myChart4"></canvas>
+                        <div class="card-admin-f">
+                            <div class="card-background" id="alerta">
+                                <h2>Alerta</h2>
+                            </div>
+                            <div class="card-information met">
+                                <h3 id="h3TempMinAviso">--°C</h3>
+                                <h3 id="h3UmidMinAviso">--%</h3>
+                            </div>
+                        </div>
+                        <div class="card-admin-f">
+                            <div class="card-background" id="ideal">
+                                <h2>Ideal</h2>
+                            </div>
+                            <div class="card-information met">
+                                <h3 id="h3TempIdeal">--°C</h3>
+                                <h3 id="h3UmidIdeal">--%</h3>
+                            </div>
+                        </div>
+                        <div class="card-admin-f">
+                            <div class="card-background" id="alerta">
+                                <h2>Alerta</h2>
+                            </div>
+                            <div class="card-information met">
+                                <h3 id="h3TempMaxAviso">--°C</h3>
+                                <h3 id="h3UmidMaxAviso">--%</h3>
+                            </div>
+                        </div>
+                        <div class="card-admin-f">
+                            <div class="card-background" id="critico">
+                                <h2>Crítico</h2>
+                            </div>
+                            <div class="card-information met">
+                                <h3 id="h3TempMaxCritico">--°C</h3>
+                                <h3 id="h3UmidMaxCritico">--%</h3>
+                            </div>
                         </div>
                     </div>
+
+                </div>
+                <!-- Estrategico-->
+
+                <div id="idEstrategico" style="display: none;">
+                    <div id="cards-admin-f">
+                        <div class="card-admin-f">
+                            <div class="card-background">
+                                <h2>Alertas Por Temperatura</h2>
+                            </div>
+                            <div class="card-information">
+                                <h3 id="temperatura-alertas-porcentagem"></h3>
+                                <small id="temperatura-quantidade"></small>
+                            </div>
+                        </div>
+                        <div class="card-admin-f">
+                            <div class="card-background">
+                                <h2>Alertas Por Umidade Relativa</h2>
+                            </div>
+                            <div class="card-information">
+                                <h3 id="umidade-alertas-porcentagem"></h3>
+                                <small id="umidade-quantidade"></small>
+                            </div>
+
+
+                        </div>
+                        <div class="card-admin-f">
+                            <div class="card-background">
+                                <h2>Maior Parceira</h2>
+                            </div>
+                            <div class="card-information">
+                                <h3 id="maior-parceira"></h3>
+                                <small id="farmaceutica-qtd-entregas"></small>
+                            </div>
+                        </div>
+                        <div class="card-admin-f">
+                            <div class="card-background">
+                                <h2>Farmacêutica Mais Afetada</h2>
+                            </div>
+                            <div class="card-information">
+                                <h3 id="mais-afetada"></h3>
+                                <small id="farmaceutica-qtd-alertas"></small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="graficos">
+                        <div class="chart-container chart" style="position: relative;">
+                            <h1>Média De Alertas Mensal</h1>
+                            <canvas id="media-alertas-mensal"></canvas>
+                        </div>
+                        <div class="chart-container chart" style="position: relative;">
+                            <h1>Média De Alertas Semanal</h1>
+                            <canvas id="media-alertas-semanal"></canvas>
+                        </div>
+                    </div>
+
+                    <div id="graficos">
+                        <div class="chart-container chart" style="position: relative;">
+                            <h1>Média De Alertas Diário</h1>
+                            <canvas id="media-alertas-diario"></canvas>
+                        </div>
+                        <div class="chart-container chart" style="position: relative;">
+                            <h1>Média De Alertas Por Hora</h1>
+                            <canvas id="media-alertas-hora"></canvas>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
-    </div>
-    </div>
-    </div>
 </body>
 
-</html>
+<script>
+    var mesesPtBr = {
+        'January': 'Janeiro',
+        'February': 'Fevereiro',
+        'March': 'Março',
+        'April': 'Abril',
+        'May': 'Maio',
+        'June': 'Junho',
+        'July': 'Julho',
+        'August': 'Agosto',
+        'September': 'Setembro',
+        'October': 'Outubro',
+        'November': 'Novembro',
+        'December': 'Dezembro'
+    };
+    var nomeDiaPtBr = {
+        'Monday': 'Segunda-Feira',
+        'Tuesday': 'Terça-Feira',
+        'Wednesday': 'Quarta-Feira',
+        'Thursday': 'Quinta-Feira',
+        'Friday': 'Sexta-Feira',
+        'Saturday': 'Sábado',
+        'Sunday': 'Domingo'
+    }
+
+    var graficos = {
+        'operacional': [],
+        'estrategico': []
+    };
+    var proximaAtualizacao = {
+        'operacional': [],
+        'estrategico': []
+    };
+
+    var entregaSolicitada = 0;
+    var obtendoDados = false;
+    var entregas = [];
+
+    function renderizarGraficosOperacionais() {
+        // Operacional
+        /* Gráfico 1 */
+
+        let dadosGraficoTempAtual = [];
+        var dataGraficoTempAtual = {
+            labels: [],
+            datasets: [{
+                label: 'Temperatura',
+                backgroundColor: 'rgb(72 116 152)',
+                borderColor: 'rgb(72 116 152)',
+                data: [],
+            }]
+        };
+
+        var graficoTempAtual = new Chart(
+            document.getElementById('temperatura-viagem-atual'), {
+            type: 'line',
+            data: dataGraficoTempAtual,
+            options: {
+                scales: {
+                    y: {
+                        title: {
+                            color: '#3C9DCF',
+                            display: true,
+                            text: 'Temperatura °C'
+                        }
+                    },
+                    x: {
+                        title: {
+                            color: '#3C9DCF',
+                            display: true,
+                            text: 'Hora'
+                        }
+                    }
+                },
+                responsive: true,
+                animation: {
+                    duration: 500
+                },
+                hoverMode: 'index',
+                stacked: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        }
+        );
+        graficos.operacional.push(graficoTempAtual);
+
+
+        let dadosGraficoUmiAtual = [];
+        var dataGraficoUmiAtual = {
+            labels: [],
+            datasets: [{
+                label: 'Alertas',
+                backgroundColor: 'rgb(72 116 152)',
+                borderColor: 'rgb(72 116 152)',
+                data: [],
+            }]
+        };
+
+        var graficoUmiAtual = new Chart(
+            document.getElementById('umidade-viagem-atual'), {
+            type: 'line',
+            data: dataGraficoUmiAtual,
+            options: {
+                scales: {
+                    y: {
+                        title: {
+                            color: '#3C9DCF',
+                            display: true,
+                            text: 'Umidade %'
+                        }
+                    },
+                    x: {
+                        title: {
+                            color: '#3C9DCF',
+                            display: true,
+                            text: 'Hora'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        }
+        );
+        graficos.operacional.push(graficoUmiAtual);
+
+        plotarGraficosOperacionais();
+    }
+
+    function plotarGraficosOperacionais() {
+        for (let i = 0; i < graficos.operacional.length; i++) {
+            let tipoDado;
+            let tipoGrafico = 'operacional';
+            if (i == 0) {
+                tipoDado = 'dht11temperatura'
+            } else if (i == 1) {
+                tipoDado = 'dht11umidade'
+            }
+            obterDadosGrafico(graficos.operacional[i], true, 10, tipoGrafico, tipoDado);
+        }
+    }
+
+    function renderizarGraficosEstrategicos() {
+        // estrategico
+        const dataAlertaMensal = {
+            labels: [],
+            datasets: [{
+                label: 'Alertas',
+                backgroundColor: 'rgb(72 116 152)',
+                borderColor: 'rgb(72 116 152)',
+                data: [],
+            }]
+        };
+        const alertasMensal = new Chart(
+            document.getElementById('media-alertas-mensal'), {
+            type: 'line',
+            data: dataAlertaMensal,
+            options: {
+                scales: {
+                    y: {
+                        title: {
+                            color: '#3C9DCF',
+                            display: true,
+                            text: 'Alertas'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        }
+        );
+        graficos.estrategico.push({
+            'tipo': 'mes',
+            'grafico': alertasMensal
+        });
+
+        let dadosAlertasSemanal = [10, 15, 5, 25, 20, 30, 45, 100];
+        const dataAlertasSemanal = {
+            labels: [],
+            /* labelsSemana */
+            datasets: [{
+                label: 'Alertas',
+                backgroundColor: 'rgb(72 116 152)',
+                borderColor: 'rgb(72 116 152)',
+                data: [],
+            }]
+        };
+        const alertasSemanal = new Chart(
+            document.getElementById('media-alertas-semanal'), {
+            type: 'line',
+            data: dataAlertasSemanal,
+            options: {
+                scales: {
+                    y: {
+                        title: {
+                            color: '#3C9DCF',
+                            display: true,
+                            text: 'Alertas'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        }
+        );
+        graficos.estrategico.push({
+            'tipo': 'nomeDia',
+            'grafico': alertasSemanal
+        });
+
+        const dataAlertasDiarios = {
+            labels: [],
+            /* labelsDias */
+            datasets: [{
+                label: 'Alertas',
+                backgroundColor: 'rgb(72 116 152)',
+                borderColor: 'rgb(72 116 152)',
+                data: [],
+            }]
+        };
+        const alertasDiario = new Chart(
+            document.getElementById('media-alertas-diario'), {
+            type: 'line',
+            data: dataAlertasDiarios,
+            options: {
+                scales: {
+                    y: {
+                        title: {
+                            color: '#3C9DCF',
+                            display: true,
+                            text: 'Alertas'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        }
+        );
+        graficos.estrategico.push({
+            'tipo': 'dia',
+            'grafico': alertasDiario
+        });
+
+        const dataAlertasHoras = {
+            labels: [],
+            /* labelsHoras */
+            datasets: [{
+                label: 'Alertas',
+                backgroundColor: 'rgb(72 116 152)',
+                borderColor: 'rgb(72 116 152)',
+                data: [],
+            }]
+        };
+        const alertasPHora = new Chart(
+            document.getElementById('media-alertas-hora'), {
+            type: 'line',
+            data: dataAlertasHoras,
+            options: {
+                scales: {
+                    y: {
+                        title: {
+                            color: '#3C9DCF',
+                            display: true,
+                            text: 'Alertas'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        }
+        );
+        graficos.estrategico.push({
+            'tipo': 'tempo',
+            'grafico': alertasPHora
+        });
+
+        for (let i = 0; i < graficos.estrategico.length; i++) {
+            obterAlertasGrafico(graficos.estrategico[i].grafico, 'estrategico', graficos.estrategico[i].tipo);
+        }
+    }
+
+
+    //Metricas
+    var minTemp;
+    var maxTemp;
+    var medianaTemp;
+    var q1Temp;
+    var q3Temp;
+    var minUmid;
+    var maxUmid;
+    var medianaUmid;
+    var q1Umid;
+    var q3Umid;
+
+    function obterDadosGrafico(grafico, ordenar, limite, tipoGrafico, tipoDado) {
+        if (proximaAtualizacao != undefined) {
+            clearTimeout(proximaAtualizacao);
+        }
+        let viagemElement = document.getElementById('selectViagem');
+        let fkEntrega = viagemElement.value;
+        fetch(`/registro/obterDados/${fkEntrega}&${ordenar}&${limite}`, {
+            cache: 'no-store',
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(function (response) {
+            console.log(response)
+            if (response.ok) {
+                response.json().then(function (resposta) {
+                    console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+                    resposta.reverse();
+
+                    plotarGrafico(resposta, grafico, tipoGrafico, tipoDado);
+                });
+            } else {
+                console.error('Nenhum dado encontrado ou erro na API');
+            }
+        })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
+            });
+
+    }
+
+    function plotarGrafico(resposta, grafico, tipoGrafico, tipoDado) {
+        console.log('iniciando plotagem do gráfico...');
+        console.log(tipoDado)
+        for (i = 0; i < resposta.length; i++) {
+            var registro = resposta[i];
+            grafico.data.labels.push(new Date(registro.horario).toLocaleTimeString());
+            grafico.data.datasets[0].data.push(registro[tipoDado]);
+            if (tipoDado == 'dht11temperatura') {
+                if (registro[tipoDado] < q1Temp || registro[tipoDado] > q3Temp) {
+                    if (registro[tipoDado] < minTemp || registro[tipoDado] > maxTemp) {
+                        grafico.data.datasets[0].backgroundColor = "#F04A5B";
+                        grafico.data.datasets[0].borderColor = "#F04A5B";
+                    }
+                    else {
+                        grafico.data.datasets[0].backgroundColor = "#FFCD56";
+                        grafico.data.datasets[0].borderColor = "#FFCD56";
+                    }
+                }
+                else {
+                    grafico.data.datasets[0].backgroundColor = "#36A2EB";
+                    grafico.data.datasets[0].borderColor = "#36A2EB";
+                }
+            } else {
+                if (registro[tipoDado] < q1Umid || registro[tipoDado] > q3Umid) {
+                    if (registro[tipoDado] < minUmid || registro[tipoDado] > maxUmid) {
+                        grafico.data.datasets[0].backgroundColor = "#F04A5B";
+                        grafico.data.datasets[0].borderColor = "#F04A5B";
+                    }
+                    else {
+                        grafico.data.datasets[0].backgroundColor = "#FFCD56";
+                        grafico.data.datasets[0].borderColor = "#FFCD56";
+                    }
+                }
+                else {
+                    grafico.data.datasets[0].backgroundColor = "#36A2EB";
+                    grafico.data.datasets[0].borderColor = "#36A2EB";
+                }
+            }
+        }
+
+        grafico.update();
+        proximaAtualizacao[tipoGrafico].push(setTimeout(() => atualizarGrafico(grafico, tipoGrafico, tipoDado), 2000));
+    }
+
+    function atualizarGrafico(grafico, tipoGrafico, tipoDado) {
+        let ordenar = true;
+        let limite = 1;
+        let viagemElement = document.getElementById('selectViagem');
+        let fkEntrega = viagemElement.value;
+        fetch(`/registro/obterDados/${fkEntrega}&${ordenar}&${limite}`, {
+            cache: 'no-store',
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(function (response) {
+            if (response.ok) {
+                response.json().then(function (novoRegistro) {
+
+                    console.log(`Dados recebidos: ${JSON.stringify(novoRegistro)}`);
+                    console.log(`Dados atuais do gráfico: ${grafico}`);
+
+                    // tirando e colocando valores no gráfico
+                    grafico.data.labels.shift(); // apagar o primeiro
+                    grafico.data.labels.push(new Date(novoRegistro[0].horario)
+                        .toLocaleTimeString()); // incluir um novo momento
+                    grafico.data.datasets[0].data.shift(); // apagar o primeiro de umidade
+                    grafico.data.datasets[0].data.push(novoRegistro[0][
+                        tipoDado]); // incluir uma nova medida de umidade
+
+                    if (tipoDado == 'dht11temperatura') {
+                        if (novoRegistro[0][tipoDado] < q1Temp || novoRegistro[0][tipoDado] > q3Temp) {
+                            if (novoRegistro[0][tipoDado] < minTemp || novoRegistro[0][tipoDado] > maxTemp) {
+                                grafico.data.datasets[0].backgroundColor = "#F04A5B";
+                                grafico.data.datasets[0].borderColor = "#F04A5B";
+                            }
+                            else {
+                                grafico.data.datasets[0].backgroundColor = "#FFCD56";
+                                grafico.data.datasets[0].borderColor = "#FFCD56";
+                            }
+                        }
+                        else {
+                            grafico.data.datasets[0].backgroundColor = "#36A2EB";
+                            grafico.data.datasets[0].borderColor = "#36A2EB";
+                        }
+                    } else {
+                        if (novoRegistro[0][tipoDado] < q1Umid || novoRegistro[0][tipoDado] > q3Umid) {
+                            if (novoRegistro[0][tipoDado] < minUmid || novoRegistro[0][tipoDado] > maxUmid) {
+                                grafico.data.datasets[0].backgroundColor = "#F04A5B";
+                                grafico.data.datasets[0].borderColor = "#F04A5B";
+                            }
+                            else {
+                                grafico.data.datasets[0].backgroundColor = "#FFCD56";
+                                grafico.data.datasets[0].borderColor = "#FFCD56";
+                            }
+                        }
+                        else {
+                            grafico.data.datasets[0].backgroundColor = "#36A2EB";
+                            grafico.data.datasets[0].borderColor = "#36A2EB";
+                        }
+                    }
+                    grafico.update();
+
+                    proximaAtualizacao[tipoGrafico].push(setTimeout(() => {
+                        atualizarGrafico(grafico, tipoGrafico, tipoDado);
+                        proximaAtualizacao[tipoGrafico].shift();
+                    }, 2000));
+                });
+            } else {
+                console.error('Nenhum dado encontrado ou erro na API');
+                proximaAtualizacao[tipoGrafico].push(setTimeout(() => {
+                    atualizarGrafico(grafico, tipoGrafico, tipoDado);
+                    proximaAtualizacao[tipoGrafico].shift();
+                }, 2000));
+            }
+        })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
+            });
+
+    }
+
+    function carregarEntregas() {
+        fetch(`/entregas/operacao/inicial/${usuario.fkCliente}`, {
+            cache: 'no-store',
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(resposta => {
+            console.log('Resposta: ', resposta);
+
+            if (resposta.ok) {
+                resposta.json().then(json => {
+                    console.log(json);
+
+                    entregas = json;
+
+                    if (entregas.length > 0) {
+                        entregaSolicitada = entregas[0].idEntrega;
+                        let viagemElement = document.getElementById('selectViagem');
+                        viagemElement.value = entregaSolicitada;
+
+                        for (var index = 0; index < entregas.length; index++) {
+                            var entrega = entregas[index];
+                            var ocorrencia = index + 1;
+                            renderizarOptEntrega(entrega, ocorrencia);
+                        }
+                        renderizarGraficosOperacionais();
+                        renderizarMetricas();
+                        carregarKPI();
+                    }
+                });
+            }
+        })
+    }
+
+    function renderizarOptEntrega(entrega, i) {
+        selectViagem.innerHTML += `
+            <option id="optEntrega#${entrega.idEntrega}" value="${entrega.idEntrega}">Entrega ${i}</option>
+        `;
+    }
+
+    function obterAlertasGrafico(grafico, tipoGrafico, tipoDado) {
+        if (proximaAtualizacao != undefined) {
+            clearTimeout(proximaAtualizacao);
+        }
+        let viagemElement = document.getElementById('selectViagem');
+        let fkEntrega = viagemElement.value;
+        fetch(`/registro/obterAlertas/${usuario.fkCliente}&${tipoDado}&${'T'}`, {
+            cache: 'no-store',
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(function (response) {
+            console.log(response)
+            if (response.ok) {
+                response.json().then(function (resposta) {
+                    console.log(`Dados recebidos: `, JSON.stringify(resposta));
+                    resposta.reverse();
+
+                    plotarGraficoEstrategico(resposta, grafico, tipoGrafico, tipoDado);
+                });
+            } else {
+                console.error('Nenhum dado encontrado ou erro na API');
+            }
+        })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
+            });
+
+    }
+
+    function plotarGraficoEstrategico(resposta, grafico, tipoGrafico, tipoDado) {
+        console.log('iniciando plotagem do gráfico...');
+        console.log('Tipo do Gráfico: ', tipoDado);
+        
+
+        for (i = 0; i < resposta.length; i++) {
+            var registro = resposta[i];
+            if (tipoDado == 'nomeDia') {
+                grafico.data.labels.push(nomeDiaPtBr[registro.nomeDia]);
+            } else if (tipoDado == 'dia') {
+                grafico.data.labels.push(`${registro.dia}/${registro.mes}`);
+            } else if (tipoDado == 'mes') {
+                grafico.data.labels.push(mesesPtBr[registro.mes]);
+            } else if (tipoDado == 'tempo') {
+                grafico.data.labels.push(registro.tempo);
+
+            }
+            if(registro.quantidadeAlerta == undefined) registro.quantidadeAlerta = 0;
+            grafico.data.datasets[0].data.push((registro.quantidadeAlerta / registro.quantidadeRegistro) * 100);
+        }
+        grafico.update();
+    }
+</script>
 
 <script>
-    // Grafico caminhao 1
-    const labels = [
-        '10:00',
-        '10:30',
-        '11:00',
-        '11:30',
-        '12:00',
-        '12:30',
-    ];
+    async function troca() {
+        await deletarGrafico();
 
-    const data1 = {
-        labels: labels,
-        datasets: [{
-            label: 'Temperatura',
-            backgroundColor: '#347cd8',
-            borderColor: '#347cd8',
-            data: [2, 2.4, 2.4, 2.3, 1.9, 2.2, 2.4],
-        }]
-    };
+        await renderizarGraficosOperacionais();
+        renderizarMetricas();
+        carregarKPI();
+    }
 
-    const data2 = {
-        labels: [
-            'Critico',
-            'Média',
-            'Atenção'
-        ],
-        datasets: [{
-            label: labels,
-            data: [5, 80, 15],
-            backgroundColor: [
-                '#347cd8',
-                '#487498',
-                '#92c2e6'
-            ],
-            hoverOffset: 4
-        }]
-    };
+    async function operacao() {
+        btnOperacao.classList.add('selected');
+        btnEstrategico.classList.remove('selected');
+        idEstrategico.style.display = 'none';
+        idOperacao.style.display = 'block';
+        var opcoes = document.getElementById('selectViagem').children;
 
-    const config1 = {
-        type: 'bar',
-        data: data1,
-        options: {}
-    };
-    const config2 = {
-        type: 'doughnut',
-        data: data2,
-        options: {}
-    };
-
-    const myChart1 = new Chart(
-        document.getElementById('myChart1'),
-        config1
-    );
-    const myChart2 = new Chart(
-        document.getElementById('myChart2'),
-        config2
-    );
-
-    // Grafico caminhao 2
-    const labels3 = [
-        '15:30',
-        '16:00',
-        '16:30',
-        '17:00',
-        '17:30',
-        '18:00',
-        '18:30',
-    ];
-
-    const data3 = {
-        labels: labels3,
-        datasets: [{
-            label: 'Temperatura',
-            backgroundColor: '#347cd8',
-            borderColor: '#347cd8',
-            data: [5.1, 5.4, 5.2, 4.8, 4.5, 4.8, 5, 5.1],
-        }]
-    };
-
-    const data4 = {
-        labels: [
-            'Critico',
-            'Média',
-            'Atenção'
-        ],
-        datasets: [{
-            label: labels,
-            data: [10, 60, 30],
-            backgroundColor: [
-                '#347cd8',
-                '#487498',
-                '#92c2e6'
-            ],
-            hoverOffset: 4
-        }]
-    };
-
-    const config3 = {
-        type: 'bar',
-        data: data3,
-        options: {}
-    };
-    const config4 = {
-        type: 'doughnut',
-        data: data4,
-        options: {}
-    };
-
-    const myChart3 = new Chart(
-        document.getElementById('myChart3'),
-        config3
-    );
-    const myChart4 = new Chart(
-        document.getElementById('myChart4'),
-        config4
-    );
-
-    // Função
-    function ver() {        
-        var grafico = sel.value
-
-        if (grafico == 0) {
-            grafico1.style.display = 'none';
-            grafico2.style.display = 'none';
+        if (opcoes[0] == undefined) {
+            selectViagem.value = '';
+        } else {
+            selectViagem.value = opcoes[0].value;
         }
 
-        if (grafico == 1) {
-            grafico1.style.display = 'block';
-            grafico2.style.display = 'none';
+        await deletarGrafico();
+
+        await renderizarGraficosOperacionais();
+        carregarKPI();
+    }
+
+    async function estrategico() {
+        btnEstrategico.classList.add('selected');
+        btnOperacao.classList.remove('selected');
+        idOperacao.style.display = 'none';
+        idEstrategico.style.display = 'block';
+
+        await deletarGrafico();
+        await renderizarGraficosEstrategicos();
+        carregarKPIEstrategico()
+
+
+    }
+
+    function renderizarMetricas() {
+        let viagemElement = document.getElementById('selectViagem');
+        var fkEntrega = viagemElement.value;
+
+        var entrega = entregas.find(i => {
+            if (i.idEntrega == fkEntrega) {
+                return i;
+            }
+        });
+
+        if (!entrega) {
+            h3TempMinCritico.innerHTML = '--°C';
+            h3TempMinAviso.innerHTML = '--°C';
+            h3TempIdeal.innerHTML = '--°C';
+            h3TempMaxAviso.innerHTML = '--°C';
+            h3TempMaxCritico.innerHTML = '--°C';
+
+            h3UmidMinCritico.innerHTML = '--%';
+            h3UmidMinAviso.innerHTML = '--%';
+            h3UmidIdeal.innerHTML = '--%';
+            h3UmidMaxAviso.innerHTML = '--%';
+            h3UmidMaxCritico.innerHTML = '--%';
         }
 
-        if (grafico == 2) {
-            grafico1.style.display = 'none';
-            grafico2.style.display = 'block';
+        minTemp = parseFloat(entrega.minTemperatura);
+        maxTemp = parseFloat(entrega.maxTemperatura);
+
+        medianaTemp = (minTemp + maxTemp) / 2;
+        q1Temp = (minTemp + medianaTemp) / 2;
+        q3Temp = (maxTemp + medianaTemp) / 2;
+
+
+        console.log(minTemp);
+        console.log(maxTemp);
+
+        h3TempMinCritico.innerHTML = `${minTemp}°C`;
+        h3TempMinAviso.innerHTML = `${q1Temp}°C`;
+        h3TempIdeal.innerHTML = `${medianaTemp}°C`;
+        h3TempMaxAviso.innerHTML = `${q3Temp}°C`;
+        h3TempMaxCritico.innerHTML = `${maxTemp}°C`;
+
+        minUmid = parseFloat(entrega.minUmidade);
+        maxUmid = parseFloat(entrega.maxUmidade);
+
+        medianaUmid = (minUmid + maxUmid) / 2;
+        q1Umid = (minUmid + medianaUmid) / 2;
+        q3Umid = (maxUmid + medianaUmid) / 2;
+
+        h3UmidMinCritico.innerHTML = `${minUmid}%`;
+        h3UmidMinAviso.innerHTML = `${q1Umid}%`;
+        h3UmidIdeal.innerHTML = `${medianaUmid}%`;
+        h3UmidMaxAviso.innerHTML = `${q3Umid}%`;
+        h3UmidMaxCritico.innerHTML = `${maxUmid}%`;
+    }
+
+    function carregarKPI() {
+        let viagemElement = document.getElementById('selectViagem');
+        let fkEntrega = viagemElement.value;
+        fetch(`/registro/obterKPI/${fkEntrega}`, {
+            cache: 'no-store',
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(function (response) {
+            console.log(response)
+            if (response.ok) {
+                response.json().then(function (resposta) {
+                    console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+                    let informacoes = resposta[0];
+                    let temperaturaElement = document.getElementById('temperatura-viagem');
+                    let umidadeElement = document.getElementById('umidade-viagem');
+                    let alertaElement = document.getElementById('alertas-viagem');
+                    temperaturaElement.innerHTML =
+                        `${informacoes.temperaturaminima}/${informacoes.temperaturamaxima}°C`;
+                    umidadeElement.innerHTML =
+                        `${informacoes.umidademinima}/${informacoes.umidademaxima}%`;
+                    alertaElement.innerHTML = `${informacoes.qtdalertas}`;
+                });
+            }
+        });
+    }
+
+    function carregarKPIEstrategico() {
+        fetch(`/entregas/estrategico-t/${usuario.fkCliente}`, {
+            cache: 'no-store',
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(function (response) {
+            console.log(response)
+            if (response.ok) {
+                response.json().then(function (resposta) {
+                    console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+
+                    let temperaturaPorcentagemElement = document.getElementById(
+                        'temperatura-alertas-porcentagem');
+                    temperaturaPorcentagemElement.innerHTML =
+                        `${((resposta.qtdAlertaTemperatura / resposta.qtdAlertasTotal) * 100).toFixed(2)}%`
+
+                    let temperaturaQtdElement = document.getElementById('temperatura-quantidade');
+                    temperaturaQtdElement.innerHTML =
+                        `${resposta.qtdAlertaTemperatura} dos alertas ocorreram por temperatura`
+
+                    let umidadePorcentagemElement = document.getElementById(
+                        'umidade-alertas-porcentagem');
+                    umidadePorcentagemElement.innerHTML =
+                        `${((resposta.qtdAlertaUmidade / resposta.qtdAlertasTotal) * 100).toFixed(2)}%`
+
+                    let umidadeQtdElement = document.getElementById('umidade-quantidade');
+                    umidadeQtdElement.innerHTML =
+                        `${resposta.qtdAlertaUmidade} dos alertas ocorreram por umidade`
+
+                    document.getElementById('maior-parceira').innerHTML = resposta.maiorParceira;
+                    let texto;
+                    if (resposta.qtdEntregas == 1) texto = `Realizou ${resposta.qtdEntregas} entrega com você`;
+                    else texto = `Realizou ${resposta.qtdEntregas} entregas com você`;
+
+                    document.getElementById('farmaceutica-qtd-entregas').innerHTML = texto;
+
+                    document.getElementById('mais-afetada').innerHTML = resposta.maisAfetada;
+                    document.getElementById('farmaceutica-qtd-alertas').innerHTML = `${resposta.qtdAlerta} alertas foram emitidos em entregas para ela`;
+                });
+            }
+        });
+    }
+
+    function deletarGrafico() {
+        graficos = {
+            'operacional': [],
+            'estrategico': []
+        };
+        for (let i = 0; i < graficos.operacional.length; i++) {
+            graficos.operacional[i].destroy();
+        }
+        for (let i = 0; i < graficos.estrategico.length; i++) {
+            graficos.estrategico[i].destroy();
+        }
+        for (let i = 0; i < proximaAtualizacao.operacional.length; i++) {
+            clearTimeout(proximaAtualizacao.operacional[i]);
+        }
+        for (let i = 0; i < proximaAtualizacao.estrategico.length; i++) {
+            clearTimeout(proximaAtualizacao.estrategico[i]);
+        }
+        proximaAtualizacao = {
+            'operacional': [],
+            'estrategico': []
+        };
+
+        let elementsChart = document.getElementsByClassName('chart-container');
+        let elementsChartName = ['temperatura-viagem-atual', 'umidade-viagem-atual', 'media-alertas-mensal',
+            'media-alertas-semanal', 'media-alertas-diario', 'media-alertas-hora'
+        ]
+        for (let i = 0; i < elementsChartName.length; i++) {
+            console.log(document.getElementById(elementsChartName[i]))
+            document.getElementById(elementsChartName[i]).remove();
+        }
+
+        for (let i = 0; i < elementsChart.length; i++) {
+            let chartName = '';
+            if (i == 0) {
+                chartName = 'temperatura-viagem-atual';
+            } else if (i == 1) {
+                chartName = 'umidade-viagem-atual';
+            } else if (i == 2) {
+                chartName = 'media-alertas-mensal';
+            } else if (i == 3) {
+                chartName = 'media-alertas-semanal';
+            } else if (i == 4) {
+                chartName = 'media-alertas-diario';
+            } else if (i == 5) {
+                chartName = 'media-alertas-hora';
+            }
+            let canvasElement = document.createElement('canvas');
+            canvasElement.id = chartName;
+            elementsChart[i].appendChild(canvasElement);
         }
     }
 </script>
+
+
+
+</html>

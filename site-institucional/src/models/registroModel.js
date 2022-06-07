@@ -21,34 +21,30 @@ function obterAlertas(fkCliente, tipoDado,tipoCliente) {
     var instrucao;
 
     if (tipoDado == 'mes') {
-        instrucao = `SELECT COUNT(*) as 'quantidadeRegistro', 
-        (select COUNT(*) from registro r2  join entrega e1 on idEntrega = fkEntrega 
-        and (r2.situacaoTemperatura <> 'I' or r2.situacaoUmidade <> 'I') 
-        join sensor on idSensor = fkSensor and e1.idEntrega  = e2.idEntrega) as 
-        'quantidadeAlerta', MONTHNAME(horario) as 'mes' FROM registro r1 join entrega e2 on idEntrega = fkEntrega join sensor on idSensor = fkSensor`; 
+        instrucao = `SELECT COUNT(*) as 'quantidadeRegistro', MONTHNAME(horario) as 'mes' FROM registro r1 join entrega on idEntrega = fkEntrega join sensor on idSensor = fkSensor`; 
         
       if (tipoCliente == 'F') {
         instrucao += ` AND fkFarmaceutica = ${fkCliente} `;
     } else {
-        instrucao += ` AND e2.fkTransportadora = ${fkCliente} `;
+        instrucao += ` AND entrega.fkTransportadora = ${fkCliente} `;
     }
-    instrucao +=` GROUP BY MONTHNAME(horario) order by horario desc;`;
+    instrucao +=` GROUP BY MONTHNAME(horario) order by MONTHNAME(horario);`;
     
 
 
     } else if (tipoDado == 'nomeDia') {
-        instrucao = `SELECT COUNT(situacaoTemperatura) as 'quantidadeRegistro', (select count(*) from registro r2 where (r2.situacaoTemperatura <> 'I' or r2.situacaoUmidade <> 'I') and r2.fkEntrega = r1.fkEntrega group by fkEntrega) as 'quantidadeAlerta', DAYNAME(horario) as 'nomeDia' FROM registro r1 join entrega on fkEntrega = idEntrega join Sensor on fkSensor = idSensor`;
+        instrucao = `SELECT COUNT(situacaoTemperatura) as 'quantidadeRegistro', DAYNAME(horario) as 'nomeDia' FROM registro r1 join entrega on fkEntrega = idEntrega join Sensor on fkSensor = idSensor`;
         
         if (tipoCliente == 'F') {
             instrucao += ` AND fkFarmaceutica = ${fkCliente} `;
         } else {
             instrucao += ` AND entrega.fkTransportadora = ${fkCliente} `;
         }
-        instrucao +=` AND MONTH(horario) in (${new Date().getMonth()}, ${new Date().getMonth() + 1 }) GROUP BY DAYNAME(horario);`;
+        instrucao +=` AND MONTH(horario) in (${new Date().getMonth()}, ${new Date().getMonth() + 1 }) GROUP BY DAYNAME(horario) order by DAYNAME(horario);`;
 
 
     } else if (tipoDado == 'dia') {
-        instrucao = `SELECT COUNT(situacaoTemperatura) as 'quantidadeRegistro', (select count(*) from registro r2 where (r2.situacaoTemperatura <> 'I' or r2.situacaoUmidade <> 'I') and r2.fkEntrega = r1.fkEntrega group by fkEntrega) as 'quantidadeAlerta', DAY(horario) as 'dia', MONTH(horario) as 'mes' FROM registro r1 JOIN entrega on fkEntrega = idEntrega JOIN Sensor on fkSensor = idSensor`;
+        instrucao = `SELECT COUNT(situacaoTemperatura) as 'quantidadeRegistro', DAY(horario) as 'dia', MONTH(horario) as 'mes' FROM registro r1 JOIN entrega on fkEntrega = idEntrega JOIN Sensor on fkSensor = idSensor`;
 
         if(tipoCliente == 'F'){
             instrucao += ` AND sensor.fkFarmaceutica = ${fkCliente} `;
@@ -56,7 +52,7 @@ function obterAlertas(fkCliente, tipoDado,tipoCliente) {
         else{
             instrucao += ` AND entrega.fkTransportadora = ${fkCliente} `;
         }
-        instrucao +=` GROUP BY DAY(horario) order by horario desc;`;
+        instrucao +=` GROUP BY DAY(horario) order by DAY(horario);`;
         
     } else if (tipoDado == 'tempo') {
         instrucao = `SELECT COUNT(situacaoTemperatura) as 'quantidadeRegistro', HOUR(horario) as 'tempo' FROM registro r1 join entrega on fkEntrega = idEntrega join Sensor on fkSensor = idSensor `;
@@ -67,7 +63,7 @@ function obterAlertas(fkCliente, tipoDado,tipoCliente) {
         else{
             instrucao += ` AND entrega.fkTransportadora = ${fkCliente} `;
         }
-        instrucao +=` GROUP BY HOUR(horario) order by horario desc;`;
+        instrucao +=` GROUP BY HOUR(horario) order by HOUR(horario) desc;`;
 
     }
 
@@ -75,15 +71,35 @@ function obterAlertas(fkCliente, tipoDado,tipoCliente) {
     return database.executar(instrucao);
 }
 
-function obterAlertasTempo(fkCliente, tipoCliente) {
+function obterAlertasAdicional(fkCliente, tipoDado, tipoCliente) {
     console.log("ACESSEI O SENSOR MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function obterAlertasTempo():", fkCliente, tipoCliente);
 
     var instrucao;
-
+    if (tipoDado == 'mes') {
+        instrucao = `select count(*) as 'quantidadeAlerta', MONTHNAME(horario) as 'mes' from registro r2 join entrega on fkEntrega = idEntrega join Sensor on fkSensor = idSensor`; 
+        
+      if (tipoCliente == 'F') {
+        instrucao += ` AND fkFarmaceutica = ${fkCliente} `;
+    } else {
+        instrucao += ` AND entrega.fkTransportadora = ${fkCliente} `;
+    }
+    instrucao += `where (r2.situacaoTemperatura <> 'I' or r2.situacaoUmidade <> 'I') GROUP BY MONTHNAME(horario) order by MONTHNAME(horario);`;
     
 
-        instrucao = `select count(*) as 'quantidadeAlerta', Hour(horario) as 'tempo' from registro r2  
-        join entrega on fkEntrega = idEntrega join Sensor on fkSensor = idSensor `;
+
+    } else if (tipoDado == 'nomeDia') {
+        instrucao = `select count(*) as 'quantidadeAlerta', DAYNAME(horario) as 'nomeDia' from registro r2 join entrega on fkEntrega = idEntrega join Sensor on fkSensor = idSensor`;
+        
+        if (tipoCliente == 'F') {
+            instrucao += ` AND fkFarmaceutica = ${fkCliente} `;
+        } else {
+            instrucao += ` AND entrega.fkTransportadora = ${fkCliente} `;
+        }
+        instrucao += `where (r2.situacaoTemperatura <> 'I' or r2.situacaoUmidade <> 'I') AND MONTH(horario) in (${new Date().getMonth()}, ${new Date().getMonth() + 1 }) GROUP BY DAYNAME(horario) order by DAYNAME(horario);`;
+
+
+    } else if (tipoDado == 'dia') {
+        instrucao = `select count(*) as 'quantidadeAlerta', DAY(horario) as 'dia', MONTH(horario) as 'mes' from registro r2  join entrega on fkEntrega = idEntrega join Sensor on fkSensor = idSensor`;
 
         if(tipoCliente == 'F'){
             instrucao += ` AND sensor.fkFarmaceutica = ${fkCliente} `;
@@ -91,8 +107,21 @@ function obterAlertasTempo(fkCliente, tipoCliente) {
         else{
             instrucao += ` AND entrega.fkTransportadora = ${fkCliente} `;
         }
-        instrucao +=`where (r2.situacaoTemperatura <> 'I' or r2.situacaoUmidade <> 'I') group by HOUR(horario) order by horario desc;`;
+        instrucao += `where (r2.situacaoTemperatura <> 'I' or r2.situacaoUmidade <> 'I') GROUP BY DAY(horario) order by Day(horario);`;
+        
+    } else if (tipoDado == 'tempo') {
+        instrucao = `select count(*) as 'quantidadeAlerta', Hour(horario) as 'tempo' from registro r2  
+        join entrega on fkEntrega = idEntrega join Sensor on fkSensor = idSensor`;
 
+        if(tipoCliente == 'F'){
+            instrucao += ` AND sensor.fkFarmaceutica = ${fkCliente} `;
+        }
+        else{
+            instrucao += ` AND entrega.fkTransportadora = ${fkCliente} `;
+        }
+        instrucao += ` where (r2.situacaoTemperatura <> 'I' or r2.situacaoUmidade <> 'I') GROUP BY HOUR(horario) order by HOUR(horario) desc;`;
+
+    }
 
     console.log("Executando a instrução SQL: \n" + instrucao);
     return database.executar(instrucao);
@@ -204,5 +233,5 @@ module.exports = {
     obterTransportadorasAlertas,
     monitorarEntregas,
     situacaoRegistro,
-    obterAlertasTempo
+    obterAlertasAdicional
 }

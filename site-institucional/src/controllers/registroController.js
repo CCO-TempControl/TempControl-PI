@@ -1,101 +1,108 @@
 var registroModel = require('../models/registroModel');
 
 function obterDados(request, response) {
-    var fkEntrega = request.params.fkEntregaServer;
-    var ordenar = request.params.ordenarServer;
-    var limite = parseInt(request.params.limiteServer);
-    
+  var fkEntrega = request.params.fkEntregaServer;
+  var ordenar = request.params.ordenarServer;
+  var limite = parseInt(request.params.limiteServer);
 
-    if (limite <= 0 || isNaN(limite)) {
-        limite = 10;
-    }
-    if (ordenar != 'false' && ordenar != 'true') {
-      ordenar = false;
+
+  if (limite <= 0 || isNaN(limite)) {
+    limite = 10;
+  }
+  if (ordenar != 'false' && ordenar != 'true') {
+    ordenar = false;
+  } else {
+    if (ordenar == 'true') {
+      ordenar = true;
     } else {
-      if (ordenar == 'true') {
-        ordenar = true;
-      } else {
-        ordenar = false
-      }
+      ordenar = false
     }
-    if (fkEntrega == undefined) {
-      response.status(400).send("Fk da Entrega é indefinido");
-    }  else {
-      registroModel.obterDados(fkEntrega, ordenar, limite).then(function (resultado) {
-        console.log(`\nResultados encontrados: ${resultado.length}`);
-        console.log(`Resultados: ${JSON.stringify(resultado)}`);
-  
-        response.json(resultado);
-      }).catch(function (erro) {
-        console.log(erro);
-        console.log(
-            "\nHouve um erro ao obter os dados dos sensores! Erro: ",
-            erro.sqlMessage
-        );
-        
-        response.status(500).json(erro.sqlMessage);
-      });
-    }
+  }
+  if (fkEntrega == undefined) {
+    response.status(400).send("Fk da Entrega é indefinido");
+  } else {
+    registroModel.obterDados(fkEntrega, ordenar, limite).then(function (resultado) {
+      console.log(`\nResultados encontrados: ${resultado.length}`);
+      console.log(`Resultados: ${JSON.stringify(resultado)}`);
+
+      response.json(resultado);
+    }).catch(function (erro) {
+      console.log(erro);
+      console.log(
+        "\nHouve um erro ao obter os dados dos sensores! Erro: ",
+        erro.sqlMessage
+      );
+
+      response.status(500).json(erro.sqlMessage);
+    });
+  }
 
 }
 
 function obterAlertas(request, response) {
-    var fkCliente = request.params.fkClienteServer;
-    var tipoDado = request.params.tipoDadoServer;
-    var tipoCliente = request.params.tipoCliente;
+  var fkCliente = request.params.fkClienteServer;
+  var tipoDado = request.params.tipoDadoServer;
+  var tipoCliente = request.params.tipoCliente;
 
-    if (fkCliente == undefined) {
-      response.status(400).send("Fk da Farmacêutica é indefinido");
-    } else if (tipoDado == undefined) {
-      response.status(400).send("Tipo do Dado é indefinido");
-    }  else {
-      registroModel.obterAlertas(fkCliente, tipoDado,tipoCliente).then(async function (resultado) {
-        console.log(`\nResultados encontrados: ${resultado.length}`);
-        console.log(`Resultados: ${JSON.stringify(resultado)}`);
-        if (tipoDado == 'tempo') {
-          let result = await registroModel.obterAlertasTempo(fkCliente, tipoCliente);
-          for (let i = 0; i < result.length; i++) {
-            for (let j = 0; j < resultado.length; j++) {
-              if (result[i].tempo == resultado[j].tempo) {
-                resultado[j].quantidadeAlerta = resultado[i].quantidadeAlerta;
-              }
-            }
+  if (fkCliente == undefined) {
+    response.status(400).send("Fk da Farmacêutica é indefinido");
+  } else if (tipoDado == undefined) {
+    response.status(400).send("Tipo do Dado é indefinido");
+  } else {
+    registroModel.obterAlertas(fkCliente, tipoDado, tipoCliente).then(async function (resultado) {
+      console.log(`\nResultados encontrados: ${resultado.length}`);
+      console.log(`Resultados: ${JSON.stringify(resultado)}`);
+      let result = await registroModel.obterAlertasAdicional(fkCliente, tipoDado, tipoCliente);
+      console.log(result);
+      result.forEach(element => {
+        for (let i = 0; i < resultado.length; i++) {
+          console.log(element.quantidadeAlerta)
+          if (element.quantidadeAlerta == null) element.quantidadeAlerta = 0;
+          if (tipoDado == 'mes' && (resultado[i].mes == element.mes)) {
+            resultado[i].quantidadeAlerta = element.quantidadeAlerta;
+          } else if (tipoDado == 'nomeDia' && (resultado[i].nomeDia == element.nomeDia)) {
+            resultado[i].quantidadeAlerta = element.quantidadeAlerta;
+          } else if (tipoDado == 'dia' && (resultado[i].dia == element.dia && resultado[i].mes == element.mes)) {
+            resultado[i].quantidadeAlerta = element.quantidadeAlerta;
+          } else if (tipoDado == 'tempo' && (resultado[i].tempo == element.tempo)) {
+            resultado[i].quantidadeAlerta = element.quantidadeAlerta;
           }
         }
-        response.json(resultado);
-      }).catch(function (erro) {
-        console.log(erro);
-        console.log(
-            "\nHouve um erro ao obter os dados dos sensores! Erro: ",
-            erro.sqlMessage
-        );
-        
-        response.status(500).json(erro.sqlMessage);
       });
-    }
+      response.json(resultado);
+    }).catch(function (erro) {
+      console.log(erro);
+      console.log(
+        "\nHouve um erro ao obter os dados dos sensores! Erro: ",
+        erro.sqlMessage
+      );
+
+      response.status(500).json(erro.sqlMessage);
+    });
+  }
 }
 
 function obterKPI(request, response) {
-    var fkEntrega = request.params.fkEntregaServer;
+  var fkEntrega = request.params.fkEntregaServer;
 
-    if (fkEntrega == undefined) {
-      response.status(400).send("Fk da Entrega é indefinido");
-    }  else {
-      registroModel.obterKPI(fkEntrega).then(function (resultado) {
-        console.log(`\nResultados encontrados: ${resultado.length}`);
-        console.log(`Resultados: ${JSON.stringify(resultado)}`);
-  
-        response.json(resultado);
-      }).catch(function (erro) {
-        console.log(erro);
-        console.log(
-            "\nHouve um erro ao obter os dados dos sensores! Erro: ",
-            erro.sqlMessage
-        );
-        
-        response.status(500).json(erro.sqlMessage);
-      });
-    }
+  if (fkEntrega == undefined) {
+    response.status(400).send("Fk da Entrega é indefinido");
+  } else {
+    registroModel.obterKPI(fkEntrega).then(function (resultado) {
+      console.log(`\nResultados encontrados: ${resultado.length}`);
+      console.log(`Resultados: ${JSON.stringify(resultado)}`);
+
+      response.json(resultado);
+    }).catch(function (erro) {
+      console.log(erro);
+      console.log(
+        "\nHouve um erro ao obter os dados dos sensores! Erro: ",
+        erro.sqlMessage
+      );
+
+      response.status(500).json(erro.sqlMessage);
+    });
+  }
 
 }
 
@@ -103,40 +110,40 @@ function obterKPIEstrategico(request, response) {
   var fkCliente = request.params.fkClienteServer;
   var tipoCliente = request.params.tipoCliente;
 
-    if (fkCliente == undefined) {
-      response.status(400).send("Fk da Farmacêutica é indefinido");
-    }  else {
-      registroModel.obterKPIEstrategico(fkCliente,tipoCliente).then(function (resultadoKPI) {
-        console.log(`\nResultados encontrados: ${resultadoKPI.length}`);
-        console.log(`Resultados: ${JSON.stringify(resultadoKPI)}`);
-  
-        registroModel.obterTransportadorasAlertas(fkCliente).then(function (resultado) {
-              console.log(`\nResultados encontrados: ${resultado.length}`);
-              console.log(`Resultados: ${JSON.stringify(resultado)}`);
-              let result = {
-                'primeiraParte': resultadoKPI,
-                'segundaParte': resultado
-              };
-              response.json(result);
-        }).catch(function (erro) {
-              console.log(erro);
-              console.log(
-                  "\nHouve um erro ao obter os dados dos sensores! Erro: ",
-                  erro.sqlMessage
-              );
-              
-              response.status(500).json(erro.sqlMessage);
-        });
+  if (fkCliente == undefined) {
+    response.status(400).send("Fk da Farmacêutica é indefinido");
+  } else {
+    registroModel.obterKPIEstrategico(fkCliente, tipoCliente).then(function (resultadoKPI) {
+      console.log(`\nResultados encontrados: ${resultadoKPI.length}`);
+      console.log(`Resultados: ${JSON.stringify(resultadoKPI)}`);
+
+      registroModel.obterTransportadorasAlertas(fkCliente).then(function (resultado) {
+        console.log(`\nResultados encontrados: ${resultado.length}`);
+        console.log(`Resultados: ${JSON.stringify(resultado)}`);
+        let result = {
+          'primeiraParte': resultadoKPI,
+          'segundaParte': resultado
+        };
+        response.json(result);
       }).catch(function (erro) {
         console.log(erro);
         console.log(
-            "\nHouve um erro ao obter os dados dos sensores! Erro: ",
-            erro.sqlMessage
+          "\nHouve um erro ao obter os dados dos sensores! Erro: ",
+          erro.sqlMessage
         );
-        
+
         response.status(500).json(erro.sqlMessage);
       });
-    }
+    }).catch(function (erro) {
+      console.log(erro);
+      console.log(
+        "\nHouve um erro ao obter os dados dos sensores! Erro: ",
+        erro.sqlMessage
+      );
+
+      response.status(500).json(erro.sqlMessage);
+    });
+  }
 
 }
 
@@ -156,10 +163,10 @@ function monitorarEntregas(request, response) {
     }).catch(function (erro) {
       console.log(erro);
       console.log(
-          "\nHouve um erro ao obter os dados dos sensores! Erro: ",
-          erro.sqlMessage
+        "\nHouve um erro ao obter os dados dos sensores! Erro: ",
+        erro.sqlMessage
       );
-      
+
       response.status(500).json(erro.sqlMessage);
     });
   }
@@ -181,10 +188,10 @@ function situacaoRegistro(request, response) {
     }).catch(function (erro) {
       console.log(erro);
       console.log(
-          "\nHouve um erro ao obter os dados dos sensores! Erro: ",
-          erro.sqlMessage
+        "\nHouve um erro ao obter os dados dos sensores! Erro: ",
+        erro.sqlMessage
       );
-      
+
       response.status(500).json(erro.sqlMessage);
     });
   }
