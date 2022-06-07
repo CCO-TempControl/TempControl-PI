@@ -108,9 +108,11 @@ CREATE TABLE medicamento (
 CREATE TABLE lote (
   fkMedicamento INT NOT NULL,
   CONSTRAINT FK_lote_fkMedicamento FOREIGN KEY (fkMedicamento) REFERENCES medicamento (idMedicamento),
+
   fkEntrega INT NOT NULL,
   CONSTRAINT FK_lote_fkEntrega FOREIGN KEY (fkEntrega) REFERENCES entrega (idEntrega),
   PRIMARY KEY (fkMedicamento, fkEntrega),
+
   qtd INT NOT NULL
 );
 
@@ -234,13 +236,5 @@ INSERT INTO registro (dht11temperatura, dht11umidade, ldrluminosidade, lm35tempe
 INSERT INTO registro (dht11temperatura, dht11umidade, ldrluminosidade, lm35temperatura, trc5000chave, situacaoTemperatura, situacaoUmidade, horario, fkEntrega) VALUES (24, 81, 500, 24, 1, 'I', 'I', '2022-06-02 15:25', 1001);
 
 SELECT * FROM registro;
-
-select 
-	nomeCliente,
-    (SELECT COUNT(idEntrega) FROM entrega WHERE aprovada = 'S' AND horaChegada IS NOT NULL AND fkTransportadora = idCliente) as 'qtdEntregas',
-    (SELECT COUNT(idRegistro) FROM registro INNER JOIN entrega ON idEntrega = fkEntrega WHERE idCliente = fkTransportadora AND (situacaoTemperatura <> 'I' OR situacaoUmidade <> 'I')) as 'qtdAlerta'
-FROM cliente
-WHERE tipoCliente = 'T'
-ORDER BY qtdAlerta ASC, qtdEntregas DESC;
 
 
