@@ -13,7 +13,7 @@
     <title>GRÁFICOS/ALERTAS</title>
 </head>
 
-<body onload="setUp('transportador'), carregarEntregas()">
+<body onload="setUp('logistico'), carregarEntregas()">
     <div class="wrapper">
         <div class="sidebar">
             <div class="dropdown">
@@ -26,7 +26,6 @@
                 <li><a href="./index.html"><i class="fas fa-home"></i>Home</a></li>
                 <li><a href="./solicitacoes.html"><i class="fas fa-solid fa-file-contract"></i>Solicitações</a></li>
                 <li><a href="./entregas.html"><i class="fas fa-regular fa-truck-ramp-box"></i>Entregas</a></li>
-                <li><a href="./veiculos.html"><i class="fas fa-regular fa-truck"></i>Veículos</a></li>
                 <li><a href="./sensores.html"><i class="fas fa-solid fa-pager"></i>Sensores</a></li>
                 <li><a href="./graficos.html"><i class="fas fa-solid fa-chart-gantt"></i></i>Gráficos/Alertas</a></li>
                 <li><a href="./dadosPessoais.html"><i class="fas fa-solid fa-user"></i></i>Dados Pessoais</a></li>
@@ -166,20 +165,20 @@
                         </div>
                         <div class="card-admin-f">
                             <div class="card-background">
-                                <h2>Maior Parceira</h2>
+                                <h2>Transportadora Mais Confiável</h2>
                             </div>
                             <div class="card-information">
-                                <h3 id="maior-parceira"></h3>
-                                <small id="farmaceutica-qtd-entregas"></small>
+                                <h3 id="transportadora-confiavel"></h3>
+                                <small id="transportadora-confiavel-alertas"></small>
                             </div>
                         </div>
                         <div class="card-admin-f">
                             <div class="card-background">
-                                <h2>Farmacêutica Mais Afetada</h2>
+                                <h2>Transportadora Mais Utilizada</h2>
                             </div>
                             <div class="card-information">
-                                <h3 id="mais-afetada"></h3>
-                                <small id="farmaceutica-qtd-alertas"></small>
+                                <h3 id="transportadora-mais-utilizada"></h3>
+                                <small id="transportadora-mais-utilizada-viagens"></small>
                             </div>
                         </div>
                     </div>
@@ -630,8 +629,10 @@
                         tipoDado]); // incluir uma nova medida de umidade
 
                     if (tipoDado == 'dht11temperatura') {
+
                         if (novoRegistro[0][tipoDado] < q1Temp || novoRegistro[0][tipoDado] > q3Temp) {
                             if (novoRegistro[0][tipoDado] < minTemp || novoRegistro[0][tipoDado] > maxTemp) {
+
                                 grafico.data.datasets[0].backgroundColor = "#F04A5B";
                                 grafico.data.datasets[0].borderColor = "#F04A5B";
                             }
@@ -645,8 +646,10 @@
                             grafico.data.datasets[0].borderColor = "#36A2EB";
                         }
                     } else {
+
                         if (novoRegistro[0][tipoDado] < q1Umid || novoRegistro[0][tipoDado] > q3Umid) {
                             if (novoRegistro[0][tipoDado] < minUmid || novoRegistro[0][tipoDado] > maxUmid) {
+
                                 grafico.data.datasets[0].backgroundColor = "#F04A5B";
                                 grafico.data.datasets[0].borderColor = "#F04A5B";
                             }
@@ -728,7 +731,7 @@
         }
         let viagemElement = document.getElementById('selectViagem');
         let fkEntrega = viagemElement.value;
-        fetch(`/registro/obterAlertas/${usuario.fkCliente}&${tipoDado}&${'T'}`, {
+        fetch(`/registro/obterAlertas/${usuario.fkCliente}&${tipoDado}&${'F'}`, {
             cache: 'no-store',
             method: "GET",
             headers: {
@@ -757,7 +760,6 @@
         console.log('iniciando plotagem do gráfico...');
         console.log('Tipo do Gráfico: ', tipoDado);
         
-
         for (i = 0; i < resposta.length; i++) {
             var registro = resposta[i];
             if (tipoDado == 'nomeDia') {
@@ -768,8 +770,8 @@
                 grafico.data.labels.push(mesesPtBr[registro.mes]);
             } else if (tipoDado == 'tempo') {
                 grafico.data.labels.push(registro.tempo);
-
             }
+
             if(registro.quantidadeAlerta == undefined) registro.quantidadeAlerta = 0;
             grafico.data.datasets[0].data.push((registro.quantidadeAlerta / registro.quantidadeRegistro) * 100);
         }
@@ -902,7 +904,7 @@
     }
 
     function carregarKPIEstrategico() {
-        fetch(`/entregas/estrategico-t/${usuario.fkCliente}`, {
+        fetch(`/registro/obterKPIEstrategico/${usuario.fkCliente}&${'F'}`, {
             cache: 'no-store',
             method: "GET",
             headers: {
@@ -913,34 +915,40 @@
             if (response.ok) {
                 response.json().then(function (resposta) {
                     console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+                    let primeirasKPI = resposta.primeiraParte[0];
+                    let outrasKPI = resposta.segundaParte;
 
                     let temperaturaPorcentagemElement = document.getElementById(
                         'temperatura-alertas-porcentagem');
                     temperaturaPorcentagemElement.innerHTML =
-                        `${((resposta.qtdAlertaTemperatura / resposta.qtdAlertasTotal) * 100).toFixed(2)}%`
+                        `${((primeirasKPI.qtdAlertaTemperatura / primeirasKPI.qtdAlertasTotal) * 100).toFixed(2)}%`
 
                     let temperaturaQtdElement = document.getElementById('temperatura-quantidade');
                     temperaturaQtdElement.innerHTML =
-                        `${resposta.qtdAlertaTemperatura} dos alertas ocorreram por temperatura`
+                        `${primeirasKPI.qtdAlertaTemperatura} dos alertas ocorreram por temperatura`
 
                     let umidadePorcentagemElement = document.getElementById(
                         'umidade-alertas-porcentagem');
                     umidadePorcentagemElement.innerHTML =
-                        `${((resposta.qtdAlertaUmidade / resposta.qtdAlertasTotal) * 100).toFixed(2)}%`
+                        `${((primeirasKPI.qtdAlertaUmidade / primeirasKPI.qtdAlertasTotal) * 100).toFixed(2)}%`
 
                     let umidadeQtdElement = document.getElementById('umidade-quantidade');
                     umidadeQtdElement.innerHTML =
-                        `${resposta.qtdAlertaUmidade} dos alertas ocorreram por umidade`
+                        `${primeirasKPI.qtdAlertaUmidade} dos alertas ocorreram por umidade`
 
-                    document.getElementById('maior-parceira').innerHTML = resposta.maiorParceira;
-                    let texto;
-                    if (resposta.qtdEntregas == 1) texto = `Realizou ${resposta.qtdEntregas} entrega com você`;
-                    else texto = `Realizou ${resposta.qtdEntregas} entregas com você`;
+                    let maisUtilizada = outrasKPI.reduce((prev, current) => {
+                        return prev.qtdEntregas > current.qtdEntregas ? prev : current;
+                    });
 
-                    document.getElementById('farmaceutica-qtd-entregas').innerHTML = texto;
+                    let menorQtdAlerta = outrasKPI.reduce((prev, current) => {
+                        return prev.qtdAlerta > current.qtdAlerta ? prev : current;
+                    });
 
-                    document.getElementById('mais-afetada').innerHTML = resposta.maisAfetada;
-                    document.getElementById('farmaceutica-qtd-alertas').innerHTML = `${resposta.qtdAlerta} alertas foram emitidos em entregas para ela`;
+                    document.getElementById('transportadora-confiavel').innerHTML = menorQtdAlerta.nomeCliente;
+                    document.getElementById('transportadora-confiavel-alertas').innerHTML = `Emitiu Apenas ${menorQtdAlerta.qtdAlerta} Alertas`;
+
+                    document.getElementById('transportadora-mais-utilizada').innerHTML = maisUtilizada.nomeCliente;
+                    document.getElementById('transportadora-mais-utilizada-viagens').innerHTML = `Realizou ${maisUtilizada.qtdEntregas} Viagens`;
                 });
             }
         });

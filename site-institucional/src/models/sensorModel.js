@@ -13,7 +13,7 @@ function listarPorFarmaceutica(idFarmaceutica) {
   console.log("ACESSEI O SENSOR MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function listarPorFarmaceutica():", idFarmaceutica);
 
   var instrucao = `
-    SELECT idSensor, fkFarmaceutica, fkTransportadora, nomeCliente FROM sensor LEFT JOIN cliente ON fkTransportadora = idCliente WHERE fkFarmaceutica = ${idFarmaceutica};
+    SELECT s.idSensor, s.fkFarmaceutica, s.fkTransportadora, t.nomeCliente, f.nomeCliente as 'dona' FROM sensor s LEFT JOIN cliente t ON s.fkTransportadora = t.idCliente LEFT JOIN cliente f ON s.fkFarmaceutica = f.idCliente WHERE fkFarmaceutica = ${idFarmaceutica};
   `;
 
   console.log("Executando a instrução SQL: \n" + instrucao);

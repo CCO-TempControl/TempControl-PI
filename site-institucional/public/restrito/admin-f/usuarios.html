@@ -17,7 +17,7 @@
 </head>
 
 
-<body onload="obterUsuariosCliente()">
+<body onload="setUp('admin-f'); obterUsuariosCliente()">
   <div class="wrapper">
     <div class="sidebar">
       <div class="dropdown">
@@ -70,7 +70,7 @@
                   <select name="" id="txtTipo">
                     <option value="admin-f">Administrador Farmacêutica</option>
                     <option value="laboratorio">Laboratório</option>
-                    <option value="logistico">Logística</option>
+                    <option value="logistico">Logístico</option>
                   </select>
                 </div>
                 <div class="field">
@@ -103,16 +103,9 @@
 
 
 <script>
-  var dadosSession = obterDadosSession();
-  var nome = dadosSession.nomeUsuario;
-  var email = dadosSession.emailUsuario;
-  var idCliente = dadosSession.fkCliente;
-  var idAdmin = dadosSession.idUsuario;
-  spanNome.innerHTML = dadosSession.nomeUsuario;
-
   function obterUsuariosCliente() {
 
-    fetch(`/usuarios/listarPorCliente/${idCliente}`, {
+    fetch(`/usuarios/listarPorCliente/${usuario.fkCliente}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json"
@@ -183,10 +176,6 @@
     var emailVar = txtEmail.value;
     var senhaVar = txtPassword.value;
     var tipoUsuarioVar = txtTipo.value;
-    var fkClienteVar = idCliente;
-    var fkAdminVar = idAdmin;
-
-
 
     if (nomeVar == ""|| emailVar == "" || senhaVar == "") {
       Swal.fire({
@@ -200,10 +189,12 @@
       return;
     }
 
-    if (emailVar.indexOf('@') <= 0 || emailVar.indexOf('.com') <= 2) {
+    var validacaoEmail = validarEmail(emailVar);
+
+    if (validacaoEmail != 'OK') {
       Swal.fire({
         title: 'Erro',
-        text: 'Email e/ou Senha incorreto(s)',
+        text: validacaoEmail,
         icon: 'error',
         showConfirmButton: false,
         showDenyButton: true,
@@ -234,8 +225,8 @@
         emailServer: emailVar,
         senhaServer: senhaVar,
         tipoUsuarioServer: tipoUsuarioVar,
-        clienteServer: fkClienteVar,
-        adminServer: fkAdminVar
+        clienteServer: usuario.fkCliente,
+        adminServer: usuario.idUsuario
       })
     }).then(function (resposta) {
       console.log('Resposta: ', resposta);
@@ -247,9 +238,7 @@
           title: 'Sucesso',
           text: 'Cadastrado realizado com sucesso',
           icon: 'success',
-          showConfirmButton: false,
-          showDenyButton: true,
-          denyButtonText: 'OK'
+          confirmButtonColor: '#34e269',
         });
         window.location.reload(true);
 
@@ -278,11 +267,6 @@
 
     return false;
   }
-
-  function sair() {
-    signOut();
-  }
-
 </script>
 
 

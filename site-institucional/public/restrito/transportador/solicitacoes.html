@@ -8,14 +8,30 @@
     <script src="https://kit.fontawesome.com/2eecc47c4e.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/date-fns/1.30.1/date_fns.min.js" integrity="sha512-F+u8eWHrfY8Xw9BLzZ8rG/0wIvs0y+JyRJrXjp3VjtFPylAEEGwKbua5Ip/oiVhaTDaDs4eU2Xtsxjs/9ag2bQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="../style.css">
     <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
     <script src="../../assets/js/funcoes.js"></script>
-    <title>ENTREGAS</title>
+    <title>SOLICITAÇÕES</title>
+
+    <style>
+        table,
+        td,
+        th {
+            border: 1px solid;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .cartao{
+            width: 100%;
+        }
+    </style>
 </head>
 
-<body onload="setUp('transportador'); obterEntregas();">
+<body onload="setUp('transportador'); obterSolicitacoes();">
     <div class="wrapper">
         <div class="sidebar">
             <div class="dropdown">
@@ -46,7 +62,7 @@
                     <div class="container">
                         <div class="cartao">
                             <div class="tabela tabelaSolicitacoes">
-                                <h1>Entregas</h1>
+                                <h1>Solicitações Recebidas</h1>
                                 <ul id="lista">
                                 </ul>
                             </div>
@@ -59,14 +75,11 @@
 </body>
 
 <script>
-    var resposta = [];
-    var entregas = [];
-
-    function obterEntregas() {
+    function obterSolicitacoes() {
         const idTransportadoraVar = usuario.fkCliente;
 
         console.log(`idTransportadora: ${idTransportadoraVar}`);
-        fetch(`/entregas/listar-entregas-transportadora`, {
+        fetch(`/entregas/listar-solicitacoes-transportadora`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -83,112 +96,107 @@
                 }
 
                 response.json().then(function (json) {
-                    resposta = json
-
                     document.getElementById("lista").innerHTML = `
                                     <li class="tabela-cabecalho">
                                         <div>Farmaceutica</div>
                                         <div>Trajeto</div>
                                         <div>Carregamento</div>
                                         <div>Data de Entrega</div>
-                                        <div>Saída - Chegada</div>
                                     </li>
                                     `;
 
-                    entregas = [];
+                    var entregas = [];
 
                     for (let index = 0; index < json.length; index++) {
-                      var item = json[index];
+                        var item = json[index];
 
                         var indexEntregaAtual = entregas.findIndex(e => {
-                          if (e.idEntrega == item.idEntrega) {
-                            return e;
-                          }
+                            if (e.idEntrega == item.idEntrega) {
+                                return e;
+                            }
                         });
                         
                         if (indexEntregaAtual >= 0) {
-                          if (item.idEndereco == 1 && entregas[indexEntregaAtual].origem == '') {
-                            entregas[indexEntregaAtual].origem = `${item.endereco}, ${item.numero} (${item.cidade} - ${item.uf})`
-                          } else if (item.idEndereco == 2 && entregas[indexEntregaAtual].destino == '') {
-                            entregas[indexEntregaAtual].destino = `${item.endereco}, ${item.numero} (${item.cidade} - ${item.uf})`
-                          }
-
-                          var loteJaCarregado = entregas[indexEntregaAtual].carregamento.find(l => {
-                            if (l.idMedicamento == item.idMedicamento) {
-                              return l;
-                            }
-                          });
-
-                          if (!loteJaCarregado) {
-                            var novoLote = {
-                              idMedicamento: item.idMedicamento,
-                              qtd: item.qtd,
-                              medicamento: item.nome
+                            if (item.idEndereco == 1 && entregas[indexEntregaAtual].origem == '') {
+                                entregas[indexEntregaAtual].origem = `${item.endereco}, ${item.numero} (${item.cidade} - ${item.uf})`
+                            } else if (item.idEndereco == 2 && entregas[indexEntregaAtual].destino == '') {
+                                entregas[indexEntregaAtual].destino = `${item.endereco}, ${item.numero} (${item.cidade} - ${item.uf})`
                             }
 
-                            entregas[indexEntregaAtual].carregamento.push(lote);
-                          }
+                            var loteJaCarregado = entregas[indexEntregaAtual].carregamento.find(l => {
+                                if (l.idMedicamento == item.idMedicamento) {
+                                return l;
+                                }
+                            });
+
+                            if (!loteJaCarregado) {
+                                var novoLote = {
+                                    idMedicamento: item.idMedicamento,
+                                    qtd: item.qtd,
+                                    medicamento: item.nome
+                                }
+
+                                entregas[indexEntregaAtual].carregamento.push(lote);
+                            }
                         } else {
-                          var novaEntrega = {
-                            idEntrega: item.idEntrega,
-                            horaSaida: item.horaSaida == null ? 'Não definida' : dateFns.format(item.horaSaida, 'hh:mm DD/MM/YYYY'),
-                            horaChegada: item.horaChegada == null ? 'Não definida' : dateFns.format(item.horaChegada, 'hh:mm DD/MM/YYYY'),
-                            nomeCliente: item.nomeCliente,
-                            tempMin: item.tempMin,
-                            tempMax: item.tempMax,
-                            umidMin: item.umidMin,
-                            umidMax: item.umidMax,
-                            dataEntrega: item.dataEntrega,
-                            origem: '',
-                            destino: '',
-                            carregamento: []                           
-                          }
+                            var novaEntrega = {
+                                idEntrega: item.idEntrega,
+                                nomeCliente: item.nomeCliente,
+                                tempMin: item.tempMin,
+                                tempMax: item.tempMax,
+                                umidMin: item.umidMin,
+                                umidMax: item.umidMax,
+                                dataEntrega: item.dataEntrega,
+                                aprovada: item.aprovada == 'N' ? 'Cancelada' : 'Pendente',
+                                origem: '',
+                                destino: '',
+                                carregamento: []                            
+                            }
 
-                          if (item.idEndereco == 1) {
-                            novaEntrega.origem = `${item.endereco}, ${item.numero} (${item.cidade} - ${item.uf})`
-                          } else {
-                            novaEntrega.destino = `${item.endereco}, ${item.numero} (${item.cidade} - ${item.uf})`
-                          }
+                            if (item.idEndereco == 1) {
+                                novaEntrega.origem = `${item.endereco}, ${item.numero} (${item.cidade} - ${item.uf})`
+                            } else {
+                                novaEntrega.destino = `${item.endereco}, ${item.numero} (${item.cidade} - ${item.uf})`
+                            }
 
-                          var lote = {
-                            idMedicamento: item.idMedicamento,
-                            qtd: item.qtd,
-                            medicamento: item.nome
-                          }
+                            var lote = {
+                                idMedicamento: item.idMedicamento,
+                                qtd: item.qtd,
+                                medicamento: item.nome
+                            }
 
-                          novaEntrega.carregamento.push(lote);
+                            novaEntrega.carregamento.push(lote);
 
-                          entregas.push(novaEntrega);
+                            entregas.push(novaEntrega);
                         }
                     }
 
                     for (let index = 0; index < entregas.length; index++) {
-                      var entregaAtual = entregas[index];
+                        var entregaAtual = entregas[index];
                       
-                      var liCarregamento = `<ul>`;
+                        var liCarregamento = `<ul>`;
 
-                      entregaAtual.carregamento.forEach(l => {
-                        liCarregamento += `<li>${l.qtd}X ${l.medicamento}</li>`;
-                      })
+                        entregaAtual.carregamento.forEach(l => {
+                            liCarregamento += `<li>${l.qtd}X ${l.medicamento}</li>`;
+                        })
 
-                      liCarregamento += `</ul>`
+                        liCarregamento += `</ul>`
 
-                      var liElement = document.createElement('li');
-                      liElement.addEventListener('click', (event) => {
-                        mostrarEntrega(entregaAtual.idEntrega)
-                      });
-                      liElement.classList.add('tabela-linha');
+                        var liElement = document.createElement('li');
+                        liElement.addEventListener('click', (event) => {
+                            mostrarEntrega(entregaAtual.idEntrega)
+                        });
+                        liElement.classList.add('tabela-linha');
 
-                      liElement.innerHTML = `
-                        <div>${entregaAtual.nomeCliente}</div>
-                        <div><strong>Origem:</strong> <br>${entregaAtual.origem}<br>
-                        <strong>Destino:</strong> <br>${entregaAtual.destino}</div>
-                        <div>${liCarregamento}</div>
-                        <div>${entregaAtual.dataEntrega}</div>
-                        <div>${entregaAtual.horaSaida} - ${entregaAtual.horaChegada}</div>
-                      `;
+                        liElement.innerHTML = `
+                            <div>${entregaAtual.nomeCliente}</div>
+                            <div><strong>Origem:</strong> <br>${entregaAtual.origem}<br>
+                            <strong>Destino:</strong> <br>${entregaAtual.destino}</div>
+                            <div>${liCarregamento}</div>
+                            <div>${entregaAtual.dataEntrega}</div>
+                        `;
 
-                      document.getElementById("lista").appendChild(liElement);
+                        document.getElementById("lista").appendChild(liElement);
                     }
                 });
             } else {
@@ -205,9 +213,8 @@
             });
     }
 
-    function mostrarEntrega(idEntrega) {
-        window.location.href = `entrega.html?idEntrega=${idEntrega}`;
+    function mostrarEntrega(idEntrega){
+        window.location.href = `solicitacao.html?idEntrega=${idEntrega}`;
     }
 </script>
-
 </html>

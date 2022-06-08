@@ -14,7 +14,7 @@
     <title>SENSORES</title>
 </head>
 
-<body onload="setUp('admin-f'); carregarSensores();">
+<body onload="setUp('logistico'); carregarSensores();">
     <div class="wrapper">
         <div class="sidebar">
             <div class="dropdown">
@@ -28,10 +28,8 @@
                 <li><a href="./solicitacoes.html"><i class="fas fa-solid fa-file-contract"></i>Solicitações</a></li>
                 <li><a href="./entregas.html"><i class="fas fa-regular fa-truck-ramp-box"></i>Entregas</a></li>
                 <li><a href="./sensores.html"><i class="fas fa-solid fa-pager"></i>Sensores</a></li>
-                <li><a href="./medicamentos.html"><i class="fas fa-solid fa-file-medical"></i>Medicamentos</a></li>
                 <li><a href="./graficos.html"><i class="fas fa-solid fa-chart-gantt"></i></i>Gráficos/Alertas</a></li>
                 <li><a href="./dadosPessoais.html"><i class="fas fa-solid fa-user"></i></i>Dados Pessoais</a></li>
-                <li><a href="./usuarios.html"><i class="fas fa-solid fa-users"></i>Usuários</a></li>
                 <li><a href="../../index.html" onclick="signOut()"><i class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
             </ul>            
         </div>
@@ -43,7 +41,7 @@
             <div class="info">
                 <div id="lista-medicamentos-container">
                     <h1>Sensores</h1>
-                    <button onclick="cadastrarSensor()">Solicitar Sensor</button>
+                    <!-- <button onclick="cadastrarSensor()">Solicitar Sensor</button> -->
                     <div class="lista-dados">
                         <ul id="ul-lista-sensor" class="ul-lista-dados">
                             <li class="medicamento-container-titulo">

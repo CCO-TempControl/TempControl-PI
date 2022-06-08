@@ -8,8 +8,10 @@
     <script src="https://kit.fontawesome.com/2eecc47c4e.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="../style.css">
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
     <script src="../../assets/js/funcoes.js"></script>
+    <script src="../../assets/js/validacoes.js"></script>
     <title>USUÁRIOS</title>
 
     <style>
@@ -63,7 +65,7 @@
                                     <label for="txtNome">
                                         Nome:
                                     </label>
-                                    <input id="txtNome" type="text" placeholder="Digite nome completo do usuário">
+                                    <input id="txtNome" type="text" placeholder="Ex: Nome completo">
                                 </div>
                                 <div class="field">
                                     <label for="txtEmail">
@@ -73,7 +75,7 @@
                                 </div>
                                 <div class="field">
                                     <label for="txtTipo">
-                                        Tipo Úsuario:
+                                        Tipo de Usuário:
                                     </label>
                                     <select name="" id="txtTipo">
                                         <option value="admin-t">Administrador Transportadora</option>
@@ -86,11 +88,7 @@
                                     </label>
                                     <input id="txtPassword" type="password" placeholder="Ex: **********">
                                 </div>
-                                <div id="divSignInResult" class="result">
-                                    <p id="pMensagem">
-                                        Olá meus senhores e minhas senhoras
-                                    </p>
-                                </div>
+                                <div id="divSignInResult" class="result"></div>
                                 <button onclick="validarCadastro()">Cadastrar</button>
                             </div>
                             <div class="tabela">
@@ -152,26 +150,41 @@
         var fkClienteVar = usuario.fkCliente;
         var fkAdminVar = usuario.idUsuario;
 
-
-
         if (emailVar == "" || senhaVar == "") {
-            divSignInResult.style.display = 'flex';
-            pMensagem.style.color = '#fc3636';
-            pMensagem.innerHTML = 'Todos os campos são obrigatórios';
+            Swal.fire({
+                title: 'Erro',
+                text: 'Todos os campos são obrigatórios',
+                icon: 'error',
+                showConfirmButton: false,
+                showDenyButton: true,
+                denyButtonText: 'OK'
+            });
             return;
         }
 
-        if (emailVar.indexOf('@') <= 0 || emailVar.indexOf('.com') <= 2) {
-            divSignInResult.style.display = 'flex';
-            pMensagem.style.color = '#fc3636';
-            pMensagem.innerHTML = 'Email e/ou Senha incorreto(s)';
+        var validacaoEmail = validarEmail(emailVar);
+
+        if (validacaoEmail != 'OK') {
+            Swal.fire({
+                title: 'Erro',
+                text: validacaoEmail,
+                icon: 'error',
+                showConfirmButton: false,
+                showDenyButton: true,
+                denyButtonText: 'OK'
+            });
             return;
         }
 
         if (senhaVar.length < 8) {
-            divSignInResult.style.display = 'flex';
-            pMensagem.style.color = '#fc3636';
-            pMensagem.innerHTML = 'Email e/ou Senha incorreto(s)';
+            Swal.fire({
+                title: 'Sucesso',
+                text: 'Email e/ou Senha incorreto(s)',
+                icon: 'error',
+                showConfirmButton: false,
+                showDenyButton: true,
+                denyButtonText: 'OK'
+            });
             return;
         }
 
@@ -195,29 +208,47 @@
                 console.log(resposta);
                 console.log(JSON.stringify(resposta));
 
-                divSignInResult.style.display = 'flex';
-                pMensagem.style.color = '#34e269';
-                pMensagem.innerHTML = 'Cadastrado realizado com sucesso';
+                Swal.fire({
+                    title: 'Sucesso',
+                    text: 'Cadastrado realizado com sucesso',
+                    icon: 'success',
+                    confirmButtonColor: '#34e269',
+                });
                 obterUsuariosCliente();
 
             } else {
                 if (resposta.status == 403) {
                     resposta.text().then(text => {
-                        divSignInResult.style.display = 'flex';
-                        pMensagem.style.color = '#fc3636';
-                        pMensagem.innerHTML = text;
+                        Swal.fire({
+                            title: 'Sucesso',
+                            text: text,
+                            icon: 'error',
+                            showConfirmButton: false,
+                            showDenyButton: true,
+                            denyButtonText: 'OK'
+                        });
                     })
                 } else {
-                    divSignInResult.style.display = 'flex';
-                    pMensagem.style.color = '#fc3636';
-                    pMensagem.innerHTML = 'Houve um erro ao realizar o cadastro!';
+                    Swal.fire({
+                        title: 'Sucesso',
+                        text: 'Houve um erro ao realizar O cadastro ',
+                        icon: 'error',
+                        showConfirmButton: false,
+                        showDenyButton: true,
+                        denyButtonText: 'OK'
+                    });
                 }
 
             }
         }).catch(function (erro) {
-            divSignInResult.style.display = 'flex';
-            pMensagem.style.color = '#fc3636';
-            pMensagem.innerHTML = 'Houve um erro ao se cadastar!';
+            Swal.fire({
+                title: 'Sucesso',
+                text: 'Houve um erro ao realizar O cadastro ',
+                icon: 'error',
+                showConfirmButton: false,
+                showDenyButton: true,
+                denyButtonText: 'OK'
+            });
             console.log(`ERRO: ${erro}`);
         })
 

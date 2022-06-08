@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/2eecc47c4e.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="icon" type="image/x-icon" href="../../assets/img/Logo.png">
+    <script src="../../assets/js/funcoes.js"></script>
+    <title>VEÍCULOS</title>
+</head>
+
+<body onload="setUp('transportador'); obterVeiculosCliente(); modoEdicao(false);">
+    <div class="wrapper">
+        <div class="sidebar">
+            <div class="dropdown">
+                <a href="#"><i class="fa-solid fa-circle-user" style="font-size:70px;  color: white;"></i></a>
+                <div class="dropdown-content">
+                    <h4>Olá <span id="spanNome"></span></h4>
+                </div>
+            </div>
+            <ul>
+                <li><a href="./index.html"><i class="fas fa-home"></i>Home</a></li>
+                <li><a href="./solicitacoes.html"><i class="fas fa-solid fa-file-contract"></i>Solicitações</a></li>
+                <li><a href="./entregas.html"><i class="fas fa-regular fa-truck-ramp-box"></i>Entregas</a></li>
+                <li><a href="./veiculos.html"><i class="fas fa-regular fa-truck"></i>Veículos</a></li>
+                <li><a href="./sensores.html"><i class="fas fa-solid fa-pager"></i>Sensores</a></li>
+                <li><a href="./graficos.html"><i class="fas fa-solid fa-chart-gantt"></i></i>Gráficos/Alertas</a></li>
+                <li><a href="./dadosPessoais.html"><i class="fas fa-solid fa-user"></i></i>Dados Pessoais</a></li>
+                <li><a href="../../index.html" onclick="signOut()"><i class="fas fa-solid fa-arrow-right-from-bracket"></i></i>Sair</a></li>
+            </ul>
+        </div>
+        <div class="main_content">
+            <div class="header">
+                <!-- <input type="text" placeholder="Pesquise.."> -->
+                <img src="img/logo_nome_sembg.png">
+            </div>
+            <div class="info">
+                <!-- Login -->
+                <div class="banner-form alt-banner sign">
+                    <div class="container">
+                        <div class="cartao">
+                            <h2>Cadastro De Veículos</h2>
+                            <div class="form">
+                                <div class="field">
+                                    <label for="txtModelo">
+                                        Modelo:
+                                    </label>
+                                    <input id="txtModelo" type="text" placeholder="Digite o modelo do veículo aqui">
+                                </div>
+                                <div class="field">
+                                    <label for="txtPlaca">
+                                        Placa:
+                                    </label>
+                                    <input id="txtPlaca" type="text" placeholder="Ex.: ABC1234" maxlength="7">
+                                </div>
+                                <div class="field">
+                                    <label for="txtAno">
+                                        Ano:
+                                    </label>
+                                    <input id="txtAno" type="number" placeholder="Ex.: 2019">
+                                </div>
+                                <input type="text" id="txtIdVeiculo" class="hiddenInput">
+                                <input type="text" id="txtFkTransportadora" class="hiddenInput">
+                                <button onclick="validarCadastroVeiculo()" id="btnCadastrar">Cadastrar</button>
+                                <button onclick="salvarEdicao()" id="btnSalvar" style="display: none;">Salvar</button>
+                                <button onclick="cancelarEdicao()" id="btnCancelar"
+                                    style="display: none;">Cancelar</button>
+                            </div>
+
+                            <div class="tabela">
+                                <h1>Veículos Cadastrados</h1>
+                                <ul id="lista">
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    function obterVeiculosCliente() {
+        const idClienteVar = usuario.fkCliente;
+
+        fetch(`/veiculos/listarPorCliente/`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                idClienteServer: idClienteVar
+            })
+        }).then(function (response) {
+            if (response.ok) {
+                let elementosNaLista = document.getElementsByClassName('tabela-linha');
+                for (let index = 0; index < elementosNaLista.length; index++) {
+                    elementosNaLista[index].remove();
+                }
+
+                response.json().then(function (veiculosEncontrados) {
+                    document.getElementById("lista").innerHTML = `
+                                    <li class="tabela-cabecalho">
+                                        <div>id</div>
+                                        <div>Modelo</div>
+                                        <div>Placa</div>
+                                        <div>Ano</div>
+                                        <div>Ações</div>
+                                    </li>
+                                    `;
+
+                    if (veiculosEncontrados.length == 0) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Aviso',
+                            text: 'Nenhum veículo foi encontrado'
+                        })
+                    }
+
+                    for (var index = 0; index < veiculosEncontrados.length; index++) {
+                        var veiculoAtual = veiculosEncontrados[index];
+                        
+                        document.getElementById("lista").innerHTML += `
+                            <li class="tabela-linha">
+                                <div>${veiculoAtual.idVeiculo}</div>
+                                <div>${veiculoAtual.modelo}</div>
+                                <div>${veiculoAtual.placa}</div>
+                                <div>${veiculoAtual.ano}</div>
+                                <div><button onclick="excluirVeiculo(${veiculoAtual.idVeiculo})" class="btnExcluir"></button>|<button onclick="editarVeiculo(${veiculoAtual.idVeiculo})" class="btnEditar"></button></div>
+                            </li>
+                        `;                        
+                    }
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erro',
+                    text: 'Houve um erro ao carregar os veículos'
+                })
+                console.error('Nenhum dado encontrado ou erro na API');
+            }
+        })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos veículos cadastrados ${error.message}`);
+            });
+    }
+
+    function validarCadastroVeiculo() {
+        var modeloVar = txtModelo.value;
+        var placaVar = txtPlaca.value;
+        var anoVar = txtAno.value;
+        var fkClienteVar = usuario.fkCliente;
+
+        if (modeloVar == "" || placaVar == "" || anoVar == "") {
+            divSignInResult.style.display = 'flex';
+            pMensagem.style.color = '#fc3636';
+            pMensagem.innerHTML = 'Todos os campos são obrigatórios';
+            return;
+        }
+
+        if (placaVar.toString().length < 6) {
+            divSignInResult.style.display = 'flex';
+            pMensagem.style.color = '#fc3636';
+            pMensagem.innerHTML = `Placa incorreta. Length: ${placaVar.length}`;
+            return;
+        }
+
+        fetch("/veiculos/cadastrar", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                modeloServer: modeloVar,
+                placaServer: placaVar,
+                anoServer: anoVar,
+                fkClienteServer: fkClienteVar
+            })
+        }).then(function (resposta) {
+            console.log('Resposta: ', resposta);
+
+            if (resposta.ok) {
+                console.log(resposta);
+
+                Swal.fire({
+                    title: 'Sucesso',
+                    text: 'Veículo cadastrado com sucesso',
+                    icon: 'success',
+                    timer: 2000,
+                    timerProgressBar: true,
+                    confirmButtonColor: '#34e269',
+                });
+
+                obterVeiculosCliente();
+
+            } else {
+                if (resposta.status == 403) {
+                    resposta.text().then(text => {
+                        divSignInResult.style.display = 'flex';
+                        pMensagem.style.color = '#fc3636';
+                        pMensagem.innerHTML = text;
+                    })
+                } else {
+                    divSignInResult.style.display = 'flex';
+                    pMensagem.style.color = '#fc3636';
+                    pMensagem.innerHTML = 'Houve um erro ao realizar o cadastro de veículo!';
+                }
+
+            }
+        }).catch(function (erro) {
+            divSignInResult.style.display = 'flex';
+            pMensagem.style.color = '#fc3636';
+            pMensagem.innerHTML = 'Houve um erro ao se cadastar!';
+            console.log(`ERRO: ${erro}`);
+        })
+
+        return false;
+    }
+
+    function excluirVeiculo(idVeiculoVar) {
+        Swal.fire({
+            title: 'Você tem certeza?',
+            text: `Excluir veículo ${idVeiculoVar}? Essa ação não poderá ser revertida!`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sim',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch('/veiculos/excluir', {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        idVeiculoServer: idVeiculoVar
+                    })
+                }).then(function (response) {
+                    if (response.ok) {
+                        Swal.fire(
+                            'Excluído!',
+                            'Seu veículo foi excluído com sucesso',
+                            'success'
+                        )
+                        obterVeiculosCliente();
+                    }
+                })
+            }
+        })
+    }
+
+    function editarVeiculo(idVeiculo) {
+        let idVeiculoVar = idVeiculo;
+        //listando os dados do veiculo
+        fetch('/veiculos/listarPorIdVeiculo', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                idVeiculoServer: idVeiculoVar
+            })
+        }).then(function (response) {
+            if (response.ok) {
+                response.json().then(function (respostaBanco) {
+                    let veiculoEncontrado = respostaBanco[0];
+                    document.getElementById('txtIdVeiculo').value = veiculoEncontrado.idVeiculo;
+                    document.getElementById('txtFkTransportadora').value = veiculoEncontrado.fkTransportadora;
+                    document.getElementById('txtPlaca').value = veiculoEncontrado.placa;
+                    document.getElementById('txtModelo').value = veiculoEncontrado.modelo;
+                    document.getElementById('txtAno').value = veiculoEncontrado.ano;
+
+                    modoEdicao(true);
+                })
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erro',
+                    text: 'Houve um erro ao carregar os dados do veículo'
+                })
+                console.error('Nenhum dado encontrado ou erro na API');
+            }
+        })
+    }
+
+    function salvarEdicao() {
+        let idVeiculoVar = document.getElementById('txtIdVeiculo').value;
+        let fkTransportadoraVar = document.getElementById('txtFkTransportadora').value;
+        let modeloVar = document.getElementById('txtModelo').value;
+        let placaVar = document.getElementById('txtPlaca').value;
+        let anoVar = document.getElementById('txtAno').value;
+        fetch('/veiculos/salvarEdicao', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                idVeiculoServer: idVeiculoVar,
+                fkTransportadoraServer: fkTransportadoraVar,
+                modeloServer: modeloVar,
+                placaServer: placaVar,
+                anoServer: anoVar
+            })
+        }).then(function (resposta) {
+            console.log('Resposta: ', resposta);
+
+            if (resposta.ok) {
+                console.log(resposta);
+
+                Swal.fire({
+                    title: 'Sucesso',
+                    text: 'Veículo editado com sucesso',
+                    icon: 'success',
+                    timer: 2000,
+                    timerProgressBar: true,
+                    confirmButtonColor: '#34e269',
+                });
+                modoEdicao(false);
+                obterVeiculosCliente();
+
+            } else {
+                if (resposta.status == 403) {
+                    resposta.text().then(text => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Houve um problema',
+                            text: `Erro: ${text}`
+                        })
+                    })
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Houve um problema',
+                        text: `Houve um erro no processo de salvar os dados do veículo`
+                    })
+                }
+
+            }
+        }).catch(function (erro) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Houve um problema',
+                text: `Erro ao salvar o veículo: ${erro}`
+            })
+        })
+    }
+
+    function cancelarEdicao() {
+        modoEdicao(false);
+    }
+
+    function modoEdicao(estado) {
+        
+        if (estado == true) {
+            window.scrollTo(0, 0);
+            document.getElementById('btnCadastrar').style.display = "none";
+            document.getElementById('btnSalvar').style.display = "block";
+            document.getElementById('btnCancelar').style.display = "block";
+            return;
+        }
+        if (estado == false) {
+            document.getElementById('btnCadastrar').style.display = "block";
+            document.getElementById('btnSalvar').style.display = "none";
+            document.getElementById('btnCancelar').style.display = "none";
+
+            document.getElementById('txtModelo').value = "";
+            document.getElementById('txtPlaca').value = "";
+            document.getElementById('txtAno').value = "";
+            document.getElementById('txtIdVeiculo').value = "";
+            document.getElementById('txtFkTransportadora').value = "";
+        }
+    }
+</script>
+
+
+
+
+</html>
