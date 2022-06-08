@@ -154,7 +154,7 @@ const serial = async (
                 }
 
                 var insert = `
-                    INSERT INTO registro (dht11temperatura, dht11umidade, ldrluminosidade, lm35temperatura, trc5000chave, situacaoTemperatura, situacaoUmidade, horario, fkEntrega) VALUES (${isNaN(dht11Temperatura) ? null : dht11Temperatura}, ${isNaN(dht11Umidade) ? null : dht11Umidade}, ${isNaN(luminosidade) ? null : luminosidade}, ${isNaN(lm35Temperatura) ? null : lm35Temperatura}, ${isNaN(chave) ? null : chave}, ${isNaN(dht11Temperatura) ? 'C' : `'${situacaoTemperatura}'`}, ${isNaN(dht11Umidade) ? 'C' : `'${situacaoUmidade}'`}, now(), ${dadosSelect.idEntrega});
+                    INSERT INTO registro (dht11temperatura, dht11umidade, ldrluminosidade, lm35temperatura, trc5000chave, situacaoTemperatura, situacaoUmidade, horario, fkEntrega) VALUES (${isNaN(dht11Temperatura) ? null : dht11Temperatura}, ${isNaN(dht11Umidade) ? null : dht11Umidade}, ${isNaN(luminosidade) ? null : luminosidade}, ${isNaN(lm35Temperatura) ? null : lm35Temperatura}, ${isNaN(chave) ? null : chave}, ${isNaN(dht11Temperatura) ? "'C'" : `'${situacaoTemperatura}'`}, ${isNaN(dht11Umidade) ? "'C'" : `'${situacaoUmidade}'`}, now(), ${dadosSelect.idEntrega});
                 `;
 
                 // Este insert irá inserir os dados na tabela "medida" -> altere se necessário
